@@ -12,6 +12,7 @@ import kr.hs.emirim.uuuuri.haegbook.R;
  * Created by 유리 on 2017-11-04.
  */
 
+// TODO: 2017-11-04 환율 : 두리
 public class FourthInputFragment extends Fragment{
     public FourthInputFragment() {
     }

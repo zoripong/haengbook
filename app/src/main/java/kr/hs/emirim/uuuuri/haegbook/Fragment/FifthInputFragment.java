@@ -12,6 +12,7 @@ import kr.hs.emirim.uuuuri.haegbook.R;
  * Created by 유리 on 2017-11-04.
  */
 
+// TODO: 2017-11-04 seekbar : 민주
 public class FifthInputFragment extends Fragment{
     public FifthInputFragment() {
     }

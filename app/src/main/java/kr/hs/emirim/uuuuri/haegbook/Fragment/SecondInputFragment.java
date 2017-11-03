@@ -11,7 +11,7 @@ import kr.hs.emirim.uuuuri.haegbook.R;
 /**
  * Created by 유리 on 2017-11-04.
  */
-
+// TODO: 2017-11-04 여행 시작일 : 두리 
 public class SecondInputFragment extends Fragment{
     public SecondInputFragment() {
     }

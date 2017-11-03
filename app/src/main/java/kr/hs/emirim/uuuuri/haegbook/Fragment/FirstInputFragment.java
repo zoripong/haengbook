@@ -12,6 +12,7 @@ import kr.hs.emirim.uuuuri.haegbook.R;
  * Created by 유리 on 2017-11-04.
  */
 
+// TODO: 2017-11-04 여행제목 & 위치 : 한유리  
 public class FirstInputFragment extends Fragment{
     public FirstInputFragment() {
     }

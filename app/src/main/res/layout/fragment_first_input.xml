@@ -3,9 +3,14 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:text="first input"
+   <EditText
+       android:id="@+id/trip_title_et"
+       android:hint="나의 후쿠오카 이야기"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/search_btn"
+        android:background="@drawable/basic_gps"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
+        android:layout_height="wrap_content" />
 </LinearLayout>

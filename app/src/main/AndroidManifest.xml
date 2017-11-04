@@ -22,8 +22,15 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activity.AddPhotoActivity" />
         <activity android:name=".Activity.AddReceiptActivity" />
-        <activity android:name=".Activity.AddScheduleActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        </application>
+        <activity
+            android:name=".Activity.AddScheduleActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBewTAGc7YHOPkQsrUOOQu6IV2IMJizUMs" />
+
+        <activity android:name=".Activity.SearchLocationActivity"></activity>
+    </application>
 
 </manifest>

@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
 
 //                Intent intent = new Intent(MainActivity.this, AddScheduleActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
 
@@ -37,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, TravelDetailActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
     }

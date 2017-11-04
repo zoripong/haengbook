@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import kr.hs.emirim.uuuuri.haegbook.CustomViewPager;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.FifthInputFragment;
@@ -25,6 +26,10 @@ public class AddScheduleActivity extends AppCompatActivity {
 
     private boolean isClick = false;
 
+    private FirstInputFragment firstInputFragment;
+    private SecondInputFragment secondInputFragment;
+    private ThirdInputFragment thirdInputFragment;
+    private FourthInputFragment fourthInputFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +53,25 @@ public class AddScheduleActivity extends AppCompatActivity {
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                switch (mViewPager.getCurrentItem()){
+                    case 0:
+                        if(!firstInputFragment.saveData()){
+                            Toast.makeText(getApplicationContext(), "입력바람", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+
+                }
                 if(mViewPager.getCurrentItem() >= 0 && mViewPager.getCurrentItem() < PAGE_COUNT )
                     mViewPager.setCurrentItem(mViewPager.getCurrentItem()+1);
 
                 if(mViewPager.getCurrentItem() == PAGE_COUNT - 1 && isClick){
+
                     Intent intent = new Intent(AddScheduleActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -105,13 +125,17 @@ public class AddScheduleActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch(position){
                 case 0:
-                    return new FirstInputFragment();
+                    firstInputFragment = new FirstInputFragment();
+                    return firstInputFragment;
                 case 1:
-                    return new SecondInputFragment();
+                     secondInputFragment = new SecondInputFragment();
+                    return secondInputFragment;
                 case 2:
-                    return new ThirdInputFragment();
+                    thirdInputFragment = new ThirdInputFragment();
+                    return thirdInputFragment;
                 case 3:
-                    return new FourthInputFragment();
+                    fourthInputFragment = new FourthInputFragment();
+                    return fourthInputFragment;
                 case 4:
                     return new FifthInputFragment();
                 default:

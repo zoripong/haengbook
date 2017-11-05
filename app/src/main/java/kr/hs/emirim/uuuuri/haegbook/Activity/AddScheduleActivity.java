@@ -30,6 +30,7 @@ public class AddScheduleActivity extends AppCompatActivity {
     private SecondInputFragment secondInputFragment;
     private ThirdInputFragment thirdInputFragment;
     private FourthInputFragment fourthInputFragment;
+    private FifthInputFragment fifthInputFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,15 +56,32 @@ public class AddScheduleActivity extends AppCompatActivity {
             public void onClick(View view) {
                 switch (mViewPager.getCurrentItem()){
                     case 0:
-                        if(!firstInputFragment.saveData()){
+                        if(firstInputFragment.saveData()){
+                            // // TODO: 2017-11-05 DEBUG
+                            secondInputFragment.getData();
+                        }else{
                             Toast.makeText(getApplicationContext(), "입력바람", Toast.LENGTH_SHORT).show();
                             return;
                         }
                     case 1:
+                        if(!secondInputFragment.saveData()){
+                            Toast.makeText(getApplicationContext(), "입력바람", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         break;
                     case 2:
+                        if(!thirdInputFragment.saveData()){
+                            Toast.makeText(getApplicationContext(), "입력바람", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         break;
                     case 3:
+                        if(fourthInputFragment.saveData()){
+                            fifthInputFragment.getData();
+                        }else{
+                            Toast.makeText(getApplicationContext(), "입력바람", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         break;
 
                 }
@@ -71,6 +89,8 @@ public class AddScheduleActivity extends AppCompatActivity {
                     mViewPager.setCurrentItem(mViewPager.getCurrentItem()+1);
 
                 if(mViewPager.getCurrentItem() == PAGE_COUNT - 1 && isClick){
+
+                    fifthInputFragment.saveData();
 
                     Intent intent = new Intent(AddScheduleActivity.this, MainActivity.class);
                     startActivity(intent);
@@ -137,7 +157,8 @@ public class AddScheduleActivity extends AppCompatActivity {
                     fourthInputFragment = new FourthInputFragment();
                     return fourthInputFragment;
                 case 4:
-                    return new FifthInputFragment();
+                     fifthInputFragment = new FifthInputFragment();
+                    return fifthInputFragment;
                 default:
             return null;
             }

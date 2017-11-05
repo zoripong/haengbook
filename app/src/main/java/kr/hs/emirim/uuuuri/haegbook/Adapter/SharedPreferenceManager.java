@@ -50,7 +50,7 @@ public class SharedPreferenceManager {
         return sharedpreferences.getBoolean(tag, false);
     }
 
-    public void resetDate(){
+    public void resetData(){
         SharedPreferences.Editor editor = sharedpreferences.edit();
 
         editor.putString(ScheduleTag.TITLE_TAG, "");

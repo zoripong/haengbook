@@ -25,10 +25,24 @@ public class SecondInputFragment extends Fragment{
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_second_input, container, false);
 
-        SharedPreferenceManager spm = new SharedPreferenceManager(getActivity());
-        Toast.makeText(getContext(), spm.retrieveString(ScheduleTag.LOCATION_TAG), Toast.LENGTH_SHORT).show();
 
         return rootView;
     }
 
+    // TODO: 2017-11-05 DEBUG
+    public void getData(){
+        if(getActivity() == null)
+            return;
+        SharedPreferenceManager spm = new SharedPreferenceManager(getActivity());
+        Toast.makeText(getContext(), spm.retrieveString(ScheduleTag.LOCATION_TAG), Toast.LENGTH_SHORT).show();
+
+    }
+
+
+    public boolean saveData(){
+        // TODO: 2017-11-05 시작날짜 선택 안했을 경우 return false!!!!!!!!
+        SharedPreferenceManager spm = new SharedPreferenceManager(getActivity());
+        spm.save(ScheduleTag.START_DATE_TAG, "시작날짜");
+        return true;
+    }
 }

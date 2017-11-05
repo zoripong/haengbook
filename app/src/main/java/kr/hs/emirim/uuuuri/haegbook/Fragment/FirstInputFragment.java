@@ -91,6 +91,7 @@ public class FirstInputFragment extends Fragment{
             if (resultCode == RESULT_OK) {
                 mPlace = PlaceAutocomplete.getPlace(getActivity(), data);
                 Log.e(TAG, (String) mPlace.getName());
+                Log.e(TAG, (String) mPlace.getAddress());
 
                 if(String.valueOf(mTripTitleEt.getText()).equals(""))
                     mTripTitleEt.setText("나의 "+ mPlace.getName()+" 이야기");
@@ -115,9 +116,20 @@ public class FirstInputFragment extends Fragment{
     public boolean saveData(){
         if(mPlace == null)
             return false;
+
+        String address[] = mPlace.getAddress().toString().split(" ");
         SharedPreferenceManager spm = new SharedPreferenceManager(getActivity());
+
         spm.save(ScheduleTag.TITLE_TAG, mTripTitleEt.getText().toString());
         spm.save(ScheduleTag.LOCATION_TAG, (String) mPlace.getName());
+        spm.save(ScheduleTag.ADDRESS_TAG, address[0]);
+
+        if(address[0].equals("대한민국"))
+            spm.save(ScheduleTag.IS_KOR_TAG, true);
+        else
+            spm.save(ScheduleTag.IS_KOR_TAG, false);
+
+
         return true;
     }
 

@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import kr.hs.emirim.uuuuri.haegbook.Adapter.SharedPreferenceManager;
+import kr.hs.emirim.uuuuri.haegbook.Interface.ScheduleTag;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 /**
@@ -22,6 +24,13 @@ public class ThirdInputFragment extends Fragment{
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_third_input, container, false);
         return rootView;
+    }
+
+    public boolean saveData(){
+        // TODO: 2017-11-05 끝날짜 선택 안했을 경우 return false!!!!!!!!
+        SharedPreferenceManager spm = new SharedPreferenceManager(getActivity());
+        spm.save(ScheduleTag.END_DATE_TAG, "종료날짜");
+        return true;
     }
 
 }

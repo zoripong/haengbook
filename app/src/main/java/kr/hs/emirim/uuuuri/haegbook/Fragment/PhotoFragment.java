@@ -8,10 +8,6 @@ import android.view.ViewGroup;
 
 import kr.hs.emirim.uuuuri.haegbook.R;
 
-/**
- * Created by 유리 on 2017-11-03.
- */
-
 public class PhotoFragment extends Fragment {
     public PhotoFragment() {
     }

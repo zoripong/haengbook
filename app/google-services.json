@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "207678802631",
+    "firebase_url": "https://haengbook-1509728929001.firebaseio.com",
+    "project_id": "haengbook-1509728929001",
+    "storage_bucket": "haengbook-1509728929001.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:207678802631:android:2a28268e6e50b0e9",
+        "android_client_info": {
+          "package_name": "kr.hs.emirim.uuuuri.haegbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "207678802631-07kga6qlh2du6k9t6darkk7c4q6cc14p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.hs.emirim.uuuuri.haegbook",
+            "certificate_hash": "4432ca294e91d5251b26992228d8c67b3d32827f"
+          }
+        },
+        {
+          "client_id": "207678802631-bd203g61fblqigbcl9djdtldtut178nv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyButyj_GBEbVuNYR16MTl8JOEhJO6SGMUc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "207678802631-bd203g61fblqigbcl9djdtldtut178nv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

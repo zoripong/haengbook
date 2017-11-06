@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import kr.hs.emirim.uuuuri.haegbook.Fragment.PhotoFragment;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.ReceiptFragment;
@@ -32,6 +33,11 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_detail);
+
+        Intent intent = getIntent();
+        String code = intent.getStringExtra("BOOK_CODE");
+        Toast.makeText(getApplicationContext(), code, Toast.LENGTH_SHORT).show();
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

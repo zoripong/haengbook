@@ -19,6 +19,16 @@ public class CardBook {
         this.url = url;
     }
 
+    @Override
+    public String toString() {
+        return "CardBook{" +
+                "period='" + period + '\'' +
+                ", location='" + location + '\'' +
+                ", title='" + title + '\'' +
+                ", bookCode='" + bookCode + '\'' +
+                ", url='" + url + '\'' +
+                '}';
+    }
 
     public String getPeriod() {
         return period;

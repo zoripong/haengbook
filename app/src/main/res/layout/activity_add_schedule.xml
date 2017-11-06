@@ -29,7 +29,7 @@
         </LinearLayout>
     </FrameLayout>
 
-    <kr.hs.emirim.uuuuri.haegbook.CustomViewPager
+    <kr.hs.emirim.uuuuri.haegbook.Adapter.CustomViewPager
         android:id="@+id/container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

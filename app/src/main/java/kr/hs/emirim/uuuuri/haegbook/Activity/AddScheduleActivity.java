@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import kr.hs.emirim.uuuuri.haegbook.CustomViewPager;
+import kr.hs.emirim.uuuuri.haegbook.Adapter.CustomViewPager;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.FifthInputFragment;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.FirstInputFragment;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.FourthInputFragment;

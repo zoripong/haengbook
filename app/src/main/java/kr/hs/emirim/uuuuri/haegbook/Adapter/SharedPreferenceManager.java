@@ -32,6 +32,12 @@ public class SharedPreferenceManager {
         editor.commit();
     }
 
+    public void save(String tag, float value){
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putFloat(tag, value);
+        editor.commit();
+    }
+
     public void save(String tag, boolean value){
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putBoolean(tag, value);
@@ -44,6 +50,10 @@ public class SharedPreferenceManager {
 
     public int retrieveInt(String tag){
         return sharedpreferences.getInt(tag, -1);
+    }
+
+    public float retrieveFloat(String tag){
+        return sharedpreferences.getFloat(tag, -1.0f);
     }
 
     public boolean retrieveBoolean(String tag){

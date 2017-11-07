@@ -17,7 +17,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-}
+
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -36,9 +36,17 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.5.2'
 
     compile 'com.github.JakeWharton:ViewPagerIndicator:2.4.1'
+    compile 'org.jsoup:jsoup:1.10.3'
+
     testCompile 'junit:junit:4.12'
 
     compile 'org.jetbrains:annotations-java5:15.0'
-}
+    }
 
+    packagingOptions {
+        exclude 'META-INF/NOTICE' // will not include NOTICE file
+        exclude 'META-INF/LICENSE' // will not include LICENSE file
+    }
+
+}
 apply plugin: 'com.google.gms.google-services'

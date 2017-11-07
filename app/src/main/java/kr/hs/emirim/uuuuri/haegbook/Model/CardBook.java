@@ -10,6 +10,12 @@ public class CardBook {
     String title;
     String bookCode;
     String url;
+    public CardBook(String period, String location, String title, String url) {
+        this.period = period;
+        this.location = location;
+        this.title = title;
+        this.url = url;
+    }
 
     public CardBook(String period, String location, String title, String bookCode, String url) {
         this.period = period;

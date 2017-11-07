@@ -1,5 +1,6 @@
 package kr.hs.emirim.uuuuri.haegbook.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -52,6 +53,7 @@ public class AddScheduleActivity extends AppCompatActivity {
         previousBtn.setVisibility(View.INVISIBLE);
 
         nextBtn.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("LongLogTag")
             @Override
             public void onClick(View view) {
                 switch (mViewPager.getCurrentItem()){
@@ -63,14 +65,20 @@ public class AddScheduleActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "입력바람", Toast.LENGTH_SHORT).show();
                             return;
                         }
+                        break;
                     case 1:
-                        if(!secondInputFragment.saveData()){
+                        if(secondInputFragment.saveData()){
+                            thirdInputFragment.getData();
+                        }else{
                             Toast.makeText(getApplicationContext(), "입력바람", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         break;
                     case 2:
-                        if(!thirdInputFragment.saveData()){
+                        if(thirdInputFragment.saveData()){
+                            // // TODO: 2017-11-05 DEBUG
+                            fourthInputFragment.getData();
+                        }else{
                             Toast.makeText(getApplicationContext(), "입력바람", Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -148,7 +156,7 @@ public class AddScheduleActivity extends AppCompatActivity {
                     firstInputFragment = new FirstInputFragment();
                     return firstInputFragment;
                 case 1:
-                     secondInputFragment = new SecondInputFragment();
+                    secondInputFragment = new SecondInputFragment();
                     return secondInputFragment;
                 case 2:
                     thirdInputFragment = new ThirdInputFragment();
@@ -157,10 +165,10 @@ public class AddScheduleActivity extends AppCompatActivity {
                     fourthInputFragment = new FourthInputFragment();
                     return fourthInputFragment;
                 case 4:
-                     fifthInputFragment = new FifthInputFragment();
+                    fifthInputFragment = new FifthInputFragment();
                     return fifthInputFragment;
                 default:
-            return null;
+                    return null;
             }
         }
 

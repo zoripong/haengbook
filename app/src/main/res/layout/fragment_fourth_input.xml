@@ -49,17 +49,7 @@
             android:gravity="center"
             android:textColor="#FFF"
             />
-        <Spinner
-            android:id="@+id/before_country_sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:scale_height="47"
-            app:scale_left="101"
-            app:scale_textsize="30"
-            app:scale_top="555"
-            app:scale_width="187"
-            android:background="@drawable/dropdown_icon">
-        </Spinner>
+
         <EditText
             android:id="@+id/before_money_et"
             android:layout_width="wrap_content"
@@ -94,6 +84,7 @@
             app:scale_textsize="30"
             app:scale_top="655"
             app:scale_width="187"
+            android:entries="@array/currencyCountry"
             android:background="@drawable/dropdown_icon">
         </Spinner>
         <EditText

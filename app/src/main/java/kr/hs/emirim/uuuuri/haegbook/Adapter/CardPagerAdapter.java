@@ -23,7 +23,7 @@ import kr.hs.emirim.uuuuri.haegbook.Model.CardBook;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
-    private final String LOG = "CardPagerAdapter";
+    private final String TAG = "CardPagerAdapter";
     private List<CardView> mViews;
     private List<CardBook> mData;
     private float mBaseElevation;
@@ -44,14 +44,21 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
         Iterator<CardBook> iterator = items.iterator();
         while(iterator.hasNext()){
             CardBook cardBook= iterator.next();
-            Log.e(LOG,cardBook.toString());
+            Log.e(TAG,cardBook.toString());
             mViews.add(null);
             mData.add(cardBook);
         }
     }
 
     public void addCardItems(ArrayList<CardBook> items){
+        Log.e(TAG, String.valueOf(items.size()));
+
+        mData.clear();
+        mViews.clear();
+
         for(int i = 0; i<items.size(); i++){
+            Log.e(TAG, "킬킬"+items.get(i).toString());
+
             mViews.add(null);
             mData.add(items.get(i));
         }
@@ -96,7 +103,7 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
-        mViews.set(position, null);
+//        mViews.set(position, null);
     }
 
     private void bind(final CardBook item, View view) {

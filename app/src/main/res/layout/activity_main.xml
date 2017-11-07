@@ -23,15 +23,6 @@
         android:layout_height="wrap_content"
         android:text="새로운 여행 추가하기"/>
 
-    <!--뷰페이저로 변경-->
-    <Button
-        android:id="@+id/detail_travel_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="여행 확인"/>
-
-
-
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
@@ -44,5 +35,14 @@
         android:paddingLeft="@dimen/card_padding"
         android:paddingRight="@dimen/card_padding"
         android:paddingStart="@dimen/card_padding" />
+
+    <com.viewpagerindicator.UnderlinePageIndicator
+        android:id="@+id/activity_view_pager_indicator_underline"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:textColor="#3e3e3e"
+        app:fades="false"
+        app:selectedColor="@color/colorPrimary" />
+
 
 </LinearLayout>

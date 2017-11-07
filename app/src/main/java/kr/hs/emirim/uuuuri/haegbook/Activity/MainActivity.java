@@ -11,8 +11,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.viewpagerindicator.UnderlinePageIndicator;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import kr.hs.emirim.uuuuri.haegbook.Adapter.CardPagerAdapter;
 import kr.hs.emirim.uuuuri.haegbook.Adapter.ShadowTransformer;
@@ -22,15 +24,20 @@ import kr.hs.emirim.uuuuri.haegbook.R;
 public class MainActivity extends BaseActivity {
     private final String TAG = "MainActivity";
 
+
     private FirebaseDatabase mDatabase;
     private DatabaseReference mUserRefer;
+    private DatabaseReference mCardBookRefer;
     private ValueEventListener mUserListener;
+    private ValueEventListener mCardBookListener;
 
     private ArrayList<CardBook> testSet;
-
     private ArrayList<String> mCardBookAddress;
+    private ArrayList<CardBook> mCardBooks;
+    private ArrayList<CardBook> mReserveBooks;
 
     private ViewPager mViewPager;
+    private UnderlinePageIndicator indicatorUnderline;
     private CardPagerAdapter mCardAdapter;
     private ShadowTransformer mCardShadowTransformer;
 
@@ -50,14 +57,14 @@ public class MainActivity extends BaseActivity {
         mDatabase = FirebaseDatabase.getInstance();
 
         mCardBookAddress = new ArrayList<>();
+        mCardBooks = new ArrayList<>();
+        mReserveBooks = new ArrayList<>();
 
         findViewById(R.id.add_schedule_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this,
                         AddScheduleActivity.class);
-
-//                Intent intent = new Intent(MainActivity.this, AddScheduleActivity.class);
                 startActivity(intent);
             }
         });
@@ -66,15 +73,29 @@ public class MainActivity extends BaseActivity {
         mViewPager = findViewById(R.id.viewPager);
         mCardAdapter = new CardPagerAdapter(this);
         // TODO: 2017-11-07 debug
-        mCardAdapter.addCardItems(testSet);
+        mCardAdapter.addCardItem(new CardBook("test", "test", "test", "test", "test"));
 
         mCardShadowTransformer = new ShadowTransformer(mViewPager, mCardAdapter);
         mCardShadowTransformer.enableScaling(true);
 
         mViewPager.setAdapter(mCardAdapter);
         mViewPager.setPageTransformer(false, mCardShadowTransformer);
-        mViewPager.setOffscreenPageLimit(3);
 
+        // page
+        indicatorUnderline = findViewById(R.id.activity_view_pager_indicator_underline);
+        ViewPager.SimpleOnPageChangeListener pagerSyncronizer = getPagerSynchronizer();
+        indicatorUnderline.setViewPager(mViewPager);
+        indicatorUnderline.setOnPageChangeListener(pagerSyncronizer);
+
+    }
+
+    private ViewPager.SimpleOnPageChangeListener getPagerSynchronizer() {
+        return new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                mViewPager.setCurrentItem(position, true);
+            }
+        };
     }
 
     @Override
@@ -83,6 +104,10 @@ public class MainActivity extends BaseActivity {
 
         if(mUserListener != null)
             mUserRefer.removeEventListener(mUserListener);
+
+        if(mCardBookListener != null)
+            mCardBookRefer.removeEventListener(mCardBookListener);
+
     }
 
     public void getDatabaseData() {
@@ -92,11 +117,11 @@ public class MainActivity extends BaseActivity {
         mUserListener = mUserRefer.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.e(TAG, "키"+dataSnapshot.getChildrenCount());
+                mCardBookAddress.clear();
                 for (DataSnapshot noteDataSnapshot : dataSnapshot.getChildren()) {
                     mCardBookAddress.add(noteDataSnapshot.getValue(String.class));
                 }
-                Log.e(TAG, mCardBookAddress.toString());
+                getCardBook();
             }
 
             @Override
@@ -107,7 +132,62 @@ public class MainActivity extends BaseActivity {
         });
         mUserRefer.addValueEventListener(mUserListener);
     }
-//
+
+    private void getCardBook(){
+        mCardBookRefer = mDatabase.getReference("BookInfo");
+        Log.e(TAG, "contain ? "+mCardBookAddress.toString());
+        mCardBookListener = mCardBookRefer.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mCardBooks.clear();
+                mReserveBooks.clear();
+
+                mCardAdapter.addCardItems(mCardBooks);
+                mViewPager.setAdapter(mCardAdapter);
+
+                Iterator<DataSnapshot> bookDataSnapshot = dataSnapshot.getChildren().iterator();
+                while(bookDataSnapshot.hasNext()){
+                    DataSnapshot bookCodeSnapShot = bookDataSnapshot.next();
+                    String bookCode = bookCodeSnapShot.getKey().toString(); // key
+                    if(mCardBookAddress.contains(bookCode)){
+
+                        String location = bookCodeSnapShot.child("Registration").child("Location").getValue(String.class);
+                        String period = bookCodeSnapShot.child("Registration").child("Period").getValue(String.class);
+                        String title = bookCodeSnapShot.child("Registration").child("Title").getValue(String.class);
+
+                        if(Boolean.parseBoolean(bookCodeSnapShot.child("isShowing").getValue().toString())){
+                            // isShowing == true
+                            String image = bookCodeSnapShot.child("Registration").child("Image").getValue(String.class);
+                            //(String period, String location, String title, String bookCode, String url)
+                            // param
+                            mCardBooks.add(new CardBook(period, location, title, bookCode, image));
+                        }else{
+                            mReserveBooks.add(new CardBook(period, location, title, bookCode, null));
+                        }
+                    }
+
+                }
+
+                Log.e(TAG, "카드북 : "+mCardBooks.toString());
+                Log.e(TAG, "예약들 : "+mReserveBooks.toString());
+                mCardAdapter.addCardItems(mCardBooks);
+                if(mCardBooks.size() == 0)
+                    mCardAdapter.addCardItem(new CardBook("test", "test", "test", "test", "test"));
+                mViewPager.setAdapter(mCardAdapter);
+
+              }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        mCardBookRefer.addValueEventListener(mCardBookListener);
+
+
+    }
     private void test() {
         testSet = new ArrayList<CardBook>();
 

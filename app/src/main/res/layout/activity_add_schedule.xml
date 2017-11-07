@@ -8,10 +8,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <kr.hs.emirim.uuuuri.haegbook.Layout.CustomViewPager
+            android:id="@+id/container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
         <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:scale_base_height="1020"
+            app:scale_base_height="1100"
             app:scale_base_width="720">
             <TextView
                 android:id="@+id/previous_btn"
@@ -40,12 +46,7 @@
         </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
 
 
-    <kr.hs.emirim.uuuuri.haegbook.Layout.CustomViewPager
-        android:id="@+id/container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
-    </FrameLayout>
 
+    </FrameLayout>
 
 </LinearLayout>

@@ -3,8 +3,11 @@ package kr.hs.emirim.uuuuri.haegbook.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -36,13 +39,17 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getDatabaseData();
         test();
         initialize();
+        getDatabaseData();
+
+
     }
 
     private void initialize() {
+        mDatabase = FirebaseDatabase.getInstance();
 
+        mCardBookAddress = new ArrayList<>();
 
         findViewById(R.id.add_schedule_btn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,13 +78,6 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        mDatabase = FirebaseDatabase.getInstance();
-
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
 
@@ -87,22 +87,25 @@ public class MainActivity extends BaseActivity {
 
     public void getDatabaseData() {
         String uid = "testuid";
-//        mUserRefer = mDatabase.getReference("UserInfo/"+uid);
+        mUserRefer = mDatabase.getReference("UserInfo/"+uid);
 
-//        mUserListener = mUserRefer.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//
-//        mUserRefer.addValueEventListener(mUserListener);
-//
+        mUserListener = mUserRefer.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.e(TAG, "키"+dataSnapshot.getChildrenCount());
+                for (DataSnapshot noteDataSnapshot : dataSnapshot.getChildren()) {
+                    mCardBookAddress.add(noteDataSnapshot.getValue(String.class));
+                }
+                Log.e(TAG, mCardBookAddress.toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
+        mUserRefer.addValueEventListener(mUserListener);
     }
 //
     private void test() {

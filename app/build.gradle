@@ -37,6 +37,7 @@ dependencies {
 
     compile 'com.github.JakeWharton:ViewPagerIndicator:2.4.1'
     testCompile 'junit:junit:4.12'
+
     compile 'org.jetbrains:annotations-java5:15.0'
 }
 

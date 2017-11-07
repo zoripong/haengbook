@@ -12,6 +12,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.ViewTarget;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -117,7 +123,28 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
         periodTextView.setText(item.getPeriod());
         locationTextView.setText(item.getLocation());
 
-        // TODO: 2017-11-07 set the background image
+        Log.e(TAG, "<Before> width : "+ cardView.getWidth() +" / height : " + cardView.getHeight());
+        Log.e(TAG, "url : " + item.getUrl());
+
+        cardView.setPreventCornerOverlap(false);
+
+
+        Glide.with(mNowActivity.getApplicationContext())
+                .load(item.getUrl())
+                .fitCenter()
+                .placeholder(R.drawable.loading)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(new ViewTarget<CardView, GlideDrawable>(cardView) {
+                    @Override
+                    public void onResourceReady(GlideDrawable resource, GlideAnimation anim) {
+                        CardView myView = this.view;
+                        // Set your resource on myView and/or start your animation here.
+                        myView.setBackground(resource);
+                    }
+                });
+        Log.e(TAG, "<After> width : "+ cardView.getWidth() +" / height : " + cardView.getHeight());
+
+
 
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override

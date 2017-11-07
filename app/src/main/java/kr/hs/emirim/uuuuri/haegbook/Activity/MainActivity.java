@@ -50,7 +50,6 @@ public class MainActivity extends BaseActivity {
         initialize();
         getDatabaseData();
 
-
     }
 
     private void initialize() {
@@ -112,11 +111,13 @@ public class MainActivity extends BaseActivity {
 
     public void getDatabaseData() {
         String uid = "testuid";
+                showProgressDialog();
         mUserRefer = mDatabase.getReference("UserInfo/"+uid);
 
         mUserListener = mUserRefer.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 mCardBookAddress.clear();
                 for (DataSnapshot noteDataSnapshot : dataSnapshot.getChildren()) {
                     mCardBookAddress.add(noteDataSnapshot.getValue(String.class));
@@ -175,6 +176,7 @@ public class MainActivity extends BaseActivity {
                     mCardAdapter.addCardItem(new CardBook("test", "test", "test", "test", "test"));
                 mViewPager.setAdapter(mCardAdapter);
 
+                hideProgressDialog();
               }
 
 

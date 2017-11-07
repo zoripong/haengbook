@@ -7,15 +7,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import kr.hs.emirim.uuuuri.haegbook.Layout.CustomViewPager;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.FifthInputFragment;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.FirstInputFragment;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.FourthInputFragment;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.SecondInputFragment;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.ThirdInputFragment;
+import kr.hs.emirim.uuuuri.haegbook.Layout.CustomViewPager;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 public class AddScheduleActivity extends AppCompatActivity {
@@ -47,8 +47,8 @@ public class AddScheduleActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setPagingEnabled(false);
 
-        final Button nextBtn = (Button) findViewById(R.id.next_btn);
-        final Button previousBtn = (Button) findViewById(R.id.previous_btn);
+        final TextView nextBtn = (TextView) findViewById(R.id.next_btn);
+        final TextView previousBtn = (TextView) findViewById(R.id.previous_btn);
         previousBtn.setVisibility(View.INVISIBLE);
 
         nextBtn.setOnClickListener(new View.OnClickListener() {

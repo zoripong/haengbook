@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="kr.hs.emirim.uuuuri.haegbook.Activity.TravelDetailActivity$PlaceholderFragment">
+    tools:context="kr.hs.emirim.uuuuri.haegbook.Activity.TravelDetailActivity">
 
     <TextView
         android:id="@+id/section_label"

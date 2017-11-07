@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -7,38 +8,44 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+        <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="3dp">
-
-            <Button
+            app:scale_base_height="1020"
+            app:scale_base_width="720">
+            <TextView
                 android:id="@+id/previous_btn"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="PREVIOUS"
-                android:textSize="12sp"/>
+                android:layout_gravity="bottom"
+                android:gravity="right"
+                android:text="BACK"
+                android:textColor="#FFF"
+                app:scale_height="90"
+                app:scale_left="62"
+                app:scale_textsize="30"
+                app:scale_width="110" />
 
-            <Button
+            <TextView
                 android:id="@+id/next_btn"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="NEXT"
-                android:textSize="12sp" />
-        </LinearLayout>
-    </FrameLayout>
+                android:layout_gravity="bottom"
+                android:text="NEXT >"
+                android:textColor="#FFF"
+                app:scale_height="90"
+                app:scale_left="548"
+                app:scale_textsize="30"
+                app:scale_width="110" />
+        </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
+
 
     <kr.hs.emirim.uuuuri.haegbook.Layout.CustomViewPager
         android:id="@+id/container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
-
-    <!--버튼-->
-
+    </FrameLayout>
 
 
 </LinearLayout>

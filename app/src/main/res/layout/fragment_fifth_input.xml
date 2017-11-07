@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/add_schedule_background">
 
-    <kr.hs.emirim.uuuuri.haegbook.ScalableLayout
+    <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:scale_base_height="1020"
@@ -73,7 +73,7 @@
             app:scale_width="270"
             android:thumb="@drawable/seekbar_thumb"
             android:progressDrawable="@drawable/seekbar_custom"
-             />
+            />
 
         <TextView
             android:layout_width="wrap_content"
@@ -236,29 +236,6 @@
             app:scale_width="55"
             android:gravity="center"/>
 
-        <TextView
-            android:id="@+id/back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:gravity="right"
-            android:text="BACK"
-            android:textColor="#FFF"
-            app:scale_height="90"
-            app:scale_left="62"
-            app:scale_textsize="30"
-            app:scale_width="110" />
 
-        <TextView
-            android:id="@+id/next_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:text="NEXT >"
-            android:textColor="#FFF"
-            app:scale_height="90"
-            app:scale_left="548"
-            app:scale_textsize="30"
-            app:scale_width="110" />
-    </kr.hs.emirim.uuuuri.haegbook.ScalableLayout>
+    </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
 </LinearLayout>

@@ -1,11 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/add_schedule_background">
 
-    <TextView
-        android:text="second input"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <kr.hs.emirim.uuuuri.haegbook.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_height="1020"
+        app:scale_base_width="720">
+        <ProgressBar
+            android:id="@+id/horizontal_progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:theme="@style/AppTheme.WhiteAccent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="20"
+            app:scale_height="30"
+            app:scale_left="24"
+            app:scale_top="25"
+            app:scale_width="674"
+            android:gravity="center"
+            android:progressBackgroundTint="#FFF" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/calendar"
+            app:scale_height="97"
+            app:scale_left="300"
+            app:scale_top="240"
+            app:scale_width="121" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_left="55"
+            app:scale_textsize="25"
+            app:scale_top="370"
+            app:scale_width="610"
+            app:scale_height="30"
+            android:textStyle="bold"
+            android:text="여행의 시작은 언제인가요?"
+            android:gravity="center"
+            android:textColor="#FFF"
+            />
+
+        <TextView
+            android:id="@+id/start_date_tv"
+            style="@android:style/Widget.EditText"
+            android:theme="@style/MyEditTextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_height="80"
+            app:scale_left="204"
+            app:scale_textsize="30"
+            app:scale_top="535"
+            app:scale_width="247"
+            android:text="2001 . 00 . 00"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+             />
+
+        <ImageView
+            android:id="@+id/start_date_choose_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/choose"
+            app:scale_height="47"
+            app:scale_left="469"
+            app:scale_top="550"
+            app:scale_width="47" />
+
+        <TextView
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_height="90"
+            app:scale_left="62"
+            app:scale_textsize="30"
+            app:scale_width="110"
+            android:layout_gravity="bottom"
+            android:text="BACK"
+            android:gravity="right"
+            android:textColor="#FFF"/>
+
+        <TextView
+            android:id="@+id/next_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_height="90"
+            app:scale_left="548"
+            app:scale_textsize="30"
+            app:scale_width="110"
+            android:layout_gravity="bottom"
+            android:text="NEXT >"
+            android:textColor="#FFF"/>
+    </kr.hs.emirim.uuuuri.haegbook.ScalableLayout>
 </LinearLayout>

@@ -1,11 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/add_schedule_background">
 
-    <TextView
-        android:text="fourth input"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <kr.hs.emirim.uuuuri.haegbook.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_height="1020"
+        app:scale_base_width="720">
+        <ProgressBar
+            android:id="@+id/horizontal_progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:theme="@style/AppTheme.WhiteAccent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="60"
+            app:scale_height="30"
+            app:scale_left="24"
+            app:scale_top="25"
+            app:scale_width="674"
+            android:gravity="center"
+            android:progressBackgroundTint="#FFF" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/money"
+            app:scale_height="129"
+            app:scale_left="300"
+            app:scale_top="208"
+            app:scale_width="136" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_left="55"
+            app:scale_textsize="25"
+            app:scale_top="370"
+            app:scale_width="610"
+            app:scale_height="30"
+            android:textStyle="bold"
+            android:text="얼마를 사용하실건가요?"
+            android:gravity="center"
+            android:textColor="#FFF"
+            />
+        <Spinner
+            android:id="@+id/before_country_sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_height="47"
+            app:scale_left="101"
+            app:scale_textsize="30"
+            app:scale_top="555"
+            app:scale_width="187"
+            android:background="@drawable/dropdown_icon">
+        </Spinner>
+        <EditText
+            android:id="@+id/before_money_et"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:textColor="#FFFFFF"
+            android:theme="@style/MyEditTextTheme"
+            app:scale_left="288"
+            app:scale_textsize="30"
+            app:scale_top="535"
+            app:scale_width="247" />
+
+        <TextView
+            android:id="@+id/before_money_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_height="47"
+            app:scale_left="535"
+            app:scale_top="555"
+            app:scale_width="47"
+            app:scale_textsize="47"
+            android:textColor="#FFF"
+            android:gravity="center"
+            android:text="₩"/>
+
+        <Spinner
+            android:id="@+id/after_country_sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_height="47"
+            app:scale_left="101"
+            app:scale_textsize="30"
+            app:scale_top="655"
+            app:scale_width="187"
+            android:background="@drawable/dropdown_icon">
+        </Spinner>
+        <EditText
+            android:id="@+id/after_money_et"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:textColor="#FFFFFF"
+            android:theme="@style/MyEditTextTheme"
+            app:scale_left="288"
+            app:scale_textsize="30"
+            app:scale_top="635"
+            app:scale_width="247" />
+
+        <TextView
+            android:id="@+id/after_money_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_height="47"
+            app:scale_left="535"
+            app:scale_top="655"
+            app:scale_width="47"
+            app:scale_textsize="47"
+            android:textColor="#FFF"
+            android:gravity="center"
+            android:text="¥"/>
+        <TextView
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_height="90"
+            app:scale_left="62"
+            app:scale_textsize="30"
+            app:scale_width="110"
+            android:layout_gravity="bottom"
+            android:text="BACK"
+            android:gravity="right"
+            android:textColor="#FFF"/>
+
+        <TextView
+            android:id="@+id/next_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_height="90"
+            app:scale_left="548"
+            app:scale_textsize="30"
+            app:scale_width="110"
+            android:layout_gravity="bottom"
+            android:text="NEXT >"
+            android:textColor="#FFF"/>
+    </kr.hs.emirim.uuuuri.haegbook.ScalableLayout>
 </LinearLayout>

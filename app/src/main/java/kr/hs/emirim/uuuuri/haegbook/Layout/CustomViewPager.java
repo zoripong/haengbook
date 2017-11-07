@@ -1,4 +1,4 @@
-package kr.hs.emirim.uuuuri.haegbook.Adapter;
+package kr.hs.emirim.uuuuri.haegbook.Layout;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;

@@ -13,14 +13,16 @@
             android:orientation="horizontal"
             android:padding="3dp">
 
-            <Button android:id="@+id/previous_btn"
+            <Button
+                android:id="@+id/previous_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="PREVIOUS"
                 android:textSize="12sp"/>
 
-            <Button android:id="@+id/next_btn"
+            <Button
+                android:id="@+id/next_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -29,11 +31,13 @@
         </LinearLayout>
     </FrameLayout>
 
-    <kr.hs.emirim.uuuuri.haegbook.Adapter.CustomViewPager
+    <kr.hs.emirim.uuuuri.haegbook.Layout.CustomViewPager
         android:id="@+id/container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
+
+    <!--버튼-->
 
 
 

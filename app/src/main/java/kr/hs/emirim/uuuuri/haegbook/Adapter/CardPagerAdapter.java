@@ -124,13 +124,13 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
         locationTextView.setText(item.getLocation());
 
         Log.e(TAG, "<Before> width : "+ cardView.getWidth() +" / height : " + cardView.getHeight());
-        Log.e(TAG, "url : " + item.getUrl());
+        Log.e(TAG, "url : " + item.getImage());
 
         cardView.setPreventCornerOverlap(false);
 
 
         Glide.with(mNowActivity.getApplicationContext())
-                .load(item.getUrl())
+                .load(item.getImage())
                 .fitCenter()
                 .placeholder(R.drawable.loading)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

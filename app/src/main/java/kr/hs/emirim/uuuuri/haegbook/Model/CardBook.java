@@ -9,20 +9,20 @@ public class CardBook {
     String location;
     String title;
     String bookCode;
-    String url;
-    public CardBook(String period, String location, String title, String url) {
+    String image;
+    public CardBook(String period, String location, String title, String image) {
         this.period = period;
         this.location = location;
         this.title = title;
-        this.url = url;
+        this.image = image;
     }
 
-    public CardBook(String period, String location, String title, String bookCode, String url) {
+    public CardBook(String period, String location, String title, String bookCode, String image) {
         this.period = period;
         this.location = location;
         this.title = title;
         this.bookCode = bookCode;
-        this.url = url;
+        this.image = image;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class CardBook {
                 ", location='" + location + '\'' +
                 ", title='" + title + '\'' +
                 ", bookCode='" + bookCode + '\'' +
-                ", url='" + url + '\'' +
+                ", image='" + image + '\'' +
                 '}';
     }
 
@@ -68,11 +68,11 @@ public class CardBook {
         this.bookCode = bookCode;
     }
 
-    public String getUrl() {
-        return url;
+    public String getImage() {
+        return image;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setImage(String image) {
+        this.image = image;
     }
 }

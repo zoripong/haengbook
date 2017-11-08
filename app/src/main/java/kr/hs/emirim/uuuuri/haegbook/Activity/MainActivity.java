@@ -52,7 +52,6 @@ public class MainActivity extends BaseActivity {
         test();
         initialize();
         getDatabaseData();
-        //TODO
         getUserToken();
 
     }
@@ -120,8 +119,11 @@ public class MainActivity extends BaseActivity {
     }
 
     public void getDatabaseData() {
-        String uid = "testuid";
-                showProgressDialog();
+
+        SharedPreferenceManager spm = new SharedPreferenceManager(this);
+
+        String uid = spm.retrieveString(ScheduleTag.USER_TOKEN_TAG);
+        showProgressDialog();
         mUserRefer = mDatabase.getReference("UserInfo/"+uid);
 
         mUserListener = mUserRefer.addValueEventListener(new ValueEventListener() {
@@ -162,13 +164,13 @@ public class MainActivity extends BaseActivity {
                     String bookCode = bookCodeSnapShot.getKey().toString(); // key
                     if(mCardBookAddress.contains(bookCode)){
 
-                        String location = bookCodeSnapShot.child("Registration").child("Location").getValue(String.class);
-                        String period = bookCodeSnapShot.child("Registration").child("Period").getValue(String.class);
-                        String title = bookCodeSnapShot.child("Registration").child("Title").getValue(String.class);
+                        String location = bookCodeSnapShot.child("Registration").child("location").getValue(String.class);
+                        String period = bookCodeSnapShot.child("Registration").child("period").getValue(String.class);
+                        String title = bookCodeSnapShot.child("Registration").child("title").getValue(String.class);
 
                         if(Boolean.parseBoolean(bookCodeSnapShot.child("isShowing").getValue().toString())){
                             // isShowing == true
-                            String image = bookCodeSnapShot.child("Registration").child("Image").getValue(String.class);
+                            String image = bookCodeSnapShot.child("Registration").child("image").getValue(String.class);
                             //(String period, String location, String title, String bookCode, String url)
                             // param
                             mCardBooks.add(new CardBook(period, location, title, bookCode, image));

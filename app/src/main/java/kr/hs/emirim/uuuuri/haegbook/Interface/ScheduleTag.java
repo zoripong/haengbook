@@ -13,5 +13,6 @@ public interface ScheduleTag {
     String END_DATE_TAG = "END DATE";
     String KOR_MONEY_TAG = "KOREAN MONEY";
     String FOREIGN_MONEY_TAG = "FOREIGN MONEY";
+    String USER_TOKEN_TAG = "USER TOKEN";
 
 }

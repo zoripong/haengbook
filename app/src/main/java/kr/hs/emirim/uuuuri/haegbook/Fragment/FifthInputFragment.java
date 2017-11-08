@@ -7,8 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,6 +38,7 @@ public class FifthInputFragment extends Fragment{
     private String mCardBookLocation;
     private String mCardBookStartDate;
     private String mCardBookEndDate;
+    private String mUserToken;
 
     //  private Float mCardBookKorMoney;
     //  private Float mCardBookForeignMoney;
@@ -59,15 +63,17 @@ public class FifthInputFragment extends Fragment{
         mCardBookLocation = spm.retrieveString(ScheduleTag.LOCATION_TAG);
         mCardBookStartDate = spm.retrieveString(ScheduleTag.START_DATE_TAG);
         mCardBookEndDate = spm.retrieveString(ScheduleTag.END_DATE_TAG);
+        mUserToken=spm.retrieveString(ScheduleTag.USER_TOKEN_TAG);
+
         //  mCardBookKorMoney = spm.retrieveFloat(ScheduleTag.KOR_MONEY_TAG);
         //  mCardBookForeignMoney = spm.retrieveFloat(ScheduleTag.FOREIGN_MONEY_TAG);
     }
 
     public boolean saveData(){
-        // TODO: 2017-11-05 firebase save
+        //카드 업데이트
         mDatabase = FirebaseDatabase.getInstance();
         DatabaseReference ref = mDatabase.getReference("BookInfo");
-        String postKey=ref.push().getKey();
+        final String postKey=ref.push().getKey();
         DatabaseReference cardRef = ref.child(postKey);
 
         Map<String, CardBook> cardBooks = new HashMap<String, CardBook>();
@@ -79,10 +85,34 @@ public class FifthInputFragment extends Fragment{
         cardRef.setValue(cardBooks);
         cardRef.updateChildren(showing);
 
+        //uid에 카드 업데이트
+
+        final DatabaseReference tokenRef = mDatabase.getReference("UserInfo/"+mUserToken);
+
+        tokenRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            long keyIndex;
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                keyIndex = dataSnapshot.getChildrenCount();
+                Log.e("아이들 갯수", String.valueOf(keyIndex));
+                Map<String, Object> haveCardBookUpdates = new HashMap<String, Object>();
+                Log.e("카드 인덱스", String.valueOf(keyIndex+1));
+                haveCardBookUpdates.put(String.valueOf(keyIndex+1), postKey);
+                tokenRef.updateChildren(haveCardBookUpdates);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+
+
+
         SharedPreferenceManager spm = new SharedPreferenceManager(getActivity());
         spm.resetData();
         return true;
     }
+
     public boolean checkIsShowing() {
 
         try{

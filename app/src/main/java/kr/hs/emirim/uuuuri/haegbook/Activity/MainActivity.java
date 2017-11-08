@@ -18,8 +18,11 @@ import java.util.Iterator;
 
 import kr.hs.emirim.uuuuri.haegbook.Adapter.CardPagerAdapter;
 import kr.hs.emirim.uuuuri.haegbook.Adapter.ShadowTransformer;
+import kr.hs.emirim.uuuuri.haegbook.Adapter.SharedPreferenceManager;
+import kr.hs.emirim.uuuuri.haegbook.Interface.ScheduleTag;
 import kr.hs.emirim.uuuuri.haegbook.Model.CardBook;
 import kr.hs.emirim.uuuuri.haegbook.R;
+import kr.hs.emirim.uuuuri.haegbook.fcm.FirebaseInstanceIDService;
 
 public class MainActivity extends BaseActivity {
     private final String TAG = "MainActivity";
@@ -49,7 +52,14 @@ public class MainActivity extends BaseActivity {
         test();
         initialize();
         getDatabaseData();
+        //TODO
+        getUserToken();
 
+    }
+    private void getUserToken(){
+        FirebaseInstanceIDService tokenService = new FirebaseInstanceIDService();
+        SharedPreferenceManager spm = new SharedPreferenceManager(this);
+        spm.save(ScheduleTag.USER_TOKEN_TAG, tokenService.sendRegistrationToServer());
     }
 
     private void initialize() {

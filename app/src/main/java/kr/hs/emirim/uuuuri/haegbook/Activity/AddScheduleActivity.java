@@ -38,8 +38,12 @@ public class AddScheduleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_schedule);
 
+
         initialize();
     }
+
+
+
 
     private void initialize(){
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());

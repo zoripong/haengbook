@@ -11,6 +11,7 @@ public class Receipt {
     private int type;
     private String memo;
 
+    public Receipt(){}
     public Receipt(String date, String title, int amount, int type, String memo) {
         this.date = date;
         this.title = title;
@@ -57,5 +58,16 @@ public class Receipt {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    @Override
+    public String toString() {
+        return "Receipt{" +
+                "date='" + date + '\'' +
+                ", title='" + title + '\'' +
+                ", amount=" + amount +
+                ", type=" + type +
+                ", memo='" + memo + '\'' +
+                '}';
     }
 }

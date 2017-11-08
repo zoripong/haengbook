@@ -29,6 +29,8 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
     private ViewPager mViewPager;
     private int mPosition = PHOTO; // DEFAULT PAGE
 
+    private String mBookCode;
+
     FloatingActionButton fab;
 
     @Override
@@ -37,8 +39,8 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
         setContentView(R.layout.activity_travel_detail);
 
         Intent intent = getIntent();
-        String code = intent.getStringExtra("BOOK_CODE");
-        Toast.makeText(getApplicationContext(), code, Toast.LENGTH_SHORT).show();
+        mBookCode = intent.getStringExtra("BOOK_CODE");
+        Toast.makeText(getApplicationContext(), mBookCode, Toast.LENGTH_SHORT).show();
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -135,9 +137,13 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
         public Fragment getItem(int position) {
             switch (position){
                 case PHOTO:
-                    return new PhotoFragment();
+                    PhotoFragment photoFragment = new PhotoFragment();
+                    photoFragment.setBookCode(mBookCode);
+                    return  photoFragment;
                 case RECEIPT:
-                    return new ReceiptFragment();
+                    ReceiptFragment receiptFragment = new ReceiptFragment();
+                    receiptFragment.setBookCode(mBookCode);
+                    return receiptFragment;
                 default:
                     return null;
             }

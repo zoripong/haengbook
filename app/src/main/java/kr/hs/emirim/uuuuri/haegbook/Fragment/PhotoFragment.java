@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 public class PhotoFragment extends Fragment {
+    private String mBookCode;
+
     public PhotoFragment() {
     }
 
@@ -17,6 +19,10 @@ public class PhotoFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_photo, container, false);
         return rootView;
+    }
+
+    public void setBookCode(String bookCode){
+        mBookCode = bookCode;
     }
 
 }

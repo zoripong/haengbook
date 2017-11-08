@@ -3,13 +3,21 @@ package kr.hs.emirim.uuuuri.haegbook.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import kr.hs.emirim.uuuuri.haegbook.Adapter.ReceiptRecyclerSetter;
 import kr.hs.emirim.uuuuri.haegbook.Interface.ReceiptType;
@@ -21,12 +29,19 @@ import kr.hs.emirim.uuuuri.haegbook.R;
  */
 
 public class ReceiptFragment extends Fragment implements ReceiptType{
+    private final String TAG = "ReceiptFragment";
+    private String mBookCode;
 
-    private ArrayList<Receipt> testList;
     private RecyclerView recyclerView;
     private ReceiptRecyclerSetter receiptRecyclerSetter;
-    public ReceiptFragment() {
-    }
+
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mReceiptRefer;
+    private ValueEventListener mReceiptListener;
+
+    ArrayList<Receipt> receipts;
+
+    public ReceiptFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,8 +50,8 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
         recyclerView = rootView.findViewById(R.id.recyclerview);
         receiptRecyclerSetter = new ReceiptRecyclerSetter(getContext(), getActivity().getParent());
 
-        test();
-
+        getDatabase();
+        
         Button receiptButton = rootView.findViewById(R.id.add_receipt_btn);
         receiptButton.setOnClickListener(new View.OnClickListener(){
 
@@ -50,20 +65,44 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
         return rootView;
     }
 
-    private void test() {
-        testList = new ArrayList<>();
+    public void getDatabase() {
+        mDatabase = FirebaseDatabase.getInstance();
+        mReceiptRefer = mDatabase.getReference("BookInfo/"+mBookCode+"/Content/Receipt");
+        Log.e(TAG, "GetDatabase : "+mBookCode);
 
-        /*
-            0 - 식비
-         */
-        //(String date, String title, int amount, int type, String memo)
-        testList.add(new Receipt("2017.11.08", "엉터리 생고기", 9800, FOOD, "생각보다 질이 떨어진듯"));
-        testList.add(new Receipt("2017.11.08", "쇼핑", 12800, SHOPPING, "아디다스 져지"));
-        testList.add(new Receipt("2017.11.08", "밍밍", 9800, CULTURE, "뮤지컬"));
+        receipts = new ArrayList<Receipt>();
+
+        mReceiptListener = mReceiptRefer.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                receipts.clear();
+                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+                while (iterator.hasNext()){
+                    receipts.add(iterator.next().getValue(Receipt.class));
+                }
+
+                Log.e(TAG, receipts.toString());
+                receiptRecyclerSetter.setRecyclerCardView(recyclerView, receipts);
 
 
-        receiptRecyclerSetter.setRecyclerCardView(recyclerView, testList);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void setBookCode(String bookCode){
+        mBookCode = bookCode;
     }
 
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(mReceiptListener != null)
+            mReceiptRefer.removeEventListener(mReceiptListener);
+    }
 }

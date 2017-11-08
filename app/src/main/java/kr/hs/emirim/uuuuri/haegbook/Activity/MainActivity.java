@@ -31,8 +31,8 @@ public class MainActivity extends BaseActivity {
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference mUserRefer;
-    private DatabaseReference mCardBookRefer;
     private ValueEventListener mUserListener;
+    private DatabaseReference mCardBookRefer;
     private ValueEventListener mCardBookListener;
 
     private ArrayList<String> mCardBookAddress;
@@ -50,7 +50,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         initialize();
-        getDatabaseData();
+        getDatabase();
         getUserToken();
 
     }
@@ -145,7 +145,7 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    public void getDatabaseData() {
+    public void getDatabase() {
 
         SharedPreferenceManager spm = new SharedPreferenceManager(this);
 

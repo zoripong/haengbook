@@ -29,6 +29,8 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
     private ViewPager mViewPager;
     private int mPosition = PHOTO; // DEFAULT PAGE
 
+    FloatingActionButton fab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +40,7 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
         String code = intent.getStringExtra("BOOK_CODE");
         Toast.makeText(getApplicationContext(), code, Toast.LENGTH_SHORT).show();
 
+        fab = (FloatingActionButton) findViewById(R.id.fab);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -48,11 +51,26 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+
         tabLayout.setupWithViewPager(mViewPager);
+
+        if(tabLayout.getSelectedTabPosition() == PHOTO)
+            fab.show();
+        else
+            fab.hide();
+
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
             @Override
             public void onTabSelected(TabLayout.Tab tab){
                 mPosition = tab.getPosition();
+                switch (mPosition){
+                    case PHOTO:
+                        fab.show();
+                        break;
+                    case RECEIPT:
+                        fab.hide();
+                        break;
+                }
             }
 
             @Override
@@ -66,7 +84,7 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,17 +93,13 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
                 switch (mPosition){
                     case PHOTO:
                         intent = new Intent(TravelDetailActivity.this, AddPhotoActivity.class);
-                        break;
-                    case RECEIPT:
-                        intent = new Intent(TravelDetailActivity.this, AddReceiptActivity.class);
+                        startActivity(intent);
+                        finish();
                         break;
                     default:
-                        intent = null;
                         break;
                 }
 
-                startActivity(intent);
-                finish();
             }
         });
 

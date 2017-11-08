@@ -1,5 +1,6 @@
 package kr.hs.emirim.uuuuri.haegbook.Activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -68,15 +69,43 @@ public class MainActivity extends BaseActivity {
         mCardBooks = new ArrayList<>();
         mReserveBooks = new ArrayList<>();
 
+
         findViewById(R.id.add_schedule_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,
-                        AddScheduleActivity.class);
-                startActivity(intent);
+                final Dialog selectDialog = new Dialog(MainActivity.this, R.style.MyDialog);
+                selectDialog.setContentView(R.layout.dialog_select);
+                selectDialog.show();
+                selectDialog.findViewById(R.id.add_code_btn).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final Dialog inputDialog = new Dialog(MainActivity.this, R.style.MyDialog);
+                        inputDialog.setContentView(R.layout.dialog_code_input);
+                        selectDialog.hide();
+                        inputDialog.show();
+                        selectDialog.dismiss();
+
+                        inputDialog.findViewById(R.id.add_btn).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                inputDialog.hide();
+                                inputDialog.dismiss();
+                            }
+                        });
+
+                    }
+                });
+
+                selectDialog.findViewById(R.id.add_basic_btn).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(MainActivity.this, AddScheduleActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
             }
         });
-
 
         mViewPager = findViewById(R.id.viewPager);
         mCardAdapter = new CardPagerAdapter(this);

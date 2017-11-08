@@ -9,24 +9,10 @@
     <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:scale_base_height="1020"
+        android:layout_gravity="top"
+        app:scale_base_height="850"
         app:scale_base_width="720">
 
-        <ProgressBar
-            android:id="@+id/horizontal_progress_bar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:indeterminate="false"
-            android:max="100"
-            android:progress="80"
-            android:progressBackgroundTint="#FFF"
-            android:theme="@style/AppTheme.WhiteAccent"
-            app:scale_height="30"
-            app:scale_left="24"
-            app:scale_top="25"
-            app:scale_width="674" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -58,34 +44,45 @@
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             app:scale_height="80"
-            app:scale_left="75"
-            app:scale_textsize="32"
+            app:scale_left="65"
+            app:scale_textsize="27"
             app:scale_top="455"
-            app:scale_width="150"/>
+            app:scale_width="150" />
 
         <SeekBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:progress="20"
+            android:progress="0"
+            android:progressDrawable="@drawable/seekbar_custom"
+            android:thumb="@drawable/seekbar_thumb"
             app:scale_height="47"
             app:scale_left="225"
             app:scale_top="470"
-            app:scale_width="270"
-            android:thumb="@drawable/seekbar_thumb"
-            android:progressDrawable="@drawable/seekbar_custom"
-            />
+            app:scale_width="270" />
 
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#FFF"
+            app:scale_height="60"
+            app:scale_left="470"
+            app:scale_textsize="29"
+            app:scale_top="465"
+            app:scale_width="70"
+            android:background="@null"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="20%"
+            android:gravity="left|center"
+            android:text="%"
             android:textColor="#FFF"
             app:scale_height="47"
-            app:scale_left="500"
-            app:scale_textsize="27"
-            app:scale_top="470"
-            app:scale_width="55"
-            android:gravity="center"/>
+            app:scale_left="530"
+            app:scale_textsize="29"
+            app:scale_top="472"
+            app:scale_width="55" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -95,35 +92,33 @@
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             app:scale_height="80"
-            app:scale_left="75"
-            app:scale_textsize="32"
+            app:scale_left="65"
+            app:scale_textsize="27"
             app:scale_top="525"
             app:scale_width="150" />
 
         <SeekBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:progress="20"
+            android:progress="0"
+            android:progressDrawable="@drawable/seekbar_custom"
+            android:thumb="@drawable/seekbar_thumb"
             app:scale_height="47"
             app:scale_left="225"
             app:scale_top="540"
-            app:scale_width="270"
-            android:thumb="@drawable/seekbar_thumb"
-            android:progressDrawable="@drawable/seekbar_custom"
-            />
+            app:scale_width="270" />
 
         <TextView
-            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="20%"
+            android:gravity="left|center"
+            android:text="%"
             android:textColor="#FFF"
             app:scale_height="47"
-            app:scale_left="500"
-            app:scale_textsize="27"
+            app:scale_left="530"
+            app:scale_textsize="29"
             app:scale_top="540"
-            app:scale_width="55"
-            android:gravity="center"/>
+            app:scale_width="55" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -133,34 +128,45 @@
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             app:scale_height="80"
-            app:scale_left="75"
-            app:scale_textsize="32"
+            app:scale_left="65"
+            app:scale_textsize="27"
             app:scale_top="595"
             app:scale_width="150" />
 
         <SeekBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:progress="20"
+            android:progress="0"
+            android:progressDrawable="@drawable/seekbar_custom"
+            android:thumb="@drawable/seekbar_thumb"
             app:scale_height="47"
             app:scale_left="225"
             app:scale_top="610"
-            app:scale_width="270"
-            android:thumb="@drawable/seekbar_thumb"
-            android:progressDrawable="@drawable/seekbar_custom"
-            />
+            app:scale_width="270" />
 
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#FFF"
+            app:scale_height="60"
+            app:scale_left="470"
+            app:scale_textsize="29"
+            app:scale_top="605"
+            app:scale_width="70"
+            android:background="@null"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="20%"
+            android:gravity="left|center"
+            android:text="%"
             android:textColor="#FFF"
             app:scale_height="47"
-            app:scale_left="500"
-            app:scale_textsize="27"
+            app:scale_left="530"
+            app:scale_textsize="29"
             app:scale_top="610"
-            app:scale_width="55"
-            android:gravity="center"/>
+            app:scale_width="55" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -170,34 +176,45 @@
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             app:scale_height="80"
-            app:scale_left="75"
-            app:scale_textsize="32"
+            app:scale_left="65"
+            app:scale_textsize="27"
             app:scale_top="665"
             app:scale_width="150" />
 
         <SeekBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:progress="20"
+            android:progress="0"
+            android:progressDrawable="@drawable/seekbar_custom"
+            android:thumb="@drawable/seekbar_thumb"
             app:scale_height="47"
             app:scale_left="225"
             app:scale_top="680"
-            app:scale_width="270"
-            android:thumb="@drawable/seekbar_thumb"
-            android:progressDrawable="@drawable/seekbar_custom"
-            />
+            app:scale_width="270" />
 
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#FFF"
+            app:scale_height="60"
+            app:scale_left="470"
+            app:scale_textsize="29"
+            app:scale_top="675"
+            app:scale_width="70"
+            android:background="@null"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="20%"
+            android:gravity="left|center"
+            android:text="%"
             android:textColor="#FFF"
             app:scale_height="47"
-            app:scale_left="500"
-            app:scale_textsize="27"
+            app:scale_left="530"
+            app:scale_textsize="29"
             app:scale_top="680"
-            app:scale_width="55"
-            android:gravity="center"/>
+            app:scale_width="55" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -207,34 +224,59 @@
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             app:scale_height="80"
-            app:scale_left="75"
-            app:scale_textsize="32"
+            app:scale_left="65"
+            app:scale_textsize="27"
             app:scale_top="735"
             app:scale_width="150" />
 
         <SeekBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:progress="50"
+            android:progress="0"
+            android:progressDrawable="@drawable/seekbar_custom"
+            android:thumb="@drawable/seekbar_thumb"
             app:scale_height="47"
             app:scale_left="225"
             app:scale_top="750"
-            app:scale_width="270"
-            android:thumb="@drawable/seekbar_thumb"
-            android:progressDrawable="@drawable/seekbar_custom"
-            />
+            app:scale_width="270" />
 
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#FFF"
+            app:scale_height="60"
+            app:scale_left="470"
+            app:scale_textsize="29"
+            app:scale_top="745"
+            app:scale_width="70"
+            android:background="@null"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="20%"
+            android:gravity="left|center"
+            android:text="%"
             android:textColor="#FFF"
             app:scale_height="47"
-            app:scale_left="500"
-            app:scale_textsize="27"
+            app:scale_left="530"
+            app:scale_textsize="29"
             app:scale_top="750"
-            app:scale_width="55"
-            android:gravity="center"/>
+            app:scale_width="55" />
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#FFF"
+            app:scale_height="60"
+            app:scale_left="470"
+            app:scale_textsize="29"
+            app:scale_top="535"
+            app:scale_width="70" />
 
 
     </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>

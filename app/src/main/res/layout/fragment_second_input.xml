@@ -9,23 +9,9 @@
     <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:scale_base_height="1020"
+        android:layout_gravity="top"
+        app:scale_base_height="850"
         app:scale_base_width="720">
-        <ProgressBar
-            android:id="@+id/horizontal_progress_bar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:theme="@style/AppTheme.WhiteAccent"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:indeterminate="false"
-            android:max="100"
-            android:progress="20"
-            app:scale_height="30"
-            app:scale_left="24"
-            app:scale_top="25"
-            app:scale_width="674"
-            android:gravity="center"
-            android:progressBackgroundTint="#FFF" />
 
         <ImageView
             android:layout_width="wrap_content"

@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import kr.hs.emirim.uuuuri.haegbook.R;
 
@@ -13,13 +15,28 @@ import kr.hs.emirim.uuuuri.haegbook.R;
  */
 
 public class ReceiptFragment extends Fragment {
+
     public ReceiptFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_photo, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_receipt, container, false);
+
+        Button receiptButton = rootView.findViewById(R.id.add_receipt_btn);
+        receiptButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "영수증 추가 다이얼로그", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
         return rootView;
     }
+
+
+
 }

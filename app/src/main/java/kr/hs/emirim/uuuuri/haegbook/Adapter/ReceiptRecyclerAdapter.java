@@ -24,9 +24,10 @@ public class ReceiptRecyclerAdapter extends RecyclerView.Adapter<ReceiptRecycler
     ArrayList<Receipt> items;
 
 
-    public ReceiptRecyclerAdapter(Context context, Activity nowActivity){
+    public ReceiptRecyclerAdapter(Context context, Activity nowActivity, ArrayList<Receipt> items){
         this.context = context;
         this.nowActivity = nowActivity;
+        this.items = items;
     }
 
     @Override
@@ -39,8 +40,8 @@ public class ReceiptRecyclerAdapter extends RecyclerView.Adapter<ReceiptRecycler
     public void onBindViewHolder(final ReceiptViewHolder holder, int position) {
         Receipt item = items.get(position);
         holder.titleTv.setText(item.getTitle());
-        holder.amountTv.setText(item.getAmount());
-        holder.typeTv.setText(item.getType());
+        holder.amountTv.setText(String.valueOf(item.getAmount()));
+        holder.typeTv.setText(String.valueOf(item.getType()));
         holder.memoTv.setText(item.getMemo());
     }
 

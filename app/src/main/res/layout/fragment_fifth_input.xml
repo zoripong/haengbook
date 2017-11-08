@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:progress="0"
             android:progressDrawable="@drawable/seekbar_custom"
-            android:thumb="@drawable/seekbar_thumb"
+            android:thumb="@drawable/ic_thumb"
             app:scale_height="47"
             app:scale_left="225"
             app:scale_top="470"
@@ -63,6 +63,7 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@null"
             android:gravity="center"
             android:text="0"
             android:textColor="#FFF"
@@ -70,8 +71,8 @@
             app:scale_left="470"
             app:scale_textsize="29"
             app:scale_top="465"
-            app:scale_width="70"
-            android:background="@null"/>
+            app:scale_width="70" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -102,7 +103,7 @@
             android:layout_height="wrap_content"
             android:progress="0"
             android:progressDrawable="@drawable/seekbar_custom"
-            android:thumb="@drawable/seekbar_thumb"
+            android:thumb="@drawable/ic_thumb"
             app:scale_height="47"
             app:scale_left="225"
             app:scale_top="540"
@@ -138,7 +139,7 @@
             android:layout_height="wrap_content"
             android:progress="0"
             android:progressDrawable="@drawable/seekbar_custom"
-            android:thumb="@drawable/seekbar_thumb"
+            android:thumb="@drawable/ic_thumb"
             app:scale_height="47"
             app:scale_left="225"
             app:scale_top="610"
@@ -147,6 +148,7 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@null"
             android:gravity="center"
             android:text="0"
             android:textColor="#FFF"
@@ -154,8 +156,8 @@
             app:scale_left="470"
             app:scale_textsize="29"
             app:scale_top="605"
-            app:scale_width="70"
-            android:background="@null"/>
+            app:scale_width="70" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -186,7 +188,7 @@
             android:layout_height="wrap_content"
             android:progress="0"
             android:progressDrawable="@drawable/seekbar_custom"
-            android:thumb="@drawable/seekbar_thumb"
+            android:thumb="@drawable/ic_thumb"
             app:scale_height="47"
             app:scale_left="225"
             app:scale_top="680"
@@ -195,6 +197,7 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@null"
             android:gravity="center"
             android:text="0"
             android:textColor="#FFF"
@@ -202,8 +205,8 @@
             app:scale_left="470"
             app:scale_textsize="29"
             app:scale_top="675"
-            app:scale_width="70"
-            android:background="@null"/>
+            app:scale_width="70" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -234,7 +237,7 @@
             android:layout_height="wrap_content"
             android:progress="0"
             android:progressDrawable="@drawable/seekbar_custom"
-            android:thumb="@drawable/seekbar_thumb"
+            android:thumb="@drawable/ic_thumb"
             app:scale_height="47"
             app:scale_left="225"
             app:scale_top="750"
@@ -243,6 +246,7 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@null"
             android:gravity="center"
             android:text="0"
             android:textColor="#FFF"
@@ -250,8 +254,8 @@
             app:scale_left="470"
             app:scale_textsize="29"
             app:scale_top="745"
-            app:scale_width="70"
-            android:background="@null"/>
+            app:scale_width="70" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

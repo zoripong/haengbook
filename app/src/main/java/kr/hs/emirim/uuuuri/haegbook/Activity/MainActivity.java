@@ -35,7 +35,6 @@ public class MainActivity extends BaseActivity {
     private ValueEventListener mUserListener;
     private ValueEventListener mCardBookListener;
 
-    private ArrayList<CardBook> testSet;
     private ArrayList<String> mCardBookAddress;
     private ArrayList<CardBook> mCardBooks;
     private ArrayList<CardBook> mReserveBooks;
@@ -50,7 +49,6 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        test();
         initialize();
         getDatabaseData();
         getUserToken();
@@ -229,20 +227,6 @@ public class MainActivity extends BaseActivity {
 
         mCardBookRefer.addValueEventListener(mCardBookListener);
 
-
-    }
-    private void test() {
-        testSet = new ArrayList<CardBook>();
-
-        //param : String period, String location, String title, String bookCode
-        testSet.add(new CardBook("2017.11.06 - 2017.11.07", "후쿠오카", "나의 후쿠오카 이야기",
-                "abcdefghijk", "https://lh3.googleusercontent.com/puH2yZeBoBKSjBLIrXNdn9ps8xC2g3Nc20bQOMDWzaXVJ_lLfeTErBfUh1eqD337h8I=h900-rw"));
-        testSet.add(new CardBook("2017.11.05 - 2017.11.09", "도쿄", "나랑 도쿄갈래?", "afghwzs2ijk",
-                "https://lh3.googleusercontent.com/puH2yZeBoBKSjBLIrXNdn9ps8xC2g3Nc20bQOMDWzaXVJ_lLfeTErBfUh1eqD337h8I=h900-rw"));
-        testSet.add(new CardBook("2017.10.01 - 2017.10.09", "샌프란시스코", "샌프란시스코에서 살고 싶다.",
-                "abcdefghijk", "https://lh3.googleusercontent.com/puH2yZeBoBKSjBLIrXNdn9ps8xC2g3Nc20bQOMDWzaXVJ_lLfeTErBfUh1eqD337h8I=h900-rw"));
-        testSet.add(new CardBook("2017.01.08 - 2017.06.10", "유럽", "유럽 배낭 여행기", "abcdefghijk",
-                "https://lh3.googleusercontent.com/puH2yZeBoBKSjBLIrXNdn9ps8xC2g3Nc20bQOMDWzaXVJ_lLfeTErBfUh1eqD337h8I=h900-rw"));
 
     }
 

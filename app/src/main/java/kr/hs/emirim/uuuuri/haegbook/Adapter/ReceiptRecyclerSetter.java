@@ -25,16 +25,17 @@ public class ReceiptRecyclerSetter {
         this.nowActivity = nowActivity;
     }
 
-    public boolean setRecyclerCardView(RecyclerView recyclerView){
+    public boolean setRecyclerCardView(RecyclerView recyclerView, ArrayList<Receipt> receiptArrayList){
 
-        items = new ArrayList<Receipt>();
+//        items = new ArrayList<Receipt>();
+        items = receiptArrayList;
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
 
-        adapter = new ReceiptRecyclerAdapter(context, nowActivity);
+        adapter = new ReceiptRecyclerAdapter(context, nowActivity, items);
         recyclerView.setAdapter(adapter);
         return true;
 

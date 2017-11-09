@@ -1,5 +1,6 @@
 package kr.hs.emirim.uuuuri.haegbook.Activity;
 
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +37,8 @@ public class AddScheduleActivity extends AppCompatActivity {
     private FourthInputFragment fourthInputFragment;
     private FifthInputFragment fifthInputFragment;
 
+    private ProgressBar mProgressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +52,9 @@ public class AddScheduleActivity extends AppCompatActivity {
 
     private void initialize(){
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        mProgressBar = (ProgressBar) findViewById(R.id.horizontal_progress_bar);
+        mProgressBar.setMax(100);
 
         mViewPager = (CustomViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -62,6 +70,8 @@ public class AddScheduleActivity extends AppCompatActivity {
             public void onClick(View view) {
                 switch (mViewPager.getCurrentItem()){
                     case 0:
+                        increaseProgressBar(20);
+
                         if(firstInputFragment.saveData()){
                             // // TODO: 2017-11-05 DEBUG
                             secondInputFragment.getData();
@@ -71,6 +81,8 @@ public class AddScheduleActivity extends AppCompatActivity {
                         }
                         break;
                     case 1:
+                        increaseProgressBar(40);
+
                         if(secondInputFragment.saveData()){
                             thirdInputFragment.getData();
                         }else{
@@ -79,6 +91,7 @@ public class AddScheduleActivity extends AppCompatActivity {
                         }
                         break;
                     case 2:
+                        increaseProgressBar(60);
                         if(thirdInputFragment.saveData()){
                             // // TODO: 2017-11-05 DEBUG
                             fourthInputFragment.getData();
@@ -88,6 +101,7 @@ public class AddScheduleActivity extends AppCompatActivity {
                         }
                         break;
                     case 3:
+                        increaseProgressBar(80);
                         if(fourthInputFragment.saveData()){
                             fifthInputFragment.getData();
                         }else{
@@ -101,6 +115,7 @@ public class AddScheduleActivity extends AppCompatActivity {
                     mViewPager.setCurrentItem(mViewPager.getCurrentItem()+1);
 
                 if(mViewPager.getCurrentItem() == PAGE_COUNT - 1 && isClick){
+                    increaseProgressBar(100);
 
                     fifthInputFragment.saveData();
 
@@ -147,6 +162,12 @@ public class AddScheduleActivity extends AppCompatActivity {
 
     }
 
+    public void increaseProgressBar(int value){
+        ObjectAnimator progressAnimator = ObjectAnimator.ofInt(mProgressBar, "progress", value-20, value);
+        progressAnimator.setDuration(300);
+        progressAnimator.setInterpolator(new LinearInterpolator());
+        progressAnimator.start();
+    }
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -183,4 +204,6 @@ public class AddScheduleActivity extends AppCompatActivity {
         }
 
     }
+
+
 }

@@ -97,6 +97,8 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
                 switch (mPosition){
                     case PHOTO:
                         intent = new Intent(TravelDetailActivity.this, AddPhotoActivity.class);
+                        intent.putExtra("BOOK_CODE", mBookCode);
+                        intent.putExtra("DATE", mPeriod);
                         startActivity(intent);
                         finish();
                         break;
@@ -141,6 +143,7 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
                 case PHOTO:
                     PhotoFragment photoFragment = new PhotoFragment();
                     photoFragment.setBookCode(mBookCode);
+                    photoFragment.setPeriod(mPeriod);
                     return  photoFragment;
                 case RECEIPT:
                     ReceiptFragment receiptFragment = new ReceiptFragment();

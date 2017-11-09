@@ -8,8 +8,12 @@ import android.view.ViewGroup;
 
 import kr.hs.emirim.uuuuri.haegbook.R;
 
+// todo hide animation when recyclerview scroll down
 public class PhotoFragment extends Fragment {
+    private View rootView;
+
     private String mBookCode;
+    private String mPeriod;
 
     public PhotoFragment() {
     }
@@ -17,12 +21,18 @@ public class PhotoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_photo, container, false);
+        rootView = inflater.inflate(R.layout.fragment_photo, container, false);
+
+
         return rootView;
     }
 
     public void setBookCode(String bookCode){
         mBookCode = bookCode;
+    }
+
+    public void setPeriod(String period){
+        mPeriod = period;
     }
 
 }

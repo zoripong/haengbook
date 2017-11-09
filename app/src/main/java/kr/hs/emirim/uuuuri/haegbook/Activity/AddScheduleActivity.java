@@ -19,6 +19,7 @@ import kr.hs.emirim.uuuuri.haegbook.Fragment.ThirdInputFragment;
 import kr.hs.emirim.uuuuri.haegbook.Layout.CustomViewPager;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
+// TODO: 2017-11-09 Progeress Bar
 public class AddScheduleActivity extends AppCompatActivity {
     private final int PAGE_COUNT = 5;
 
@@ -37,7 +38,6 @@ public class AddScheduleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_schedule);
-
 
         initialize();
     }

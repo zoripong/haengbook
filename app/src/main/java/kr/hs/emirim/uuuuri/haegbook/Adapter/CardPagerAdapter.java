@@ -151,6 +151,7 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
             public void onClick(View view) {
                 Intent intent = new Intent(mNowActivity, TravelDetailActivity.class);
                 intent.putExtra("BOOK_CODE", item.getBookCode());
+                intent.putExtra("DATE", item.getPeriod());
                 mNowActivity.startActivity(intent);
             }
         });

@@ -30,6 +30,7 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
     private int mPosition = PHOTO; // DEFAULT PAGE
 
     private String mBookCode;
+    private String mPeriod;
 
     FloatingActionButton fab;
 
@@ -40,6 +41,7 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
 
         Intent intent = getIntent();
         mBookCode = intent.getStringExtra("BOOK_CODE");
+        mPeriod = intent.getStringExtra("DATE");
         Toast.makeText(getApplicationContext(), mBookCode, Toast.LENGTH_SHORT).show();
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -143,6 +145,7 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
                 case RECEIPT:
                     ReceiptFragment receiptFragment = new ReceiptFragment();
                     receiptFragment.setBookCode(mBookCode);
+                    receiptFragment.setPeriod(mPeriod);
                     return receiptFragment;
                 default:
                     return null;

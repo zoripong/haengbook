@@ -48,7 +48,7 @@ public class SecondInputFragment extends Fragment{
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_second_input, container, false);
         mStartDateTv = (TextView) rootView.findViewById(R.id.start_date_tv);
-
+        mStartDateTv.setText(mYear+" . "+String.valueOf(mMonth+1)+" . "+mDay);
         mStartDateChooseBtn = (ImageView) rootView.findViewById(start_date_choose_btn);
         mStartDateChooseBtn.setOnClickListener(new View.OnClickListener() {
             @Override

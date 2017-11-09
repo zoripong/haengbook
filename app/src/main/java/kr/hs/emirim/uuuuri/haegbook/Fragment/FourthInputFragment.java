@@ -256,7 +256,7 @@ public class FourthInputFragment extends Fragment{
                     if(country.contains("일본")){
                         rate[i]=Math.round(1/(sale/100) * 100000000) / 100000000.0;
                     }
-                    if(parsingCountry.equals(country)){
+                    if(country.contains(parsingCountry)){
                         currencyIndex=i;
                     }
 

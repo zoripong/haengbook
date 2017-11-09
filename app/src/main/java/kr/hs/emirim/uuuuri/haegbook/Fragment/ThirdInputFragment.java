@@ -54,6 +54,7 @@ public class ThirdInputFragment extends Fragment{
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_third_input, container, false);
         mEndDateTv = (TextView) rootView.findViewById(R.id.end_date_tv);
+        mEndDateTv.setText(mYear+" . "+String.valueOf(mMonth+1)+" . "+mDay);
 
         mEndDateChooseBtn = (ImageView) rootView.findViewById(end_date_choose_btn);
         mEndDateChooseBtn.setOnClickListener(new View.OnClickListener() {

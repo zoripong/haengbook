@@ -7,12 +7,12 @@ package kr.hs.emirim.uuuuri.haegbook.Model;
 public class Receipt {
     private String date;
     private String title;
-    private int amount;
+    private String amount;
     private int type;
     private String memo;
 
     public Receipt(){}
-    public Receipt(String date, String title, int amount, int type, String memo) {
+    public Receipt(String date, String title, String amount, int type, String memo) {
         this.date = date;
         this.title = title;
         this.amount = amount;
@@ -36,11 +36,11 @@ public class Receipt {
         this.date = date;
     }
 
-    public int getAmount() {
+    public String getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(String amount) {
         this.amount = amount;
     }
 

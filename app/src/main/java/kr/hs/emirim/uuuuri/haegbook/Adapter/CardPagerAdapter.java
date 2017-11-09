@@ -1,6 +1,8 @@
 package kr.hs.emirim.uuuuri.haegbook.Adapter;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.CardView;
@@ -27,6 +29,8 @@ import kr.hs.emirim.uuuuri.haegbook.Activity.TravelDetailActivity;
 import kr.hs.emirim.uuuuri.haegbook.Interface.CardAdapter;
 import kr.hs.emirim.uuuuri.haegbook.Model.CardBook;
 import kr.hs.emirim.uuuuri.haegbook.R;
+
+import static android.content.Context.CLIPBOARD_SERVICE;
 
 public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
     private final String TAG = "CardPagerAdapter";
@@ -159,7 +163,40 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
         sharedImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), item.getBookCode(), Toast.LENGTH_SHORT).show();
+                final String cardBookCode=item.getBookCode();
+                final Dialog mDialog = new Dialog(view.getContext(), R.style.MyDialog);
+                mDialog.setContentView(R.layout.dialog_share);
+                final TextView codeTv=(TextView)mDialog.findViewById(R.id.card_book_code_tv);
+                codeTv.setText(cardBookCode);
+                mDialog.findViewById(R.id.dialog_button_copy).setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view) {
+                        final ClipboardManager clipboardManager =  (ClipboardManager) view.getContext().getSystemService(CLIPBOARD_SERVICE);
+                        clipboardManager.setText(codeTv.getText());
+                        Toast.makeText(view.getContext(), "북코드가 복사되었습니다.", Toast.LENGTH_SHORT).show();
+
+                        mDialog.dismiss();
+
+
+                    }
+                });
+                mDialog.findViewById(R.id.dialog_button_share).setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                        intent.putExtra(Intent.EXTRA_SUBJECT, "제 여행 보실래요?");
+                        intent.putExtra(Intent.EXTRA_TEXT, cardBookCode);
+                        intent.setType("text/plain");
+                        Intent chooser = Intent.createChooser(intent, "친구에게 공유하기");
+                        view.getContext().startActivity(chooser);
+
+
+                        mDialog.dismiss();
+
+                    }
+                });
+
+                mDialog.show();
             }
         });
 

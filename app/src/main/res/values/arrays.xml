@@ -46,4 +46,46 @@
         <item >헝가리</item>
         <item >폴란드</item>
     </string-array>
+
+    <string-array name="receiptType">
+        <item >음식</item>
+        <item >교통</item>
+        <item >쇼핑</item>
+        <item >기념품</item>
+        <item >문화</item>
+        <item >기타</item>
+    </string-array>
+
+    <string-array name="currencySymbol">
+        <item ><string name="ko">\uFFE6</string></item>
+        <item >$</item>
+        <item >€</item>
+        <item >¥</item>
+        <item >£</item>
+        <item >ر.ع.</item>
+        <item >₣</item>
+        <item >kr</item>
+        <item >Kč</item>
+        <item >₮</item>
+        <item >₪</item>
+        <item >د.ا</item>
+        <item >د.إ</item>
+        <item >ب.د</item>
+        <item >د.ك</item>
+        <item >ر.س</item>
+        <item >฿</item>
+        <item >RM</item>
+        <item >Rp</item>
+        <item >ر.ق</item>
+        <item >〒</item>
+        <item >₨</item>
+        <item >৳</item>
+        <item >₱</item>
+        <item >R$</item>
+        <item >₫</item>
+        <item >R</item>
+        <item >р.</item>
+        <item >Ft</item>
+        <item >zł</item>
+    </string-array>
 </resources>

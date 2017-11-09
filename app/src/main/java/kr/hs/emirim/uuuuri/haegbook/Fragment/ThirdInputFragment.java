@@ -36,8 +36,6 @@ public class ThirdInputFragment extends Fragment{
     public int mEndYear, mEndMonth, mEndDay;
     private int mYear, mMonth, mDay;
 
-    private boolean isChecked;
-
     private String mEndDate;
 
 
@@ -46,7 +44,9 @@ public class ThirdInputFragment extends Fragment{
         mYear = cc.get(Calendar.YEAR);
         mMonth = cc.get(Calendar.MONTH);
         mDay = cc.get(Calendar.DAY_OF_MONTH);
-        isChecked=false;
+        mEndDate = mYear +"."+ String.valueOf(mMonth+1) +"."+ mDay;
+
+
     }
 
     @Override
@@ -60,7 +60,6 @@ public class ThirdInputFragment extends Fragment{
         mEndDateChooseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isChecked=true;
                 new DatePickerDialog(getActivity(), mDateSetListener,mYear,mMonth,mDay).show();
             }
         });
@@ -91,8 +90,6 @@ public class ThirdInputFragment extends Fragment{
 
 
     public boolean saveData(){
-        if(!isChecked)
-            return false;
         if(checkDate()) {
             Toast.makeText(getContext(), "여행 끝은 시작날보다 뒤로 신청하세요.", Toast.LENGTH_SHORT).show();
             return false;

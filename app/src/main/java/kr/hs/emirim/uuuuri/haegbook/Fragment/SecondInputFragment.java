@@ -31,7 +31,6 @@ public class SecondInputFragment extends Fragment{
     public int mStartYear, mStartMonth, mStartDay;
     private int mYear, mMonth, mDay;
 
-    private boolean isChecked;
 
     private String mStartDate;
 
@@ -40,7 +39,8 @@ public class SecondInputFragment extends Fragment{
         mYear = cc.get(Calendar.YEAR);
         mMonth = cc.get(Calendar.MONTH);
         mDay = cc.get(Calendar.DAY_OF_MONTH);
-        isChecked=false;
+        mStartDate = mYear +"."+ String.valueOf(mMonth+1) +"."+ mDay;
+
     }
 
     @Override
@@ -53,7 +53,6 @@ public class SecondInputFragment extends Fragment{
         mStartDateChooseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isChecked=true;
                 new DatePickerDialog(getActivity(), mDateSetListener,mYear,mMonth,mDay).show();
             }
         });
@@ -91,8 +90,6 @@ public class SecondInputFragment extends Fragment{
 
 
     public boolean saveData(){
-        if(!isChecked)
-            return false;
         SharedPreferenceManager spm = new SharedPreferenceManager(getActivity());
         spm.save(ScheduleTag.START_DATE_TAG, mStartDate);
         return true;

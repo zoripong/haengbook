@@ -184,7 +184,6 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-                        intent.putExtra(Intent.EXTRA_SUBJECT, "제 여행 보실래요?");
                         intent.putExtra(Intent.EXTRA_TEXT, cardBookCode);
                         intent.setType("text/plain");
                         Intent chooser = Intent.createChooser(intent, "친구에게 공유하기");

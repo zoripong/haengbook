@@ -1,11 +1,14 @@
 package kr.hs.emirim.uuuuri.haegbook.Activity;
 
 import android.app.Dialog;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -15,7 +18,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.viewpagerindicator.UnderlinePageIndicator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import kr.hs.emirim.uuuuri.haegbook.Adapter.CardPagerAdapter;
 import kr.hs.emirim.uuuuri.haegbook.Adapter.ShadowTransformer;
@@ -28,6 +33,7 @@ import kr.hs.emirim.uuuuri.haegbook.fcm.FirebaseInstanceIDService;
 public class MainActivity extends BaseActivity {
     private final String TAG = "MainActivity";
 
+    private EditText bookCodeEt;
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference mUserRefer;
@@ -43,6 +49,8 @@ public class MainActivity extends BaseActivity {
     private UnderlinePageIndicator indicatorUnderline;
     private CardPagerAdapter mCardAdapter;
     private ShadowTransformer mCardShadowTransformer;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,10 +90,21 @@ public class MainActivity extends BaseActivity {
                         selectDialog.hide();
                         inputDialog.show();
                         selectDialog.dismiss();
+                        final ClipboardManager clipboardManager =  (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                        bookCodeEt=inputDialog.findViewById(R.id.book_code_et);
+                        inputDialog.findViewById(R.id.paste_btn).setOnClickListener(new View.OnClickListener () {
+                                @Override
+                                public void onClick(View v) {
+                                    bookCodeEt.setText(clipboardManager.getText());
+                                }
+                             }
+                        );
 
                         inputDialog.findViewById(R.id.add_btn).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                //TODO
+                                updateFB(String.valueOf(bookCodeEt.getText()));
                                 inputDialog.hide();
                                 inputDialog.dismiss();
                             }
@@ -171,6 +190,53 @@ public class MainActivity extends BaseActivity {
 
         });
         mUserRefer.addValueEventListener(mUserListener);
+    }
+
+
+    public void updateFB(final String inputCode){
+        SharedPreferenceManager spm = new SharedPreferenceManager(this);
+        final String uid = spm.retrieveString(ScheduleTag.USER_TOKEN_TAG);
+
+        mDatabase = FirebaseDatabase.getInstance();
+        final DatabaseReference receiptRef = mDatabase.getReference("BookInfo/"+inputCode);
+        receiptRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            long keyIndex;
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getChildrenCount()<1){
+                    Toast.makeText(MainActivity.this, "유효하지않은 코드입니다.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                //uid에 카드 업데이트
+
+                final DatabaseReference userInfoRef = mDatabase.getReference("UserInfo/"+uid);
+
+                userInfoRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    long keyIndex;
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.child(inputCode) != null){
+                            Toast.makeText(MainActivity.this, "이미 등록된 코드입니다.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        keyIndex = dataSnapshot.getChildrenCount();
+                        Map<String, Object> haveCardBookUpdates = new HashMap<String, Object>();
+                        haveCardBookUpdates.put(String.valueOf(keyIndex+1), inputCode);
+                        userInfoRef.updateChildren(haveCardBookUpdates);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {}
+                });
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+
     }
 
     private void getCardBook(){

@@ -123,7 +123,6 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.e(TAG, "선택 된 날짜 : "+stringList.get(i));
 
-                // todo DEBUG
                 mReceipts.clear();
 
                 if(i == 0){

@@ -33,6 +33,8 @@ public class AddPhotoActivity extends AppCompatActivity {
 
     // Image request code for onActivityResult() .
     private final int IMAGE_REQUEST_CODE = 7;
+    private final int REQUEST_TAKE_ALBUM = 1;
+
     private final String STRORAGE_PATH = "images/";
 
     private Button testBtn;
@@ -64,6 +66,7 @@ public class AddPhotoActivity extends AppCompatActivity {
     }
 
     private void initialize() {
+
         findViewById(R.id.done_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,6 +75,13 @@ public class AddPhotoActivity extends AppCompatActivity {
                 intent.putExtra("DATE", mPeriod);
                 startActivity(intent);
                 finish();
+
+            }
+        });
+
+        findViewById(R.id.test_album).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
             }
         });

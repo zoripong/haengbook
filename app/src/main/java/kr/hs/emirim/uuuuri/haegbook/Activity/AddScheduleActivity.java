@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.ProgressBar;
@@ -24,6 +25,7 @@ import kr.hs.emirim.uuuuri.haegbook.R;
 
 // TODO: 2017-11-09 Progeress Bar
 public class AddScheduleActivity extends AppCompatActivity {
+    private final String TAG = "AddScheduleActivity";
     private final int PAGE_COUNT = 5;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -38,6 +40,8 @@ public class AddScheduleActivity extends AppCompatActivity {
     private FifthInputFragment fifthInputFragment;
 
     private ProgressBar mProgressBar;
+    private int mProgressValue;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,7 @@ public class AddScheduleActivity extends AppCompatActivity {
 
 
     private void initialize(){
+        mProgressValue = 0;
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         mProgressBar = (ProgressBar) findViewById(R.id.horizontal_progress_bar);
@@ -70,10 +75,9 @@ public class AddScheduleActivity extends AppCompatActivity {
             public void onClick(View view) {
                 switch (mViewPager.getCurrentItem()){
                     case 0:
-                        increaseProgressBar(20);
 
                         if(firstInputFragment.saveData()){
-                            // // TODO: 2017-11-05 DEBUG
+                            increaseProgressBar();
                             secondInputFragment.getData();
                         }else{
                             Toast.makeText(getApplicationContext(), "입력바람", Toast.LENGTH_SHORT).show();
@@ -81,9 +85,9 @@ public class AddScheduleActivity extends AppCompatActivity {
                         }
                         break;
                     case 1:
-                        increaseProgressBar(40);
 
                         if(secondInputFragment.saveData()){
+                            increaseProgressBar();
                             thirdInputFragment.getData();
                         }else{
                             Toast.makeText(getApplicationContext(), "입력바람", Toast.LENGTH_SHORT).show();
@@ -91,9 +95,8 @@ public class AddScheduleActivity extends AppCompatActivity {
                         }
                         break;
                     case 2:
-                        increaseProgressBar(60);
                         if(thirdInputFragment.saveData()){
-                            // // TODO: 2017-11-05 DEBUG
+                            increaseProgressBar();
                             fourthInputFragment.getData();
                         }else{
                             Toast.makeText(getApplicationContext(), "입력바람", Toast.LENGTH_SHORT).show();
@@ -101,8 +104,8 @@ public class AddScheduleActivity extends AppCompatActivity {
                         }
                         break;
                     case 3:
-                        increaseProgressBar(80);
                         if(fourthInputFragment.saveData()){
+                            increaseProgressBar();
                             fifthInputFragment.getData();
                         }else{
                             Toast.makeText(getApplicationContext(), "입력바람", Toast.LENGTH_SHORT).show();
@@ -115,9 +118,9 @@ public class AddScheduleActivity extends AppCompatActivity {
                     mViewPager.setCurrentItem(mViewPager.getCurrentItem()+1);
 
                 if(mViewPager.getCurrentItem() == PAGE_COUNT - 1 && isClick){
-                    increaseProgressBar(100);
 
                     fifthInputFragment.saveData();
+                    increaseProgressBar();
 
                     Intent intent = new Intent(AddScheduleActivity.this, MainActivity.class);
                     startActivity(intent);
@@ -145,9 +148,13 @@ public class AddScheduleActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 isClick = false;
-                if(mViewPager.getCurrentItem() > 0 && mViewPager.getCurrentItem() < PAGE_COUNT)
-                    mViewPager.setCurrentItem(mViewPager.getCurrentItem()-1);
+                Log.e(TAG, "current page : "+mViewPager.getCurrentItem());
 
+                if(mViewPager.getCurrentItem() > 0 && mViewPager.getCurrentItem() < PAGE_COUNT){
+                    decreaseProgressBar();
+                    mViewPager.setCurrentItem(mViewPager.getCurrentItem()-1);
+                }
+                
                 if(mViewPager.getCurrentItem() == 0){
                     previousBtn.setVisibility(View.INVISIBLE);
                 }else if(mViewPager.getCurrentItem() > 0 && mViewPager.getCurrentItem() < PAGE_COUNT){
@@ -162,11 +169,23 @@ public class AddScheduleActivity extends AppCompatActivity {
 
     }
 
-    public void increaseProgressBar(int value){
-        ObjectAnimator progressAnimator = ObjectAnimator.ofInt(mProgressBar, "progress", value-20, value);
+    public void increaseProgressBar(){
+        int before = mProgressValue;
+        mProgressValue +=20;
+        ObjectAnimator progressAnimator = ObjectAnimator.ofInt(mProgressBar, "progress", before, mProgressValue);
         progressAnimator.setDuration(300);
         progressAnimator.setInterpolator(new LinearInterpolator());
         progressAnimator.start();
+    }
+
+    public void decreaseProgressBar(){
+        int before = mProgressValue;
+        mProgressValue -= 20;
+        ObjectAnimator progressAnimator = ObjectAnimator.ofInt(mProgressBar, "progress", before, mProgressValue);
+        progressAnimator.setDuration(300);
+        progressAnimator.setInterpolator(new LinearInterpolator());
+        progressAnimator.start();
+
     }
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 

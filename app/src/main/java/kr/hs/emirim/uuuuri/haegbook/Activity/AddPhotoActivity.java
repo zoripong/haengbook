@@ -1,6 +1,7 @@
 package kr.hs.emirim.uuuuri.haegbook.Activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -11,13 +12,17 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import kr.hs.emirim.uuuuri.haegbook.Adapter.GalleryAdapter;
 import kr.hs.emirim.uuuuri.haegbook.Interface.OnItemClickListener;
+import kr.hs.emirim.uuuuri.haegbook.Manager.DateListAdapter;
 import kr.hs.emirim.uuuuri.haegbook.Manager.GalleryManager;
 import kr.hs.emirim.uuuuri.haegbook.Manager.GridDividerDecoration;
 import kr.hs.emirim.uuuuri.haegbook.Model.GalleryImage;
@@ -39,10 +44,20 @@ public class AddPhotoActivity extends AppCompatActivity {
     private Spinner mDateSpinner;
     private GalleryAdapter galleryAdapter;
 
+    private String mBookCode;
+    private String mPeriod;
+
+    private ArrayList<String> dateList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_photo);
+
+
+        Intent intent = getIntent();
+        mBookCode = intent.getStringExtra("BOOK_CODE");
+        mPeriod = intent.getStringExtra("DATE");
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -94,7 +109,7 @@ public class AddPhotoActivity extends AppCompatActivity {
         findViewById(R.id.canceL_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                finish();
             }
         });
 
@@ -102,11 +117,24 @@ public class AddPhotoActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 selectDone();
-
             }
         });
 
         mDateSpinner = findViewById(R.id.date_spinner);
+
+        DateListAdapter dateListAdapter = new DateListAdapter();
+        Date[] dates = dateListAdapter.convertString(mPeriod);
+
+        dateList = dateListAdapter.makeDateList(dates[0], dates[1]);
+
+        String stringArray[] = new String[dateList.size()];
+        stringArray = dateList.toArray(stringArray);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
+                android.R.layout.simple_spinner_item, stringArray);
+
+        mDateSpinner.setAdapter(adapter);
+
     }
 
     /**
@@ -131,6 +159,7 @@ public class AddPhotoActivity extends AppCompatActivity {
      * 확인 버튼 선택 시
      */
     private void selectDone() {
+        // TODO: 2017-11-11 intent & putExtra
         List<GalleryImage> selectedPhotoList = galleryAdapter.getSelectedPhotoList();
         for (int i = 0; i < selectedPhotoList.size(); i++) {
             Log.e(TAG, ">>> selectedPhotoList   :  " + selectedPhotoList.get(i).getImgPath());

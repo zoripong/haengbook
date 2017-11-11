@@ -120,7 +120,6 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
                         intent.putExtra("BOOK_CODE", mBookCode);
                         intent.putExtra("DATE", mPeriod);
                         startActivity(intent);
-                        finish();
                         break;
                     case RECEIPT:
 

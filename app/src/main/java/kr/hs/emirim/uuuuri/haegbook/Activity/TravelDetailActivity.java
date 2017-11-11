@@ -35,7 +35,7 @@ import java.util.Map;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.PhotoFragment;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.ReceiptFragment;
 import kr.hs.emirim.uuuuri.haegbook.Interface.SelectedFragment;
-import kr.hs.emirim.uuuuri.haegbook.Manager.DateListAdapter;
+import kr.hs.emirim.uuuuri.haegbook.Manager.DateListManager;
 import kr.hs.emirim.uuuuri.haegbook.Model.Receipt;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
@@ -133,10 +133,10 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
                         final Spinner currencySymbolSp = mDialog.findViewById(R.id.currency_symbol_sp);
                         final EditText mMemoEt = mDialog.findViewById(R.id.memo_et);
 
-                        DateListAdapter dateListAdapter = new DateListAdapter();
+                        DateListManager dateListManager = new DateListManager();
 
-                        Date [] dates = dateListAdapter.convertString(mPeriod);
-                        ArrayList<String> dateList = dateListAdapter.makeDateList(dates[0], dates[1]);
+                        Date [] dates = dateListManager.convertString(mPeriod);
+                        ArrayList<String> dateList = dateListManager.makeDateList(dates[0], dates[1]);
 
                         String []stringArray = new String[dateList.size()];
                         stringArray = dateList.toArray(stringArray);
@@ -162,15 +162,13 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
                         mDialog.findViewById(R.id.add_receipt_btn).setOnClickListener(new View.OnClickListener(){
                             @Override
                             public void onClick(View view) {
-
                                 Log.e("파베"+String.valueOf(mDateSp.getSelectedItem().toString()),"");
                                 updateFB(String.valueOf(mDateSp.getSelectedItem().toString()) ,typeIndex,String.valueOf(mTitleEt.getText()),
                                         String.valueOf(mAmountEt.getText())+currencySymbolSp.getSelectedItem().toString(),String.valueOf(mMemoEt.getText()));
                                 mDialog.dismiss();
-
-
                             }
                         });
+
                         mDialog.show();
 
                         break;

@@ -28,7 +28,6 @@ public class ImageRecyclerSetter{
 
     public boolean setRecyclerCardView(RecyclerView recyclerView, ArrayList<FirebaseImage> imageArrayList){
 
-//        items = new ArrayList<Receipt>();
         items = imageArrayList;
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);

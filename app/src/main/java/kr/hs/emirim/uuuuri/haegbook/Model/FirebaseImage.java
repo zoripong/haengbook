@@ -7,16 +7,16 @@ package kr.hs.emirim.uuuuri.haegbook.Model;
 public class FirebaseImage {
 
     public String imageComment;
-    public String imageURL;
+    public String imageURI;
     public String date;
 
     public FirebaseImage() {
 
     }
 
-    public FirebaseImage(String imageComment, String imageURL, String date) {
+    public FirebaseImage(String imageComment, String imageURI, String date) {
         this.imageComment = imageComment;
-        this.imageURL = imageURL;
+        this.imageURI = imageURI;
         this.date = date;
     }
 
@@ -24,8 +24,8 @@ public class FirebaseImage {
         return imageComment;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public String getImageURI() {
+        return imageURI;
     }
 
     public String getDate() {

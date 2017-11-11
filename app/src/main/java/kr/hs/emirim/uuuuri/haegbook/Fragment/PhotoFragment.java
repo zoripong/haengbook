@@ -75,7 +75,7 @@ public class PhotoFragment extends Fragment {
                 while(childIterator.hasNext()) {
                     DataSnapshot imageSnapshot = childIterator.next();
                     String imageComment=imageSnapshot.child("imageComment").getValue(String.class);
-                    String imageURL=imageSnapshot.child("imageURL").getValue(String.class);
+                    String imageURL=imageSnapshot.child("imageURI").getValue(String.class);
                     String date=imageSnapshot.child("date").getValue(String.class);
 
                     mImages.add(new FirebaseImage(imageComment,imageURL,date));

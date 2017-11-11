@@ -45,13 +45,14 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
     public void onBindViewHolder(final ImageViewHolder holder, int position) {
         FirebaseImage item = items.get(position);
 
-        Glide.with(context).load(item.getImageURL()).asBitmap().
+        Glide.with(context).load(item.getImageURI()).asBitmap().
                 override(400,400).into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                 holder.imageView.setImageBitmap(resource);
             }
         });
+
     }
 
 

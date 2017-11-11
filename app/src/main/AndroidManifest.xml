@@ -29,7 +29,8 @@
         <activity
             android:name=".Activity.AddScheduleActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activity.AddPhotoDetailActivity"/>
+        <activity android:name=".Activity.AddPhotoDetailActivity"
+            android:windowSoftInputMode="adjustPan" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

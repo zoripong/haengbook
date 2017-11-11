@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.Iterator;
 
 import kr.hs.emirim.uuuuri.haegbook.Interface.ReceiptType;
-import kr.hs.emirim.uuuuri.haegbook.Manager.DateListAdapter;
+import kr.hs.emirim.uuuuri.haegbook.Manager.DateListManager;
 import kr.hs.emirim.uuuuri.haegbook.Manager.ReceiptRecyclerSetter;
 import kr.hs.emirim.uuuuri.haegbook.Model.Receipt;
 import kr.hs.emirim.uuuuri.haegbook.R;
@@ -70,10 +70,10 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
 
         Spinner spinner = rootView.findViewById(R.id.spinner);
 
-        DateListAdapter dateListAdapter = new DateListAdapter();
-        Date[] dates = dateListAdapter.convertString(mPeriod);
+        DateListManager dateListManager = new DateListManager();
+        Date[] dates = dateListManager.convertString(mPeriod);
 
-        dateList = dateListAdapter.makeDateList(dates[0], dates[1]);
+        dateList = dateListManager.makeDateList(dates[0], dates[1]);
         dateList.add(0, "전체보기");
 
         String stringArray[] = new String[dateList.size()];
@@ -90,11 +90,6 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.e(TAG, "선택 된 날짜 : "+ dateList.get(i));
-                Log.e(TAG, "DIALOG LIST : "+ dateList.toString());
-                Log.e(TAG, "전체 영수증 : "+mAllReceipts.toString()+"/ size : "+mAllReceipts.size());
-                Log.e(TAG, "선택 index : "+i);
-
                 mReceipts.clear();
 
                 if(i == 0){
@@ -134,6 +129,7 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
         mReceiptListener = mReceiptRefer.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 mAllReceipts.clear();
                 Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
                 while (iterator.hasNext()){
@@ -142,7 +138,6 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
 
                 Log.e(TAG, mAllReceipts.toString());
                 receiptRecyclerSetter.setRecyclerCardView(recyclerView, mAllReceipts);
-
 
             }
 

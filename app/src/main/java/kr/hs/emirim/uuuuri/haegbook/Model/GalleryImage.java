@@ -1,6 +1,8 @@
 package kr.hs.emirim.uuuuri.haegbook.Model;
 
-public class GalleryImage {
+import java.io.Serializable;
+
+public class GalleryImage implements Serializable {
 
     private String imgPath;
     private boolean selected;

@@ -11,11 +11,11 @@ import java.util.Date;
  */
 
 
-public class DateListAdapter {
-    private final String TAG = "DateListAdapter";
+public class DateListManager {
+    private final String TAG = "DateListManager";
     ArrayList<String> dateList;
 
-    public DateListAdapter(){
+    public DateListManager(){
         dateList = new ArrayList<>();
     }
 

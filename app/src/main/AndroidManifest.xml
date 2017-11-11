@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="kr.hs.emirim.uuuuri.haegbook">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -23,17 +23,18 @@
             android:name=".Activity.TravelDetailActivity"
             android:label="@string/title_activity_travel_detail"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activity.AddPhotoActivity" />
+        <activity android:name=".Activity.AddPhotoActivity"
+            android:theme="@style/AppTheme.NoActionBar"  />
         <activity android:name=".Activity.AddReceiptActivity" />
         <activity
             android:name=".Activity.AddScheduleActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Activity.AddPhotoDetailActivity"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBewTAGc7YHOPkQsrUOOQu6IV2IMJizUMs" />
 
-        <activity android:name=".Activity.SearchLocationActivity"></activity>
     </application>
 
 </manifest>

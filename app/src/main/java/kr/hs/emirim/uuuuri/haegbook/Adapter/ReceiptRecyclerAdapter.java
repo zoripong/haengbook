@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -46,7 +47,7 @@ public class ReceiptRecyclerAdapter extends RecyclerView.Adapter<ReceiptRecycler
 
     @Override
     public void onBindViewHolder(final ReceiptViewHolder holder, int position) {
-        Receipt item = items.get(position);
+        final Receipt item = items.get(position);
         holder.titleTv.setText(item.getTitle());
         holder.amountTv.setText(String.valueOf(item.getAmount()));
         holder.typeTv.setText(String.valueOf(item.getType()));
@@ -72,6 +73,13 @@ public class ReceiptRecyclerAdapter extends RecyclerView.Adapter<ReceiptRecycler
                 holder.typeIv.setImageResource(R.drawable.barcode_etc);
                 break;
         }
+
+        holder.typeIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, item.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -93,10 +101,9 @@ public class ReceiptRecyclerAdapter extends RecyclerView.Adapter<ReceiptRecycler
             typeTv = itemView.findViewById(R.id.type_tv);
             memoTv = itemView.findViewById(R.id.memo_tv);
             typeIv = itemView.findViewById(R.id.type_iv);
+
         }
     }
-
-
 }
 
 

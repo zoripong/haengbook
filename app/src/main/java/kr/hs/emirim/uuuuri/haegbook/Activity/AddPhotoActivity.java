@@ -10,8 +10,8 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.List;
@@ -23,12 +23,20 @@ import kr.hs.emirim.uuuuri.haegbook.Manager.GridDividerDecoration;
 import kr.hs.emirim.uuuuri.haegbook.Model.GalleryImage;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
+// TODO: 2017-11-11 long click -> 자세히
+// TODO: 2017-11-11 click -> thumbnail list
+// TODO: 2017-11-11 menu click -> add photodetailActivity -> upload
+// TODO: 2017-11-11 spinner -> 날짜별로 view
+
+// TODO: 2017-11-11 취소버튼 생성
+
 public class AddPhotoActivity extends AppCompatActivity {
     private final String TAG = "AddPhotoActivity";
     private final int READ_EXTERNAL_STORAGE_CODE = 5;
     private GalleryManager mGalleryManager;
 
     private RecyclerView recyclerGallery;
+    private Spinner mDateSpinner;
     private GalleryAdapter galleryAdapter;
 
     @Override
@@ -77,29 +85,28 @@ public class AddPhotoActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.action_done:
-                selectDone();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     /**
      * 레이아웃 초기화
      */
     private void initLayout() {
         recyclerGallery = (RecyclerView) findViewById(R.id.recyclerview);
+        findViewById(R.id.canceL_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        findViewById(R.id.next_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectDone();
+
+            }
+        });
+
+        mDateSpinner = findViewById(R.id.date_spinner);
     }
 
     /**
@@ -126,7 +133,7 @@ public class AddPhotoActivity extends AppCompatActivity {
     private void selectDone() {
         List<GalleryImage> selectedPhotoList = galleryAdapter.getSelectedPhotoList();
         for (int i = 0; i < selectedPhotoList.size(); i++) {
-            Log.i(TAG, ">>> selectedPhotoList   :  " + selectedPhotoList.get(i).getImgPath());
+            Log.e(TAG, ">>> selectedPhotoList   :  " + selectedPhotoList.get(i).getImgPath());
         }
     }
 

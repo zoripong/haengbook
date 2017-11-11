@@ -1,5 +1,6 @@
 package kr.hs.emirim.uuuuri.haegbook.Activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,11 +15,28 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import kr.hs.emirim.uuuuri.haegbook.Fragment.PhotoFragment;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.ReceiptFragment;
 import kr.hs.emirim.uuuuri.haegbook.Interface.SelectedFragment;
+import kr.hs.emirim.uuuuri.haegbook.Manager.DateListAdapter;
+import kr.hs.emirim.uuuuri.haegbook.Model.Receipt;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 public class TravelDetailActivity extends AppCompatActivity implements SelectedFragment {
@@ -32,7 +50,11 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
     private String mBookCode;
     private String mPeriod;
 
-    FloatingActionButton fab;
+    private FloatingActionButton fab;
+
+    private FirebaseDatabase mDatabase;
+    private int typeIndex;
+    private boolean isUpdateNull=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,10 +91,8 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
                 mPosition = tab.getPosition();
                 switch (mPosition){
                     case PHOTO:
-                        fab.show();
                         break;
                     case RECEIPT:
-                        fab.hide();
                         break;
                 }
             }
@@ -101,6 +121,59 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
                         intent.putExtra("DATE", mPeriod);
                         startActivity(intent);
                         finish();
+                        break;
+                    case RECEIPT:
+
+                        final Dialog mDialog = new Dialog(view.getContext(), R.style.MyDialog);
+                        mDialog.setContentView(R.layout.dialog_regist_receipt);
+
+                        final Spinner mDateSp=  mDialog.findViewById(R.id.date_sp);
+                        Spinner mTypeSp= mDialog.findViewById(R.id.type_sp);
+                        final EditText mTitleEt= mDialog.findViewById(R.id.title_et);
+                        final EditText mAmountEt = mDialog.findViewById(R.id.amount_et);
+                        final Spinner currencySymbolSp = mDialog.findViewById(R.id.currency_symbol_sp);
+                        final EditText mMemoEt = mDialog.findViewById(R.id.memo_et);
+
+                        DateListAdapter dateListAdapter = new DateListAdapter();
+
+                        Date [] dates = dateListAdapter.convertString(mPeriod);
+                        ArrayList<String> dateList = dateListAdapter.makeDateList(dates[0], dates[1]);
+
+                        String []stringArray = new String[dateList.size()];
+                        stringArray = dateList.toArray(stringArray);
+
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
+                                android.R.layout.simple_spinner_item, stringArray);
+
+                        mDateSp.setAdapter(adapter);
+
+                        mDateSp.setSelection(stringArray.length-1);
+                        mTypeSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view,
+                                                       int position, long id) {
+                                typeIndex=position;
+                            }
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {}
+                        });
+
+
+
+                        mDialog.findViewById(R.id.add_receipt_btn).setOnClickListener(new View.OnClickListener(){
+                            @Override
+                            public void onClick(View view) {
+
+                                Log.e("파베"+String.valueOf(mDateSp.getSelectedItem().toString()),"");
+                                updateFB(String.valueOf(mDateSp.getSelectedItem().toString()) ,typeIndex,String.valueOf(mTitleEt.getText()),
+                                        String.valueOf(mAmountEt.getText())+currencySymbolSp.getSelectedItem().toString(),String.valueOf(mMemoEt.getText()));
+                                mDialog.dismiss();
+
+
+                            }
+                        });
+                        mDialog.show();
+
                         break;
                     default:
                         break;
@@ -170,5 +243,32 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
             }
             return null;
         }
+    }
+
+
+    public void updateFB(final String date, final int type, final String title, final String amount, final String memo){
+        mDatabase = FirebaseDatabase.getInstance();
+        final DatabaseReference receiptRef = mDatabase.getReference("BookInfo/"+mBookCode+"/Content/Receipt");
+
+        receiptRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            long keyIndex;
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.e("입력값",date+"        "+title+amount+memo);
+                if(date.equals("") || title.equals("") || amount.equals("") || memo.equals("")){
+                    Toast.makeText(getApplicationContext(), "입력해주세요.", Toast.LENGTH_SHORT).show();
+                }else {
+                    keyIndex = dataSnapshot.getChildrenCount();
+                    Map<String, Object> receiptUpdates = new HashMap<String, Object>();
+                    receiptUpdates.put(String.valueOf(keyIndex + 1), new Receipt(date, title, amount, type, memo));
+                    receiptRef.updateChildren(receiptUpdates);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+        Log.e("파베", String.valueOf(isUpdateNull));
+
     }
 }

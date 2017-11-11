@@ -20,13 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
     />
-
-    <Button
-        android:id="@+id/add_receipt_btn"
-        android:text="영수증 추가"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorAccent"/>
     </LinearLayout>
     </ScrollView>
 </LinearLayout>

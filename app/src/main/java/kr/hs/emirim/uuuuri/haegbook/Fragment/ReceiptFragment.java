@@ -1,6 +1,5 @@
 package kr.hs.emirim.uuuuri.haegbook.Fragment;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -10,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -21,22 +18,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
-import kr.hs.emirim.uuuuri.haegbook.Manager.ReceiptRecyclerSetter;
 import kr.hs.emirim.uuuuri.haegbook.Interface.ReceiptType;
+import kr.hs.emirim.uuuuri.haegbook.Manager.DateListAdapter;
+import kr.hs.emirim.uuuuri.haegbook.Manager.ReceiptRecyclerSetter;
 import kr.hs.emirim.uuuuri.haegbook.Model.Receipt;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 /**
  * Created by 유리 on 2017-11-03.
  */
+
+// // TODO: 2017-11-11 여행 중이라면 오늘까지, 여행이 끝났으면 여행이 끝난날까지 --> spinner add
 
 public class ReceiptFragment extends Fragment implements ReceiptType{
     private final String TAG = "ReceiptFragment";
@@ -46,17 +42,6 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
     private RecyclerView recyclerView;
     private ReceiptRecyclerSetter receiptRecyclerSetter;
 
-    private Spinner mDateSp;
-    private Spinner mTypeSp;
-    private EditText mTitleEt;
-    private EditText mAmountEt;
-    private Spinner currencySymbolSp;
-    private EditText mMemoEt;
-
-    int typeIndex;
-    boolean isUpdateNull=true;
-
-
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReceiptRefer;
     private ValueEventListener mReceiptListener;
@@ -64,11 +49,7 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
     ArrayList<Receipt> mAllReceipts;
     ArrayList<Receipt> mReceipts;
 
-    private Date beginDate;
-    private Date endDate;
-    private String stringDate[];
-
-    final ArrayList<String> dialogDateList = new ArrayList<>();
+    private ArrayList<String> dateList;
     public ReceiptFragment() {}
 
     @Override
@@ -82,46 +63,37 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
 
         getDatabase();
 
+        /*
+        *         add the item into spinner
+        * */
         Log.e(TAG, "기간 : "+ mPeriod);
 
-        stringDate = mPeriod.split("-");
-        SimpleDateFormat dt = new SimpleDateFormat("yyyy.mm.dd");
-        Log.e(TAG, "기간 : "+stringDate[0]+"  "+stringDate[1]);
-        try {
-
-            beginDate = dt.parse(stringDate[0]);
-            endDate = dt.parse(stringDate[1]);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        long diff = endDate.getTime() - beginDate.getTime();
-        int diffDays = (int)(diff / (24 * 60 * 60 * 1000));
-        final ArrayList<String> stringList = new ArrayList<>();
-
         Spinner spinner = rootView.findViewById(R.id.spinner);
-        stringList.add("전체보기");
 
-        for(int i = 0; i<=diffDays; i++){
-            Log.e(TAG, i+" : "+dt.format(beginDate));
-            stringList.add(dt.format(beginDate));
-            dialogDateList.add(dt.format(beginDate));//영수증 추가 다이얼로그에 띄울 날짜 리스트
-            beginDate.setTime(beginDate.getTime()+(24 * 60 * 60 * 1000));
+        DateListAdapter dateListAdapter = new DateListAdapter();
+        Date[] dates = dateListAdapter.convertString(mPeriod);
 
-        }
+        dateList = dateListAdapter.makeDateList(dates[0], dates[1]);
+        dateList.add(0, "전체보기");
 
-        String stringArray[] = new String[stringList.size()];
-        stringArray = stringList.toArray(stringArray);
+        String stringArray[] = new String[dateList.size()];
+        stringArray = dateList.toArray(stringArray);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item, stringArray);
 
         spinner.setAdapter(adapter);
+         /*
+        *   [end]      add the item into spinner
+        * */
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.e(TAG, "선택 된 날짜 : "+stringList.get(i));
+                Log.e(TAG, "선택 된 날짜 : "+ dateList.get(i));
+                Log.e(TAG, "DIALOG LIST : "+ dateList.toString());
+                Log.e(TAG, "전체 영수증 : "+mAllReceipts.toString()+"/ size : "+mAllReceipts.size());
+                Log.e(TAG, "선택 index : "+i);
 
                 mReceipts.clear();
 
@@ -129,10 +101,11 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
                     for(int j = 0; j<mAllReceipts.size(); j++){
                         mReceipts.add(mAllReceipts.get(j));
                     }
+                    Log.e("TAG", "보여지는 영수증 : "+mReceipts.toString());
                 }else{
                     for(int j = 0; j<mAllReceipts.size(); j++){
-                        if(mAllReceipts.get(j).getDate().equals(stringList.get(i))){
-                            Toast.makeText(getContext(), stringList.get(i), Toast.LENGTH_SHORT).show();
+                        if(mAllReceipts.get(j).getDate().equals(dateList.get(i))){
+                            Toast.makeText(getContext(), dateList.get(i), Toast.LENGTH_SHORT).show();
                             mReceipts.add(mAllReceipts.get(j));
                         }
                     }
@@ -148,90 +121,9 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
             }
         });
 
-
-
-        Button receiptButton = rootView.findViewById(R.id.add_receipt_btn);
-        receiptButton.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view) {
-                final Dialog mDialog = new Dialog(view.getContext(), R.style.MyDialog);
-                mDialog.setContentView(R.layout.dialog_regist_receipt);
-
-
-                mDateSp=  mDialog.findViewById(R.id.date_sp);
-                mTypeSp= mDialog.findViewById(R.id.type_sp);
-                mTitleEt= mDialog.findViewById(R.id.title_et);
-                mAmountEt = mDialog.findViewById(R.id.amount_et);
-                currencySymbolSp = mDialog.findViewById(R.id.currency_symbol_sp);
-                mMemoEt = mDialog.findViewById(R.id.memo_et);
-
-                String dateArray[] = new String[dialogDateList.size()];
-                dateArray = dialogDateList.toArray(dateArray);
-
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
-                        android.R.layout.simple_spinner_item, dateArray);
-
-                mDateSp.setAdapter(adapter);
-
-                mTypeSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view,
-                                               int position, long id) {
-                        typeIndex=position;
-                    }
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {}
-                });
-
-
-
-                mDialog.findViewById(R.id.add_receipt_btn).setOnClickListener(new View.OnClickListener(){
-                    @Override
-                    public void onClick(View view) {
-
-                        Log.e("파베"+String.valueOf(mDateSp.getSelectedItem().toString()),"");
-                        updateFB(String.valueOf(mDateSp.getSelectedItem().toString()),typeIndex,String.valueOf(mTitleEt.getText()),
-                                String.valueOf(mAmountEt.getText())+currencySymbolSp.getSelectedItem().toString(),String.valueOf(mMemoEt.getText()));
-                        mDialog.dismiss();
-
-
-                    }
-                });
-                mDialog.show();
-
-            }
-        });
-
-
         return rootView;
     }
 
-    public void updateFB(final String date, final int type, final String title, final String amount, final String memo){
-        mDatabase = FirebaseDatabase.getInstance();
-        final DatabaseReference receiptRef = mDatabase.getReference("BookInfo/"+mBookCode+"/Content/Receipt");
-
-        receiptRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            long keyIndex;
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.e("입력값",date+"        "+title+amount+memo);
-                if(date.equals("") || title.equals("") || amount.equals("") || memo.equals("")){
-                    Toast.makeText(getContext(), "입력해주세요.", Toast.LENGTH_SHORT).show();
-                }else {
-                    keyIndex = dataSnapshot.getChildrenCount();
-                    Map<String, Object> receiptUpdates = new HashMap<String, Object>();
-                    receiptUpdates.put(String.valueOf(keyIndex + 1), new Receipt(date, title, amount, type, memo));
-                    receiptRef.updateChildren(receiptUpdates);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
-        Log.e("파베", String.valueOf(isUpdateNull));
-
-    }
     public void getDatabase() {
         mDatabase = FirebaseDatabase.getInstance();
         mReceiptRefer = mDatabase.getReference("BookInfo/"+mBookCode+"/Content/Receipt");

@@ -23,7 +23,6 @@ import kr.hs.emirim.uuuuri.haegbook.Fragment.ThirdInputFragment;
 import kr.hs.emirim.uuuuri.haegbook.Layout.CustomViewPager;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
-// TODO: 2017-11-09 Progeress Bar
 public class AddScheduleActivity extends AppCompatActivity {
     private final String TAG = "AddScheduleActivity";
     private final int PAGE_COUNT = 5;
@@ -154,7 +153,7 @@ public class AddScheduleActivity extends AppCompatActivity {
                     decreaseProgressBar();
                     mViewPager.setCurrentItem(mViewPager.getCurrentItem()-1);
                 }
-                
+
                 if(mViewPager.getCurrentItem() == 0){
                     previousBtn.setVisibility(View.INVISIBLE);
                 }else if(mViewPager.getCurrentItem() > 0 && mViewPager.getCurrentItem() < PAGE_COUNT){
@@ -218,7 +217,6 @@ public class AddScheduleActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-//            TODO
             return 5;
         }
 

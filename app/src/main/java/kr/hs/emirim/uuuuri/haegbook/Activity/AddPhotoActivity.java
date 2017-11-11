@@ -1,241 +1,170 @@
 package kr.hs.emirim.uuuuri.haegbook.Activity;
 
-import android.app.ProgressDialog;
-import android.content.ContentResolver;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.webkit.MimeTypeMap;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+import java.util.List;
 
-import java.io.IOException;
-
-import kr.hs.emirim.uuuuri.haegbook.Model.ImageUploadInfo;
+import kr.hs.emirim.uuuuri.haegbook.Adapter.GalleryAdapter;
+import kr.hs.emirim.uuuuri.haegbook.Interface.OnItemClickListener;
+import kr.hs.emirim.uuuuri.haegbook.Manager.GalleryManager;
+import kr.hs.emirim.uuuuri.haegbook.Manager.GridDividerDecoration;
+import kr.hs.emirim.uuuuri.haegbook.Model.GalleryImage;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 public class AddPhotoActivity extends AppCompatActivity {
+    private final String TAG = "AddPhotoActivity";
+    private final int READ_EXTERNAL_STORAGE_CODE = 5;
+    private GalleryManager mGalleryManager;
 
-    // Image request code for onActivityResult() .
-    private final int IMAGE_REQUEST_CODE = 7;
-    private final int REQUEST_TAKE_ALBUM = 1;
-
-    private final String STRORAGE_PATH = "images/";
-
-    private Button testBtn;
-    private Button testBtn2;
-    private ImageView testIv;
-    private Uri FilePathUri;
-
-    // Creating StorageReference and DatabaseReference object.
-    StorageReference storageReference;
-    DatabaseReference databaseReference;
-
-
-    ProgressDialog progressDialog ;
-
-    private String mBookCode;
-    private String mPeriod;
+    private RecyclerView recyclerGallery;
+    private GalleryAdapter galleryAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_photo);
 
-        Intent intent = getIntent();
-        mBookCode = intent.getStringExtra("BOOK_CODE");
-        mPeriod = intent.getStringExtra("DATE");
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            // 권한 없음
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                Toast.makeText(this, "이미지를 불러오는데 권한이 필요합니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                // 권한 요청
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        READ_EXTERNAL_STORAGE_CODE);
+            }
+        }else{
+            // 권한이 있음
+            initLayout();
+            init();
+        }
 
-        initialize();
 
     }
 
-    private void initialize() {
-
-        findViewById(R.id.done_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(AddPhotoActivity.this, TravelDetailActivity.class);
-                intent.putExtra("BOOK_CODE",mBookCode);
-                intent.putExtra("DATE", mPeriod);
-                startActivity(intent);
-                finish();
-
-            }
-        });
-
-        findViewById(R.id.test_album).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-        testBtn = findViewById(R.id.test_btn);
-        testBtn2 = findViewById(R.id.test_btn2);
-        testIv = findViewById(R.id.test_iv);
-
-        progressDialog = new ProgressDialog(this);
-
-        storageReference = FirebaseStorage.getInstance().getReference();
-        databaseReference = FirebaseDatabase.getInstance().getReference("BookInfo/"+mBookCode+"/Content/Images");
-
-        testBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                // Creating intent.
-                Intent intent = new Intent();
-
-                // Setting intent type as image to select image from phone storage.
-                intent.setType("image/*");
-
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,"Select Picture"), IMAGE_REQUEST_CODE);
-
-//                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                startActivityForResult(Intent.createChooser(intent, "Please Select Image"), IMAGE_REQUEST_CODE);
-
-            }
-        });
-
-
-        testBtn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                // Calling method to upload selected image on Firebase storage.
-                UploadImageFileToFirebaseStorage();
-
-            }
-        });
-
-    }
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == IMAGE_REQUEST_CODE && resultCode == RESULT_OK && data != null && data.getData() != null) {
-
-            FilePathUri = data.getData();
-
-            try {
-
-                // Getting selected image into Bitmap.
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), FilePathUri);
-
-                // Setting up bitmap selected image into ImageView.
-                testIv.setImageBitmap(bitmap);
-
-                // After selecting image change choose button above text.
-                testBtn.setText("Image Selected");
-
-            }
-            catch (IOException e) {
-
-                e.printStackTrace();
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case READ_EXTERNAL_STORAGE_CODE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    initLayout();
+                    init();
+                } else {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                            READ_EXTERNAL_STORAGE_CODE);
+                }
+                return;
             }
         }
     }
 
-    // Creating Method to get the selected image file Extension from File Path URI.
-    public String GetFileExtension(Uri uri) {
-
-        ContentResolver contentResolver = this.getContentResolver();
-
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-
-        // Returning the file Extension.
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri)) ;
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
-    // Creating UploadImageFileToFirebaseStorage method to upload image on storage.
-    public void UploadImageFileToFirebaseStorage() {
 
-        // Checking whether FilePathUri Is empty or not.
-        if (FilePathUri != null) {
-
-            // Setting progressDialog Title.
-            progressDialog.setTitle("Image is Uploading...");
-
-            // Showing progressDialog.
-            progressDialog.show();
-
-            // Creating second StorageReference.
-            StorageReference storageReference2nd = storageReference.child(STRORAGE_PATH + System.currentTimeMillis() + "." + GetFileExtension(FilePathUri));
-
-            // Adding addOnSuccessListener to second StorageReference.
-            storageReference2nd.putFile(FilePathUri)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                            // Getting image name from EditText and store into string variable.
-                            String TempImageName = "test";
-
-                            // Hiding the progressDialog after done uploading.
-                            progressDialog.dismiss();
-
-                            // Showing toast message after done uploading.
-                            Toast.makeText(getApplicationContext(), "Image Uploaded Successfully ", Toast.LENGTH_LONG).show();
-
-                            @SuppressWarnings("VisibleForTests")
-                            ImageUploadInfo imageUploadInfo = new ImageUploadInfo(TempImageName, taskSnapshot.getDownloadUrl().toString(), "2017.11.10");
-
-                            // Getting image upload ID.
-                            String ImageUploadId = databaseReference.push().getKey();
-
-                            // Adding image upload id s child element into databaseReference.
-                            databaseReference.child(ImageUploadId).setValue(imageUploadInfo);
-                        }
-                    })
-                    // If something goes wrong .
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-
-                            // Hiding the progressDialog.
-                            progressDialog.dismiss();
-
-                            // Showing exception erro message.
-                            Toast.makeText(AddPhotoActivity.this, exception.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    })
-
-                    // On progress change upload time.
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-
-                            // Setting progressDialog Title.
-                            progressDialog.setTitle("Image is Uploading...");
-
-                        }
-                    });
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_done:
+                selectDone();
+                break;
         }
-        else {
+        return super.onOptionsItemSelected(item);
+    }
 
-            Toast.makeText(AddPhotoActivity.this, "Please Select Image or Add Image Name", Toast.LENGTH_LONG).show();
+    /**
+     * 레이아웃 초기화
+     */
+    private void initLayout() {
+        recyclerGallery = (RecyclerView) findViewById(R.id.recyclerview);
+    }
 
+    /**
+     * 데이터 초기화
+     */
+    private void init() {
+        //갤러리 리사이클러뷰 초기화
+        initRecyclerGallery();
+    }
+
+
+    /**
+     * 갤러리 아미지 데이터 초기화
+     */
+    private List<GalleryImage> initGalleryPathList() {
+        mGalleryManager = new GalleryManager(getApplicationContext());
+        return mGalleryManager.getDatePhotoPathList(2017, 11, 11);
+//        return mGalleryManager.getAllPhotoPathList();
+    }
+
+    /**
+     * 확인 버튼 선택 시
+     */
+    private void selectDone() {
+        List<GalleryImage> selectedPhotoList = galleryAdapter.getSelectedPhotoList();
+        for (int i = 0; i < selectedPhotoList.size(); i++) {
+            Log.i(TAG, ">>> selectedPhotoList   :  " + selectedPhotoList.get(i).getImgPath());
         }
     }
+
+
+    /**
+     * 갤러리 리사이클러뷰 초기화
+     */
+    private void initRecyclerGallery() {
+
+        galleryAdapter = new GalleryAdapter(AddPhotoActivity.this, initGalleryPathList(), R.layout.item_photo);
+        galleryAdapter.setOnItemClickListener(mOnItemClickListener);
+        recyclerGallery.setAdapter(galleryAdapter);
+        recyclerGallery.setLayoutManager(new GridLayoutManager(this, 4));
+        recyclerGallery.setItemAnimator(new DefaultItemAnimator());
+        recyclerGallery.addItemDecoration(new GridDividerDecoration(getResources(), R.drawable.divider_recycler_gallery));
+    }
+
+
+    /**
+     * 리사이클러뷰 아이템 선택시 호출 되는 리스너
+     */
+    private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
+
+        @Override
+        public void OnItemClick(GalleryAdapter.PhotoViewHolder photoViewHolder, int position) {
+
+            GalleryImage galleryImage = galleryAdapter.getmPhotoList().get(position);
+
+            if(galleryImage.isSelected()){
+                galleryImage.setSelected(false);
+            }else{
+                galleryImage.setSelected(true);
+            }
+
+            galleryAdapter.getmPhotoList().set(position, galleryImage);
+            galleryAdapter.notifyDataSetChanged();
+
+        }
+    };
 
 }

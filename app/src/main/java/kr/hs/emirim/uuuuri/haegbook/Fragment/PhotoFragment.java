@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import kr.hs.emirim.uuuuri.haegbook.Adapter.CardPagerAdapter;
-import kr.hs.emirim.uuuuri.haegbook.Adapter.ImageRecyclerSetter;
-import kr.hs.emirim.uuuuri.haegbook.Model.ImageUploadInfo;
+import kr.hs.emirim.uuuuri.haegbook.Manager.ImageRecyclerSetter;
+import kr.hs.emirim.uuuuri.haegbook.Model.FirebaseImage;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 // todo hide animation when recyclerview scroll down
@@ -37,7 +37,7 @@ public class PhotoFragment extends Fragment {
 
     private ImageView imageView;
 
-    private ArrayList<ImageUploadInfo> mImages;
+    private ArrayList<FirebaseImage> mImages;
 
     private CardPagerAdapter mImagesAdapter;
 
@@ -78,7 +78,7 @@ public class PhotoFragment extends Fragment {
                     String imageURL=imageSnapshot.child("imageURL").getValue(String.class);
                     String date=imageSnapshot.child("date").getValue(String.class);
 
-                    mImages.add(new ImageUploadInfo(imageComment,imageURL,date));
+                    mImages.add(new FirebaseImage(imageComment,imageURL,date));
 
                 }
                 imageRecyclerSetter.setRecyclerCardView(recyclerView, mImages);

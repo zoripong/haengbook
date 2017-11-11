@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import kr.hs.emirim.uuuuri.haegbook.Adapter.SharedPreferenceManager;
+import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Interface.ScheduleTag;
 import kr.hs.emirim.uuuuri.haegbook.Model.CardBook;
 import kr.hs.emirim.uuuuri.haegbook.R;

@@ -23,8 +23,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import kr.hs.emirim.uuuuri.haegbook.Adapter.CardPagerAdapter;
-import kr.hs.emirim.uuuuri.haegbook.Adapter.ShadowTransformer;
-import kr.hs.emirim.uuuuri.haegbook.Adapter.SharedPreferenceManager;
+import kr.hs.emirim.uuuuri.haegbook.Manager.ShadowTransformer;
+import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Interface.ScheduleTag;
 import kr.hs.emirim.uuuuri.haegbook.Model.CardBook;
 import kr.hs.emirim.uuuuri.haegbook.R;

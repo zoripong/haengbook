@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
-import kr.hs.emirim.uuuuri.haegbook.Adapter.SharedPreferenceManager;
+import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Interface.ScheduleTag;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
@@ -22,7 +22,7 @@ import static kr.hs.emirim.uuuuri.haegbook.R.id.start_date_choose_btn;
 /**
  * Created by 유리 on 2017-11-04.
  */
-// TODO: 2017-11-04 여행 시작일 : 두리
+
 public class SecondInputFragment extends Fragment{
 
     private ImageView mStartDateChooseBtn;
@@ -78,7 +78,7 @@ public class SecondInputFragment extends Fragment{
 
 
 
-    // TODO: 2017-11-05 DEBUG
+
     public void getData(){
         if(getActivity() == null){
             return;

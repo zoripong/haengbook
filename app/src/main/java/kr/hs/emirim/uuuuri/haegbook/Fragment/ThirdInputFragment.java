@@ -17,7 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import kr.hs.emirim.uuuuri.haegbook.Adapter.SharedPreferenceManager;
+import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Interface.ScheduleTag;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
@@ -27,7 +27,6 @@ import static kr.hs.emirim.uuuuri.haegbook.R.id.end_date_choose_btn;
  * Created by 유리 on 2017-11-04.
  */
 
-// TODO: 2017-11-04 여행 마지막일 : 두리
 public class ThirdInputFragment extends Fragment{
     private String mStartDate;
     private ImageView mEndDateChooseBtn;

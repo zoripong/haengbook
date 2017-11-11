@@ -15,7 +15,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 
 import java.util.ArrayList;
 
-import kr.hs.emirim.uuuuri.haegbook.Model.ImageUploadInfo;
+import kr.hs.emirim.uuuuri.haegbook.Model.FirebaseImage;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 /**
@@ -23,27 +23,27 @@ import kr.hs.emirim.uuuuri.haegbook.R;
  */
 
 public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdapter.ImageViewHolder> {
-        Context context;
-        Activity nowActivity;
+    Context context;
+    Activity nowActivity;
 
-        ArrayList<ImageUploadInfo> items;
+    ArrayList<FirebaseImage> items;
 
 
-public ImageRecyclerAdapter(Context context, Activity nowActivity, ArrayList<ImageUploadInfo> items){
+    public ImageRecyclerAdapter(Context context, Activity nowActivity, ArrayList<FirebaseImage> items){
         this.context = context;
         this.nowActivity = nowActivity;
         this.items = items;
-        }
+    }
 
-@Override
-public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override
+    public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image, parent, false);
         return new ImageViewHolder(v);
-        }
+    }
 
     @Override
     public void onBindViewHolder(final ImageViewHolder holder, int position) {
-        ImageUploadInfo item = items.get(position);
+        FirebaseImage item = items.get(position);
 
         Glide.with(context).load(item.getImageURL()).asBitmap().
                 override(400,400).into(new SimpleTarget<Bitmap>() {
@@ -52,26 +52,22 @@ public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 holder.imageView.setImageBitmap(resource);
             }
         });
-
-
     }
 
 
-@Override
-public int getItemCount() {
+    @Override
+    public int getItemCount() {
         return items.size();
-        }
-
-public class ImageViewHolder extends RecyclerView.ViewHolder {
-    ImageView imageView;
-
-
-    public ImageViewHolder(View itemView) {
-        super(itemView);
-        imageView = itemView.findViewById(R.id.image);
     }
-}
+
+    public class ImageViewHolder extends RecyclerView.ViewHolder {
+        ImageView imageView;
 
 
+        public ImageViewHolder(View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.image);
+        }
+    }
 }
 

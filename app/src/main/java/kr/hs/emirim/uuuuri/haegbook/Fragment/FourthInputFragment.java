@@ -22,7 +22,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
-import kr.hs.emirim.uuuuri.haegbook.Adapter.SharedPreferenceManager;
+import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Interface.ScheduleTag;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
@@ -30,7 +30,6 @@ import kr.hs.emirim.uuuuri.haegbook.R;
  * Created by 유리 on 2017-11-04.
  */
 
-// TODO: 2017-11-04 환율 : 두리
 public class FourthInputFragment extends Fragment{
 
     private EditText mBeforeMoneyEt;
@@ -201,7 +200,7 @@ public class FourthInputFragment extends Fragment{
             return false;
         SharedPreferenceManager spm = new SharedPreferenceManager(getActivity());
         spm.save(ScheduleTag.KOR_MONEY_TAG, beforeMoney);
-        // TODO: 2017-11-05 외국일 경우 if 해주셈
+
         if(!isKoreaTravel)
             spm.save(ScheduleTag.FOREIGN_MONEY_TAG, afterMoney);
         return true;

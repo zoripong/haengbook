@@ -1,4 +1,4 @@
-package kr.hs.emirim.uuuuri.haegbook.Adapter;
+package kr.hs.emirim.uuuuri.haegbook.Manager;
 
 import android.app.Activity;
 import android.content.SharedPreferences;

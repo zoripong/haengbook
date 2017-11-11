@@ -4,24 +4,24 @@ package kr.hs.emirim.uuuuri.haegbook.Model;
  * Created by 유리 on 2017-11-10.
  */
 
-public class ImageUploadInfo {
+public class FirebaseImage {
 
-    public String imageComent;
+    public String imageComment;
     public String imageURL;
     public String date;
 
-    public ImageUploadInfo() {
+    public FirebaseImage() {
 
     }
 
-    public ImageUploadInfo(String imageComent, String imageURL, String date) {
-        this.imageComent = imageComent;
+    public FirebaseImage(String imageComment, String imageURL, String date) {
+        this.imageComment = imageComment;
         this.imageURL = imageURL;
         this.date = date;
     }
 
-    public String getImageComent() {
-        return imageComent;
+    public String getImageComment() {
+        return imageComment;
     }
 
     public String getImageURL() {

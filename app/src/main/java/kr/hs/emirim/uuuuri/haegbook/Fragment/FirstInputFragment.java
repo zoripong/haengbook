@@ -20,7 +20,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
-import kr.hs.emirim.uuuuri.haegbook.Adapter.SharedPreferenceManager;
+import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Interface.ScheduleTag;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
@@ -31,7 +31,6 @@ import static android.app.Activity.RESULT_OK;
  * Created by 유리 on 2017-11-04.
  */
 
-// TODO: 2017-11-04 여행제목 & 위치 : 한유리  
 public class FirstInputFragment extends Fragment{
     private View mRootView;
     private EditText mTripTitleEt;

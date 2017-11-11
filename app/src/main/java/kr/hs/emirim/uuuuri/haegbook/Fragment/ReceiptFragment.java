@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import kr.hs.emirim.uuuuri.haegbook.Adapter.ReceiptRecyclerSetter;
+import kr.hs.emirim.uuuuri.haegbook.Manager.ReceiptRecyclerSetter;
 import kr.hs.emirim.uuuuri.haegbook.Interface.ReceiptType;
 import kr.hs.emirim.uuuuri.haegbook.Model.Receipt;
 import kr.hs.emirim.uuuuri.haegbook.R;

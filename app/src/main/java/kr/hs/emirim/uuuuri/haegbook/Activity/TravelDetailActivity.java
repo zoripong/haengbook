@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -39,10 +40,15 @@ import kr.hs.emirim.uuuuri.haegbook.Manager.DateListManager;
 import kr.hs.emirim.uuuuri.haegbook.Model.Receipt;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
-public class TravelDetailActivity extends AppCompatActivity implements SelectedFragment {
+import static kr.hs.emirim.uuuuri.haegbook.R.id.date_spinner;
+
+public class TravelDetailActivity extends AppCompatActivity implements SelectedFragment{
+
     private final String LOG = "TRAVEL_DETAIL_ACTIVITY";
     private final int TAB_COUNT = 2;
     private SectionsPagerAdapter mSectionsPagerAdapter;
+
+
 
     private ViewPager mViewPager;
     private int mPosition = PHOTO; // DEFAULT PAGE
@@ -56,10 +62,15 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
     private int typeIndex;
     private boolean isUpdateNull=true;
 
+    PhotoFragment mPhotoFragment;
+    ReceiptFragment mReceiptFragment;
+
+    ArrayList<String> dateList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_detail);
+
 
         Intent intent = getIntent();
         mBookCode = intent.getStringExtra("BOOK_CODE");
@@ -147,28 +158,20 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
                         mDateSp.setAdapter(adapter);
 
                         mDateSp.setSelection(stringArray.length-1);
-                        mTypeSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view,
-                                                       int position, long id) {
-                                typeIndex=position;
-                            }
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {}
-                        });
-
 
 
                         mDialog.findViewById(R.id.add_receipt_btn).setOnClickListener(new View.OnClickListener(){
                             @Override
                             public void onClick(View view) {
+
                                 Log.e("파베"+String.valueOf(mDateSp.getSelectedItem().toString()),"");
                                 updateFB(String.valueOf(mDateSp.getSelectedItem().toString()) ,typeIndex,String.valueOf(mTitleEt.getText()),
-                                        String.valueOf(mAmountEt.getText())+currencySymbolSp.getSelectedItem().toString(),String.valueOf(mMemoEt.getText()));
+                                        String.valueOf(mAmountEt.getText()),currencySymbolSp.getSelectedItem().toString(),String.valueOf(mMemoEt.getText()));
                                 mDialog.dismiss();
+
+
                             }
                         });
-
                         mDialog.show();
 
                         break;
@@ -181,12 +184,55 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
 
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_travel_detail, menu);
+
+        MenuItem item = menu.findItem(date_spinner);
+        Spinner dateSpinner = (Spinner) MenuItemCompat.getActionView(item);
+
+        DateListManager dateListManager = new DateListManager();
+        Date [] dates = dateListManager.convertString(mPeriod);
+        dateList =  dateListManager.makeDateList(dates[0], dates[1]);
+        dateList.add(0, "전체보기");
+
+        String stringArray[] = new String[dateList.size()];
+        stringArray = dateList.toArray(stringArray);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, stringArray);
+
+        dateSpinner.setAdapter(adapter);
+
+        dateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (mPosition){
+                    case PHOTO:
+                        Log.e("탭", "포토");
+                        mPhotoFragment.setDateList(dateList);
+                        mPhotoFragment.spinnerItemSelected(i);
+
+                        break;
+                    case RECEIPT:
+                        Log.e("탭", "영수증");
+                        mReceiptFragment.setDateList(dateList);
+                        mReceiptFragment.spinnerItemSelected(i);
+                        break;
+                }
+
+            }
+
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -196,6 +242,7 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
         if (id == R.id.publish_btn) {
             return true;
         }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -211,15 +258,15 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
         public Fragment getItem(int position) {
             switch (position){
                 case PHOTO:
-                    PhotoFragment photoFragment = new PhotoFragment();
-                    photoFragment.setBookCode(mBookCode);
-                    photoFragment.setPeriod(mPeriod);
-                    return  photoFragment;
+                    mPhotoFragment = new PhotoFragment();
+                    mPhotoFragment.setBookCode(mBookCode);
+                    mPhotoFragment.setPeriod(mPeriod);
+                    return mPhotoFragment;
                 case RECEIPT:
-                    ReceiptFragment receiptFragment = new ReceiptFragment();
-                    receiptFragment.setBookCode(mBookCode);
-                    receiptFragment.setPeriod(mPeriod);
-                    return receiptFragment;
+                    mReceiptFragment = new ReceiptFragment();
+                    mReceiptFragment.setBookCode(mBookCode);
+                    mReceiptFragment.setPeriod(mPeriod);
+                    return mReceiptFragment;
                 default:
                     return null;
             }
@@ -243,7 +290,7 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
     }
 
 
-    public void updateFB(final String date, final int type, final String title, final String amount, final String memo){
+    public void updateFB(final String date, final int type, final String title, final String amount, final String symbol, final String memo){
         mDatabase = FirebaseDatabase.getInstance();
         final DatabaseReference receiptRef = mDatabase.getReference("BookInfo/"+mBookCode+"/Content/Receipt");
 
@@ -252,12 +299,12 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.e("입력값",date+"        "+title+amount+memo);
-                if(date.equals("") || title.equals("") || amount.equals("") || memo.equals("")){
+                if(date.replaceAll(" ","").equals("") || title.equals("") || amount.equals("") || memo.equals("")){
                     Toast.makeText(getApplicationContext(), "입력해주세요.", Toast.LENGTH_SHORT).show();
                 }else {
                     keyIndex = dataSnapshot.getChildrenCount();
                     Map<String, Object> receiptUpdates = new HashMap<String, Object>();
-                    receiptUpdates.put(String.valueOf(keyIndex + 1), new Receipt(date, title, amount, type, memo));
+                    receiptUpdates.put(String.valueOf(keyIndex + 1), new Receipt(date, title, amount+symbol, type, memo));
                     receiptRef.updateChildren(receiptUpdates);
                 }
             }

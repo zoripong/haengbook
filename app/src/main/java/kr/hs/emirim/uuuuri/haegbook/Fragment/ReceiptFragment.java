@@ -7,9 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -19,11 +16,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 
 import kr.hs.emirim.uuuuri.haegbook.Interface.ReceiptType;
-import kr.hs.emirim.uuuuri.haegbook.Manager.DateListManager;
 import kr.hs.emirim.uuuuri.haegbook.Manager.ReceiptRecyclerSetter;
 import kr.hs.emirim.uuuuri.haegbook.Model.Receipt;
 import kr.hs.emirim.uuuuri.haegbook.R;
@@ -63,60 +58,33 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
 
         getDatabase();
 
-        /*
-        *         add the item into spinner
-        * */
-        Log.e(TAG, "기간 : "+ mPeriod);
-
-        Spinner spinner = rootView.findViewById(R.id.spinner);
-
-        DateListManager dateListManager = new DateListManager();
-        Date[] dates = dateListManager.convertString(mPeriod);
-
-        dateList = dateListManager.makeDateList(dates[0], dates[1]);
-        dateList.add(0, "전체보기");
-
-        String stringArray[] = new String[dateList.size()];
-        stringArray = dateList.toArray(stringArray);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_item, stringArray);
-
-        spinner.setAdapter(adapter);
-         /*
-        *   [end]      add the item into spinner
-        * */
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                mReceipts.clear();
-
-                if(i == 0){
-                    for(int j = 0; j<mAllReceipts.size(); j++){
-                        mReceipts.add(mAllReceipts.get(j));
-                    }
-                    Log.e("TAG", "보여지는 영수증 : "+mReceipts.toString());
-                }else{
-                    for(int j = 0; j<mAllReceipts.size(); j++){
-                        if(mAllReceipts.get(j).getDate().equals(dateList.get(i))){
-                            Toast.makeText(getContext(), dateList.get(i), Toast.LENGTH_SHORT).show();
-                            mReceipts.add(mAllReceipts.get(j));
-                        }
-                    }
-                }
-
-                receiptRecyclerSetter.setRecyclerCardView(recyclerView, mReceipts);
-            }
-
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
 
         return rootView;
+    }
+
+    public void spinnerItemSelected(int i){
+        Log.e(TAG, "선택 된 날짜 : "+ dateList.get(i));
+        Log.e(TAG, "DIALOG LIST : "+ dateList.toString());
+        Log.e(TAG, "전체 영수증 : "+mAllReceipts.toString()+"/ size : "+mAllReceipts.size());
+        Log.e(TAG, "선택 index : "+i);
+
+        mReceipts.clear();
+
+        if(i == 0){
+            for(int j = 0; j<mAllReceipts.size(); j++){
+                mReceipts.add(mAllReceipts.get(j));
+            }
+            Log.e("TAG", "보여지는 영수증 : "+mReceipts.toString());
+        }else{
+            for(int j = 0; j<mAllReceipts.size(); j++){
+                if(mAllReceipts.get(j).getDate().equals(dateList.get(i))){
+                    Toast.makeText(getContext(), dateList.get(i), Toast.LENGTH_SHORT).show();
+                    mReceipts.add(mAllReceipts.get(j));
+                }
+            }
+        }
+
+        receiptRecyclerSetter.setRecyclerCardView(recyclerView, mReceipts);
     }
 
     public void getDatabase() {
@@ -129,7 +97,6 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
         mReceiptListener = mReceiptRefer.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 mAllReceipts.clear();
                 Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
                 while (iterator.hasNext()){
@@ -138,6 +105,7 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
 
                 Log.e(TAG, mAllReceipts.toString());
                 receiptRecyclerSetter.setRecyclerCardView(recyclerView, mAllReceipts);
+
 
             }
 
@@ -154,6 +122,11 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
 
     public void setPeriod(String date){
         mPeriod = date;
+    }
+
+
+    public void setDateList(ArrayList<String> dateList) {
+        this.dateList = dateList;
     }
 
     @Override

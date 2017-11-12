@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="220dp"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="@drawable/modalbckg"
+    android:orientation="vertical" >
+    <Button
+        android:id="@+id/button"
+        android:text="DISMISS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/directory_et"
+        android:hint="디렉토리명을 지정해주세요."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/file_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btnCameraIntent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CameraIntent" />
+
+</LinearLayout>

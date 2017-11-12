@@ -23,15 +23,19 @@ import java.util.Iterator;
 import java.util.Map;
 
 import kr.hs.emirim.uuuuri.haegbook.Adapter.CardPagerAdapter;
+import kr.hs.emirim.uuuuri.haegbook.Interface.ScheduleTag;
 import kr.hs.emirim.uuuuri.haegbook.Manager.ShadowTransformer;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
-import kr.hs.emirim.uuuuri.haegbook.Interface.ScheduleTag;
 import kr.hs.emirim.uuuuri.haegbook.Model.CardBook;
 import kr.hs.emirim.uuuuri.haegbook.R;
 import kr.hs.emirim.uuuuri.haegbook.fcm.FirebaseInstanceIDService;
 
+// TODO: 2017-11-12 : MainActivity => 파이어베이스 로딩중 클릭시 취소 방지
+// TODO: 2017-11-12 : 이미지 로딩 화면 제공
+
 public class MainActivity extends BaseActivity {
     private final String TAG = "MainActivity";
+
 
     private EditText bookCodeEt;
 
@@ -51,17 +55,20 @@ public class MainActivity extends BaseActivity {
     private ShadowTransformer mCardShadowTransformer;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         initialize();
         getDatabase();
         getUserToken();
 
     }
+
+
+
     private void getUserToken(){
         FirebaseInstanceIDService tokenService = new FirebaseInstanceIDService();
         SharedPreferenceManager spm = new SharedPreferenceManager(this);

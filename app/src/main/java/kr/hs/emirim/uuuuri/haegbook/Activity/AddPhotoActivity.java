@@ -31,7 +31,7 @@ import kr.hs.emirim.uuuuri.haegbook.Model.GalleryImage;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 // TODO: 2017-11-11 menu click -> add photoDetailActivity -> upload
-
+// TODO: 2017-11-12 카메라 바로가기... TakePicturesActivity 
 public class AddPhotoActivity extends AppCompatActivity {
     private final String TAG = "AddPhotoActivity";
     private final String INTENT_PHOTO_EXTRA = "INTENT_PHOTO_EXTRA";

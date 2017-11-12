@@ -40,8 +40,13 @@ import kr.hs.emirim.uuuuri.haegbook.Manager.DateListManager;
 import kr.hs.emirim.uuuuri.haegbook.Model.Receipt;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
-import static kr.hs.emirim.uuuuri.haegbook.R.id.date_spinner;
 
+// TODO: 2017-11-12 : 갤러리 업데이트
+// TODO: 2017-11-12 : 이미지 업로드 시 로딩 화면 제공
+// TODO: 2017-11-12 : 앱 위젯 만들기
+// TODO: 2017-11-12 : 폴더 이름으로 불러오기
+
+// TODO: 2017-11-12 : 다른 카메라 사용시 파일 삭제
 public class TravelDetailActivity extends AppCompatActivity implements SelectedFragment{
 
     private final String LOG = "TRAVEL_DETAIL_ACTIVITY";
@@ -188,7 +193,7 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_travel_detail, menu);
 
-        MenuItem item = menu.findItem(date_spinner);
+        MenuItem item = menu.findItem(R.id.date_spinner);
         Spinner dateSpinner = (Spinner) MenuItemCompat.getActionView(item);
 
         DateListManager dateListManager = new DateListManager();

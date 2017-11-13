@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="200dp"
-    android:layout_marginLeft="30dp"
-    android:layout_marginRight="30dp"
-    android:background="#ffffff"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
-        android:layout_weight="1"
-        android:gravity="center_vertical|center_horizontal"
-        android:orientation="vertical">
-
+        android:layout_height="wrap_content"
+        android:background="@drawable/dialog_background"
+        app:scale_base_height="330"
+        app:scale_base_width="720">
         <TextView
             android:id="@+id/card_book_code_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_weight="0.3"
-        android:layout_gravity="bottom">
+            android:gravity="center"
+            app:scale_left="50"
+            app:scale_textsize="33"
+            app:scale_top="60"
+            app:scale_width="600" />
         <Button
             android:id="@+id/dialog_button_copy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#00000000"
-            android:text="코드 복사"/>
+            app:scale_height="80"
+            app:scale_left="50"
+            app:scale_textsize="33"
+            app:scale_top="190"
+            app:scale_width="290"
+            android:text="코드 복사"
+            android:textColor="#f8971c"
+            android:background="@drawable/button_background"/>
         <Button
             android:id="@+id/dialog_button_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#00000000"
-            android:text="SNS 공유"/>
-    </LinearLayout>
+            app:scale_height="80"
+            app:scale_left="370"
+            app:scale_textsize="33"
+            app:scale_top="190"
+            app:scale_width="290"
+            android:text="SNS 공유"
+            android:textColor="#f8971c"
+            android:background="@drawable/button_background"/>
+    </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
 </LinearLayout>

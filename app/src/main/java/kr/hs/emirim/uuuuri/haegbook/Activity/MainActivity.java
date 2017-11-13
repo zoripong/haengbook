@@ -5,9 +5,11 @@ import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -54,6 +56,11 @@ public class MainActivity extends BaseActivity {
     private CardPagerAdapter mCardAdapter;
     private ShadowTransformer mCardShadowTransformer;
 
+    LinearLayout card_item;
+    int setLRPadding;
+    int setTBPadding;
+    int setMargin;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +71,23 @@ public class MainActivity extends BaseActivity {
         initialize();
         getDatabase();
         getUserToken();
+
+
+
+        DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
+        int w = dm.widthPixels; //디바이스 해상도 구하기
+
+        DisplayMetrics displayMetrics = new DisplayMetrics(); //디바이스 1px당 mm 길이 구하기
+        this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        double deviceDPI = displayMetrics.xdpi;
+        double mm = 25.4f / deviceDPI;
+
+        Log.e(TAG, "해상도 가로의 값은 무엇일까요요용요ㅛ요요요요 : "+(mm*w)+" mm : "+mm); //1px에 따른 mm*화면 px개수
+
+        setLRPadding = (int) (mm*600);
+        setTBPadding=(int)(mm*200);
+        mViewPager.setPadding(setLRPadding, setTBPadding, setLRPadding, setTBPadding);
+        Log.e(TAG, "디바이스 양쪽 패딩의 값은...? : "+setLRPadding); //1px에 따른 mm*화면 px개수
 
     }
 

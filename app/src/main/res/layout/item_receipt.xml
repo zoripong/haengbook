@@ -1,59 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_margin="3dp"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
     <android.support.v7.widget.CardView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        app:cardUseCompatPadding="true"
         android:id="@+id/cardview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="50dp"
         android:elevation="3dp"
-        >
-        <LinearLayout
-            android:orientation="horizontal"
+        android:padding="50dp"
+        app:cardUseCompatPadding="true">
+
+        <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            app:scale_base_height="300"
+            app:scale_base_width="720">
 
             <ImageView
                 android:id="@+id/type_iv"
-                android:src="@drawable/barcode_culture"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:src="@drawable/barcode_culture"
+                app:scale_height="228"
+                app:scale_top="33"
+                app:scale_width="90" />
+
+            <TextView
+                android:id="@+id/title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                app:scale_height="60"
+                app:scale_left="120"
+                app:scale_textsize="40"
+                app:scale_top="30"
+                app:scale_width="290" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_x_btn"
+                app:scale_height="23"
+                app:scale_left="663"
+                app:scale_textsize="33"
+                app:scale_top="30"
+                app:scale_width="23" />
+
             <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#000"
+                app:scale_height="1"
+                app:scale_left="120"
+                app:scale_top="90"
+                app:scale_width="570"/>
 
-                <TextView
-                    android:id="@+id/title_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="금액 :"
+                app:scale_height="50"
+                app:scale_left="120"
+                app:scale_textsize="33"
+                app:scale_top="110"
+                app:scale_width="100" />
 
-                <TextView
-                    android:id="@+id/amount_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/amount_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:scale_height="50"
+                app:scale_left="220"
+                app:scale_textsize="33"
+                app:scale_top="110"
+                app:scale_width="200" />
 
-                <TextView
-                    android:id="@+id/type_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
 
-                <TextView
-                    android:id="@+id/memo_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="분야 :"
+                app:scale_height="50"
+                app:scale_left="120"
+                app:scale_textsize="33"
+                app:scale_top="160"
+                app:scale_width="100" />
 
-            </LinearLayout>
+            <TextView
+                android:id="@+id/type_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:scale_height="50"
+                app:scale_left="220"
+                app:scale_textsize="33"
+                app:scale_top="160"
+                app:scale_width="470" />
 
-        </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Memo :"
+                app:scale_height="50"
+                app:scale_left="120"
+                app:scale_textsize="33"
+                app:scale_top="230"
+                app:scale_width="120" />
+
+            <TextView
+                android:id="@+id/memo_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:scale_height="50"
+                app:scale_left="240"
+                app:scale_textsize="33"
+                app:scale_top="230"
+                app:scale_width="470" />
+
+        </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
     </android.support.v7.widget.CardView>
 
 </LinearLayout>

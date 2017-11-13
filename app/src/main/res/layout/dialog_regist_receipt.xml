@@ -1,102 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="200dp"
-    android:layout_height="300dp"
-    android:layout_marginLeft="30dp"
-    android:layout_marginRight="30dp"
-    android:orientation="vertical"
-    android:background="#ffffff"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:background="@drawable/dialog_background"
+        app:scale_base_height="720"
+        app:scale_base_width="720">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="날짜"/>
+            android:text="+ NEW RECEIPT"
+            android:textColor="#f8971c"
+            android:textStyle="bold"
+            app:scale_height="50"
+            app:scale_left="30"
+            app:scale_textsize="33"
+            app:scale_top="50"
+            app:scale_width="270" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_height="27"
+            app:scale_left="650"
+            app:scale_textsize="33"
+            app:scale_top="50"
+            app:scale_width="27"
+            android:background="@drawable/ic_x_btn"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="날짜"
+            app:scale_height="40"
+            app:scale_left="30"
+            app:scale_textsize="33"
+            app:scale_top="152"
+            app:scale_width="100" />
+
         <Spinner
             android:id="@+id/date_sp"
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-/>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="분야"/>
+            android:background="@drawable/dropdown_icon"
+            app:scale_left="118"
+            app:scale_textsize="33"
+            app:scale_top="122"
+            app:scale_width="300" />
 
         <Spinner
             android:id="@+id/type_sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/dropdown_icon"
             android:entries="@array/receiptType"
-            android:background="@drawable/dropdown_icon">
-        </Spinner>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            app:scale_left="118"
+            app:scale_textsize="29"
+            app:scale_top="206"
+            app:scale_width="300"></Spinner>
+
         <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="내용"/>
+            android:text="내용"
+            app:scale_left="30"
+            app:scale_height="40"
+            app:scale_textsize="33"
+            app:scale_top="322"
+            app:scale_width="100" />
+
         <EditText
             android:id="@+id/title_et"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            app:scale_left="118"
+            app:scale_textsize="29"
+            app:scale_top="292"
+            app:scale_width="570" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="비용"/>
+            android:text="비용"
+            app:scale_left="30"
+            app:scale_height="40"
+            app:scale_textsize="33"
+            app:scale_top="405"
+            app:scale_width="100" />
+
         <EditText
             android:id="@+id/amount_et"
-            android:inputType="numberDecimal"
             android:layout_width="100dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:inputType="numberDecimal"
+            app:scale_left="118"
+            app:scale_textsize="29"
+            app:scale_top="375"
+            app:scale_width="200" />
+
         <Spinner
             android:id="@+id/currency_symbol_sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/dropdown_icon"
             android:entries="@array/currencySymbol"
-            android:background="@drawable/dropdown_icon">
-        </Spinner>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            app:scale_left="316"
+            app:scale_textsize="29"
+            app:scale_top="395"
+            app:scale_width="90"></Spinner>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="메모"/>
+            android:text="메모"
+            app:scale_left="30"
+            app:scale_height="40"
+            app:scale_textsize="33"
+            app:scale_top="490"
+            app:scale_width="100" />
+
         <EditText
             android:id="@+id/memo_et"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            app:scale_left="118"
+            app:scale_textsize="29"
+            app:scale_top="460"
+            app:scale_width="570" />
 
-    <Button
-        android:id="@+id/add_receipt_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="영수증 등록"/>
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="분야"
+            app:scale_height="40"
+            app:scale_left="30"
+            app:scale_textsize="33"
+            app:scale_top="236"
+            app:scale_width="100" />
 
+        <Button
+            android:id="@+id/add_receipt_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_background"
+            android:text="영수증 등록 >"
+            android:textColor="#f8971c"
+            app:scale_height="80"
+            app:scale_left="430"
+            app:scale_textsize="33"
+            app:scale_top="584"
+            app:scale_width="250" />
 
+    </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
 </LinearLayout>

@@ -1,31 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="200dp"
-    android:layout_height="200dp"
-    android:layout_marginLeft="30dp"
-    android:layout_marginRight="30dp"
-    android:orientation="vertical"
-    android:background="#ffffff"
-    >
-    <EditText
-        android:id="@+id/book_code_et"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content" />
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dialog_background"
+        app:scale_base_height="330"
+        app:scale_base_width="720">
+        <EditText
+            android:id="@+id/book_code_et"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_left="50"
+            app:scale_textsize="33"
+            app:scale_top="60"
+            app:scale_width="620"/>
         <Button
             android:id="@+id/paste_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="붙여넣기"/>
+            app:scale_height="80"
+            app:scale_left="50"
+            app:scale_textsize="33"
+            app:scale_top="190"
+            app:scale_width="290"
+            android:text="붙여넣기"
+            android:textColor="#f8971c"
+            android:background="@drawable/button_background"/>
         <Button
             android:id="@+id/add_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="추가하기"/>
-
-</LinearLayout>
-
+            app:scale_height="80"
+            app:scale_left="370"
+            app:scale_textsize="33"
+            app:scale_top="190"
+            app:scale_width="290"
+            android:text="추가하기"
+            android:textColor="#f8971c"
+            android:background="@drawable/button_background"/>
+    </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
 </LinearLayout>

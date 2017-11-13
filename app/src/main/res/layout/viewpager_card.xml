@@ -1,48 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_view"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    app:cardUseCompatPadding="true">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="#fff">
 
-    <LinearLayout
-        android:id="@+id/linear"
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_height="match_parent"
+        app:cardUseCompatPadding="true"
+        android:layout_margin="20dp">
+        <LinearLayout
+            android:id="@+id/linear"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FF00FF"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:scale_base_width="720">
+                    <ImageView
+                        android:id="@+id/shared_iv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|end"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginTop="-5dp"
+                        android:src="@drawable/basic_gps" />
+                </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    app:scale_base_height="400"
+                    app:scale_base_width="720">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:scale_width="60"
+                        app:scale_left="60"
+                        app:scale_height="40"
+                        android:src="@drawable/basic_gps" />
+                    <TextView
+                        android:id="@+id/location_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:scale_textsize="32"
+                        android:textColor="#FFF"
+                        app:scale_width="540"
+                        app:scale_left="120"
+                        app:scale_height="80"
+                        />
+                    <TextView
+                        android:id="@+id/title_tv"
+                        style="@style/TextAppearance.AppCompat.Title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        app:scale_textsize="65"
+                        app:scale_width="600"
+                        app:scale_top="80"
+                        app:scale_height="200"
+                        android:gravity="center|left"
+                        android:textColor="#FFF"/>
 
-        <TextView
-            android:id="@+id/title_tv"
-            style="@style/TextAppearance.AppCompat.Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/period_tv"
-            style="@style/TextAppearance.AppCompat.Body1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"/>
-
-        <TextView
-            android:id="@+id/location_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/shared_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="-5dp"
-        android:src="@drawable/basic_gps" />
-
-
-</android.support.v7.widget.CardView>
+                    <TextView
+                        android:id="@+id/period_tv"
+                        style="@style/TextAppearance.AppCompat.Body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        app:scale_width="600"
+                        app:scale_top="280"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center_vertical"
+                        app:scale_textsize="32"
+                        android:textColor="#FFF"
+                        />
+                </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

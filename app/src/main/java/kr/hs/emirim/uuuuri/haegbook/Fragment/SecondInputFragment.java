@@ -13,8 +13,8 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
+import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
-import kr.hs.emirim.uuuuri.haegbook.Interface.ScheduleTag;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 import static kr.hs.emirim.uuuuri.haegbook.R.id.start_date_choose_btn;
@@ -84,14 +84,14 @@ public class SecondInputFragment extends Fragment{
             return;
         }
         SharedPreferenceManager spm = new SharedPreferenceManager(getActivity());
-        Toast.makeText(getContext(), spm.retrieveString(ScheduleTag.LOCATION_TAG), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), spm.retrieveString(SharedPreferenceTag.LOCATION_TAG), Toast.LENGTH_SHORT).show();
 
     }
 
 
     public boolean saveData(){
         SharedPreferenceManager spm = new SharedPreferenceManager(getActivity());
-        spm.save(ScheduleTag.START_DATE_TAG, mStartDate);
+        spm.save(SharedPreferenceTag.START_DATE_TAG, mStartDate);
         return true;
     }
 }

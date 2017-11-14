@@ -3,7 +3,7 @@ package kr.hs.emirim.uuuuri.haegbook.Manager;
 import android.app.Activity;
 import android.content.SharedPreferences;
 
-import kr.hs.emirim.uuuuri.haegbook.Interface.ScheduleTag;
+import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -63,12 +63,12 @@ public class SharedPreferenceManager {
     public void resetData(){
         SharedPreferences.Editor editor = sharedpreferences.edit();
 
-        editor.putString(ScheduleTag.TITLE_TAG, "");
-        editor.putString(ScheduleTag.LOCATION_TAG, "");
-        editor.putString(ScheduleTag.START_DATE_TAG, "");
-        editor.putString(ScheduleTag.END_DATE_TAG, "");
-        editor.putInt(ScheduleTag.FOREIGN_MONEY_TAG, 0);
-        editor.putInt(ScheduleTag.KOR_MONEY_TAG, 0);
+        editor.putString(SharedPreferenceTag.TITLE_TAG, "");
+        editor.putString(SharedPreferenceTag.LOCATION_TAG, "");
+        editor.putString(SharedPreferenceTag.START_DATE_TAG, "");
+        editor.putString(SharedPreferenceTag.END_DATE_TAG, "");
+        editor.putInt(SharedPreferenceTag.FOREIGN_MONEY_TAG, 0);
+        editor.putInt(SharedPreferenceTag.KOR_MONEY_TAG, 0);
 
         editor.commit();
     }

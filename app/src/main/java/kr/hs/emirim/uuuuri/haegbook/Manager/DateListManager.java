@@ -19,20 +19,22 @@ public class DateListManager {
         dateList = new ArrayList<>();
     }
 
-    public Date[] convertString(String period){
+    public Date[] convertDates(String period){
         String[] stringDate = period.split("-");
-        String dateInfo[][] = new String[2][3];
-        dateInfo[0] = stringDate[0].split("\\.");
-        dateInfo[1] = stringDate[1].split("\\.");
 
         Date[] dates = new Date[2];
 
-        dates[0] = new Date(Integer.parseInt(dateInfo[0][0])-1900, Integer.parseInt(dateInfo[0][1])-1, Integer.parseInt(dateInfo[0][2]), 0, 0, 0);
-        dates[1] = new Date(Integer.parseInt(dateInfo[1][0])-1900, Integer.parseInt(dateInfo[1][1])-1, Integer.parseInt(dateInfo[1][2]), 0, 0, 0);
-
+        dates[0] = convertDate(stringDate[0]);
+        dates[1] = convertDate(stringDate[1]);
 
         return dates;
     }
+
+    public Date convertDate(String period){
+        String dateInfo[] = period.split("\\.");
+        return new Date(Integer.parseInt(dateInfo[0])-1900, Integer.parseInt(dateInfo[1])-1, Integer.parseInt(dateInfo[2]), 0, 0, 0);
+    }
+
     public ArrayList<String> makeDateList(Date beginDate, Date endDate){
 
         Date today = new Date();

@@ -20,6 +20,7 @@ public class CameraWidget extends AppWidgetProvider {
 
         CharSequence widgetText = context.getString(R.string.appwidget_text);
         // Construct the RemoteViews object
+
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.camera_widget);
 
         // Instruct the widget manager to update the widget

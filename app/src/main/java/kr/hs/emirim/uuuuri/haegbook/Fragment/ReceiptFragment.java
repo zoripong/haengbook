@@ -27,8 +27,6 @@ import kr.hs.emirim.uuuuri.haegbook.R;
  * Created by 유리 on 2017-11-03.
  */
 
-// // TODO: 2017-11-11 여행 중이라면 오늘까지, 여행이 끝났으면 여행이 끝난날까지 --> spinner add
-
 public class ReceiptFragment extends Fragment implements ReceiptType{
     private final String TAG = "ReceiptFragment";
     private String mBookCode;

@@ -18,7 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
-import kr.hs.emirim.uuuuri.haegbook.Interface.ScheduleTag;
+import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 import static kr.hs.emirim.uuuuri.haegbook.R.id.end_date_choose_btn;
@@ -83,7 +83,7 @@ public class ThirdInputFragment extends Fragment{
             return;
         }
         SharedPreferenceManager spm = new SharedPreferenceManager(getActivity());
-        mStartDate= spm.retrieveString(ScheduleTag.START_DATE_TAG);
+        mStartDate= spm.retrieveString(SharedPreferenceTag.START_DATE_TAG);
 
     }
 
@@ -95,7 +95,7 @@ public class ThirdInputFragment extends Fragment{
         }
 
         SharedPreferenceManager spm = new SharedPreferenceManager(getActivity());
-        spm.save(ScheduleTag.END_DATE_TAG, mEndDate);
+        spm.save(SharedPreferenceTag.END_DATE_TAG, mEndDate);
         return true;
     }
 

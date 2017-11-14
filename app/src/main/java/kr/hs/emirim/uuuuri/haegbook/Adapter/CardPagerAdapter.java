@@ -4,9 +4,10 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,20 +55,20 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
         Iterator<CardBook> iterator = items.iterator();
         while(iterator.hasNext()){
             CardBook cardBook= iterator.next();
-            Log.e(TAG,cardBook.toString());
+//            Log.e(TAG,cardBook.toString());
             mViews.add(null);
             mData.add(cardBook);
         }
     }
 
     public void addCardItems(ArrayList<CardBook> items){
-        Log.e(TAG, String.valueOf(items.size()));
+//        Log.e(TAG, String.valueOf(items.size()));
 
         mData.clear();
         mViews.clear();
 
         for(int i = 0; i<items.size(); i++){
-            Log.e(TAG, "킬킬"+items.get(i).toString());
+//            Log.e(TAG, "킬킬"+items.get(i).toString());
 
             mViews.add(null);
             mData.add(items.get(i));
@@ -127,8 +128,8 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
         periodTextView.setText(item.getPeriod());
         locationTextView.setText(item.getLocation());
 
-        Log.e(TAG, "<Before> width : "+ cardView.getWidth() +" / height : " + cardView.getHeight());
-        Log.e(TAG, "url : " + item.getImage());
+//        Log.e(TAG, "<Before> width : "+ cardView.getWidth() +" / height : " + cardView.getHeight());
+//        Log.e(TAG, "url : " + item.getImage());
 
         cardView.setPreventCornerOverlap(false);
 
@@ -139,6 +140,7 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
                 .placeholder(R.drawable.loading)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(new ViewTarget<CardView, GlideDrawable>(cardView) {
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                     @Override
                     public void onResourceReady(GlideDrawable resource, GlideAnimation anim) {
                         CardView myView = this.view;
@@ -146,7 +148,7 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
                         myView.setBackground(resource);
                     }
                 });
-        Log.e(TAG, "<After> width : "+ cardView.getWidth() +" / height : " + cardView.getHeight());
+//        Log.e(TAG, "<After> width : "+ cardView.getWidth() +" / height : " + cardView.getHeight());
 
 
 

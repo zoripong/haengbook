@@ -20,12 +20,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.viewpagerindicator.UnderlinePageIndicator;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import kr.hs.emirim.uuuuri.haegbook.Adapter.CardPagerAdapter;
-import kr.hs.emirim.uuuuri.haegbook.Interface.ScheduleTag;
+import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
+import kr.hs.emirim.uuuuri.haegbook.Manager.DateListManager;
 import kr.hs.emirim.uuuuri.haegbook.Manager.ShadowTransformer;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Model.CardBook;
@@ -82,12 +84,12 @@ public class MainActivity extends BaseActivity {
         double deviceDPI = displayMetrics.xdpi;
         double mm = 25.4f / deviceDPI;
 
-        Log.e(TAG, "해상도 가로의 값은 무엇일까요요용요ㅛ요요요요 : "+(mm*w)+" mm : "+mm); //1px에 따른 mm*화면 px개수
+//        Log.e(TAG, "해상도 가로의 값은 무엇일까요요용요ㅛ요요요요 : "+(mm*w)+" mm : "+mm); //1px에 따른 mm*화면 px개수
 
         setLRPadding = (int) (mm*600);
         setTBPadding=(int)(mm*200);
         mViewPager.setPadding(setLRPadding, setTBPadding, setLRPadding, setTBPadding);
-        Log.e(TAG, "디바이스 양쪽 패딩의 값은...? : "+setLRPadding); //1px에 따른 mm*화면 px개수
+//        Log.e(TAG, "디바이스 양쪽 패딩의 값은...? : "+setLRPadding); //1px에 따른 mm*화면 px개수
 
     }
 
@@ -96,7 +98,7 @@ public class MainActivity extends BaseActivity {
     private void getUserToken(){
         FirebaseInstanceIDService tokenService = new FirebaseInstanceIDService();
         SharedPreferenceManager spm = new SharedPreferenceManager(this);
-        spm.save(ScheduleTag.USER_TOKEN_TAG, tokenService.sendRegistrationToServer());
+        spm.save(SharedPreferenceTag.USER_TOKEN_TAG, tokenService.sendRegistrationToServer());
     }
 
     private void initialize() {
@@ -124,11 +126,11 @@ public class MainActivity extends BaseActivity {
                         final ClipboardManager clipboardManager =  (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
                         bookCodeEt=inputDialog.findViewById(R.id.book_code_et);
                         inputDialog.findViewById(R.id.paste_btn).setOnClickListener(new View.OnClickListener () {
-                                @Override
-                                public void onClick(View v) {
-                                    bookCodeEt.setText(clipboardManager.getText());
-                                }
-                             }
+                                                                                        @Override
+                                                                                        public void onClick(View v) {
+                                                                                            bookCodeEt.setText(clipboardManager.getText());
+                                                                                        }
+                                                                                    }
                         );
 
                         inputDialog.findViewById(R.id.add_btn).setOnClickListener(new View.OnClickListener() {
@@ -149,14 +151,22 @@ public class MainActivity extends BaseActivity {
                     public void onClick(View view) {
                         Intent intent = new Intent(MainActivity.this, AddScheduleActivity.class);
                         startActivity(intent);
-                        finish();
                     }
                 });
             }
         });
 
+        findViewById(R.id.setting_btn).setOnClickListener(new View.OnClickListener() {
+                                                              @Override
+                                                              public void onClick(View view) {
+                                                                  Intent intent = new Intent(MainActivity.this, SettingActivity.class);startActivity(intent);
+                                                                  startActivity(intent);
+                                                              }
+                                                          }
+        );
         mViewPager = findViewById(R.id.viewPager);
         mCardAdapter = new CardPagerAdapter(this);
+
         // TODO: 2017-11-07 debug
         mCardAdapter.addCardItem(new CardBook("test", "test", "test", "test", "test"));
 
@@ -199,7 +209,7 @@ public class MainActivity extends BaseActivity {
 
         SharedPreferenceManager spm = new SharedPreferenceManager(this);
 
-        String uid = spm.retrieveString(ScheduleTag.USER_TOKEN_TAG);
+        String uid = spm.retrieveString(SharedPreferenceTag.USER_TOKEN_TAG);
         showProgressDialog();
         mUserRefer = mDatabase.getReference("UserInfo/"+uid);
 
@@ -226,7 +236,7 @@ public class MainActivity extends BaseActivity {
 
     public void updateFB(final String inputCode){
         SharedPreferenceManager spm = new SharedPreferenceManager(this);
-        final String uid = spm.retrieveString(ScheduleTag.USER_TOKEN_TAG);
+        final String uid = spm.retrieveString(SharedPreferenceTag.USER_TOKEN_TAG);
 
         mDatabase = FirebaseDatabase.getInstance();
         final DatabaseReference receiptRef = mDatabase.getReference("BookInfo/"+inputCode);
@@ -271,11 +281,13 @@ public class MainActivity extends BaseActivity {
     }
 
     private void getCardBook(){
+
         mCardBookRefer = mDatabase.getReference("BookInfo");
-        Log.e(TAG, "contain ? "+mCardBookAddress.toString());
+//        Log.e(TAG, "contain ? "+mCardBookAddress.toString());
         mCardBookListener = mCardBookRefer.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                final boolean[] isTraveling = {false};
                 mCardBooks.clear();
                 mReserveBooks.clear();
 
@@ -292,7 +304,25 @@ public class MainActivity extends BaseActivity {
                         String period = bookCodeSnapShot.child("Registration").child("period").getValue(String.class);
                         String title = bookCodeSnapShot.child("Registration").child("title").getValue(String.class);
 
-                        if(Boolean.parseBoolean(bookCodeSnapShot.child("isShowing").getValue().toString())){
+                        // TODO: 2017-11-14
+                        // TODO: 2017-11-14  period 여부 체크
+                        DateListManager dateListManager = new DateListManager();
+                        Date dates[] = dateListManager.convertDates(period);
+
+                        Date now = new Date();
+                        now = new Date(now.getYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+
+                        Log.e(TAG, dates[0].getTime()+"/"+dates[1].getTime()+"/"+now.getTime());
+                        Log.e(TAG, dates[0].toString()+"/"+dates[1].toString()+"/"+now.toString());
+                        if(dates[0].getTime() <= now.getTime() && dates[1].getTime() >= now.getTime()){
+                            isTraveling[0] = true;
+                            Log.e(TAG, "adfasd");
+                        }else{
+                            Log.e(TAG, "이제좀 되라");
+                        }
+
+
+                        if(Boolean.parseBoolean(bookCodeSnapShot.child("isShowing").getValue().toString())){ // 이미지가 있으면 불러오는 것
                             // isShowing == true
                             String image = bookCodeSnapShot.child("Registration").child("image").getValue(String.class);
                             //(String period, String location, String title, String bookCode, String url)
@@ -301,19 +331,25 @@ public class MainActivity extends BaseActivity {
                         }else{
                             mReserveBooks.add(new CardBook(period, location, title, bookCode, null));
                         }
+
                     }
 
                 }
 
-                Log.e(TAG, "카드북 : "+mCardBooks.toString());
-                Log.e(TAG, "예약들 : "+mReserveBooks.toString());
+
+//                Log.e(TAG, "카드북 : "+mCardBooks.toString());
+//                Log.e(TAG, "예약들 : "+mReserveBooks.toString());
                 mCardAdapter.addCardItems(mCardBooks);
                 if(mCardBooks.size() == 0)
                     mCardAdapter.addCardItem(new CardBook("test", "test", "test", "test", "test"));
                 mViewPager.setAdapter(mCardAdapter);
 
+                SharedPreferenceManager spm = new SharedPreferenceManager(MainActivity.this);
+                spm.save(SharedPreferenceTag.IS_TRAVELING_TAG, isTraveling[0]);
+                Log.e(TAG, "그래서 여행중이라고?"+String.valueOf(spm.retrieveBoolean(SharedPreferenceTag.IS_TRAVELING_TAG)));
+
                 hideProgressDialog();
-              }
+            }
 
 
             @Override
@@ -326,5 +362,4 @@ public class MainActivity extends BaseActivity {
 
 
     }
-
 }

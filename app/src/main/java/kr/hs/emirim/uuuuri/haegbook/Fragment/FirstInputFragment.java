@@ -20,8 +20,8 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
+import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
-import kr.hs.emirim.uuuuri.haegbook.Interface.ScheduleTag;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 import static android.app.Activity.RESULT_CANCELED;
@@ -119,14 +119,14 @@ public class FirstInputFragment extends Fragment{
         String address[] = mPlace.getAddress().toString().split(" ");
         SharedPreferenceManager spm = new SharedPreferenceManager(getActivity());
 
-        spm.save(ScheduleTag.TITLE_TAG, mTripTitleEt.getText().toString());
-        spm.save(ScheduleTag.LOCATION_TAG, (String) mPlace.getName());
-        spm.save(ScheduleTag.ADDRESS_TAG, address[0]);
+        spm.save(SharedPreferenceTag.TITLE_TAG, mTripTitleEt.getText().toString());
+        spm.save(SharedPreferenceTag.LOCATION_TAG, (String) mPlace.getName());
+        spm.save(SharedPreferenceTag.ADDRESS_TAG, address[0]);
 
         if(address[0].equals("대한민국"))
-            spm.save(ScheduleTag.IS_KOR_TAG, true);
+            spm.save(SharedPreferenceTag.IS_KOR_TAG, true);
         else
-            spm.save(ScheduleTag.IS_KOR_TAG, false);
+            spm.save(SharedPreferenceTag.IS_KOR_TAG, false);
 
 
         return true;

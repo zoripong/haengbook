@@ -131,7 +131,7 @@ public class AddPhotoActivity extends AppCompatActivity {
         mDateSpinner = findViewById(R.id.date_spinner);
 
         DateListManager dateListManager = new DateListManager();
-        Date[] dates = dateListManager.convertString(mPeriod);
+        Date[] dates = dateListManager.convertDates(mPeriod);
 
         dateList = dateListManager.makeDateList(dates[0], dates[1]);
 

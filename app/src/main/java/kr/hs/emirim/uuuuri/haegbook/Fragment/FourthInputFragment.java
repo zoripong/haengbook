@@ -22,8 +22,8 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
+import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
-import kr.hs.emirim.uuuuri.haegbook.Interface.ScheduleTag;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 /**
@@ -174,8 +174,8 @@ public class FourthInputFragment extends Fragment{
         if(getActivity() == null)
             return;
         SharedPreferenceManager spm = new SharedPreferenceManager(getActivity());
-        Toast.makeText(getContext(), spm.retrieveString(ScheduleTag.ADDRESS_TAG), Toast.LENGTH_SHORT).show();
-        country = spm.retrieveString(ScheduleTag.ADDRESS_TAG);
+        Toast.makeText(getContext(), spm.retrieveString(SharedPreferenceTag.ADDRESS_TAG), Toast.LENGTH_SHORT).show();
+        country = spm.retrieveString(SharedPreferenceTag.ADDRESS_TAG);
 
         for(int i=0;i<spinnerCountry.length;i++){
             if(country.equals(spinnerCountry[i])) {
@@ -183,8 +183,8 @@ public class FourthInputFragment extends Fragment{
                 break;
             }
         }
-        Toast.makeText(getContext(), String.valueOf(spm.retrieveBoolean(ScheduleTag.IS_KOR_TAG)), Toast.LENGTH_SHORT).show();
-        isKoreaTravel=spm.retrieveBoolean(ScheduleTag.IS_KOR_TAG);
+        Toast.makeText(getContext(), String.valueOf(spm.retrieveBoolean(SharedPreferenceTag.IS_KOR_TAG)), Toast.LENGTH_SHORT).show();
+        isKoreaTravel=spm.retrieveBoolean(SharedPreferenceTag.IS_KOR_TAG);
         if(isGoingForeignTravel()){
 
             new getRate().execute(); //환율 가져오기
@@ -199,10 +199,10 @@ public class FourthInputFragment extends Fragment{
         if(beforeMoney==0)
             return false;
         SharedPreferenceManager spm = new SharedPreferenceManager(getActivity());
-        spm.save(ScheduleTag.KOR_MONEY_TAG, beforeMoney);
+        spm.save(SharedPreferenceTag.KOR_MONEY_TAG, beforeMoney);
 
         if(!isKoreaTravel)
-            spm.save(ScheduleTag.FOREIGN_MONEY_TAG, afterMoney);
+            spm.save(SharedPreferenceTag.FOREIGN_MONEY_TAG, afterMoney);
         return true;
     }
 

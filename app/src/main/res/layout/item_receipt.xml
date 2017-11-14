@@ -39,6 +39,19 @@
                 app:scale_top="30"
                 app:scale_width="290" />
 
+            <TextView
+                android:id="@+id/date_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#acacac"
+                android:text="2017.11.14"
+                app:scale_height="40"
+                app:scale_left="350"
+                app:scale_textsize="30"
+                app:scale_top="50"
+                app:scale_width="200" />
+
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -151,7 +151,7 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
 
                         DateListManager dateListManager = new DateListManager();
 
-                        Date [] dates = dateListManager.convertString(mPeriod);
+                        Date [] dates = dateListManager.convertDates(mPeriod);
                         ArrayList<String> dateList = dateListManager.makeDateList(dates[0], dates[1]);
 
                         String []stringArray = new String[dateList.size()];
@@ -197,7 +197,7 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
         Spinner dateSpinner = (Spinner) MenuItemCompat.getActionView(item);
 
         DateListManager dateListManager = new DateListManager();
-        Date [] dates = dateListManager.convertString(mPeriod);
+        Date [] dates = dateListManager.convertDates(mPeriod);
         dateList =  dateListManager.makeDateList(dates[0], dates[1]);
         dateList.add(0, "전체보기");
 

@@ -19,8 +19,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
-import kr.hs.emirim.uuuuri.haegbook.Interface.ScheduleTag;
 import kr.hs.emirim.uuuuri.haegbook.Model.CardBook;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
@@ -59,14 +59,14 @@ public class FifthInputFragment extends Fragment{
             return;
         SharedPreferenceManager spm = new SharedPreferenceManager(getActivity());
 
-        mCardBookTitle=spm.retrieveString(ScheduleTag.TITLE_TAG);
-        mCardBookLocation = spm.retrieveString(ScheduleTag.LOCATION_TAG);
-        mCardBookStartDate = spm.retrieveString(ScheduleTag.START_DATE_TAG);
-        mCardBookEndDate = spm.retrieveString(ScheduleTag.END_DATE_TAG);
-        mUserToken=spm.retrieveString(ScheduleTag.USER_TOKEN_TAG);
+        mCardBookTitle=spm.retrieveString(SharedPreferenceTag.TITLE_TAG);
+        mCardBookLocation = spm.retrieveString(SharedPreferenceTag.LOCATION_TAG);
+        mCardBookStartDate = spm.retrieveString(SharedPreferenceTag.START_DATE_TAG);
+        mCardBookEndDate = spm.retrieveString(SharedPreferenceTag.END_DATE_TAG);
+        mUserToken=spm.retrieveString(SharedPreferenceTag.USER_TOKEN_TAG);
 
-        //  mCardBookKorMoney = spm.retrieveFloat(ScheduleTag.KOR_MONEY_TAG);
-        //  mCardBookForeignMoney = spm.retrieveFloat(ScheduleTag.FOREIGN_MONEY_TAG);
+        //  mCardBookKorMoney = spm.retrieveFloat(SharedPreferenceTag.KOR_MONEY_TAG);
+        //  mCardBookForeignMoney = spm.retrieveFloat(SharedPreferenceTag.FOREIGN_MONEY_TAG);
     }
 
     public boolean saveData(){

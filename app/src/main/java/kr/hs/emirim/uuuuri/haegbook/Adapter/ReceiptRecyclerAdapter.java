@@ -52,6 +52,7 @@ public class ReceiptRecyclerAdapter extends RecyclerView.Adapter<ReceiptRecycler
         holder.amountTv.setText(String.valueOf(item.getAmount()));
         holder.typeTv.setText(String.valueOf(item.getType()));
         holder.memoTv.setText(item.getMemo());
+        holder.dateTv.setText(item.getDate());
 
         switch (item.getType()){
             case FOOD:
@@ -92,6 +93,7 @@ public class ReceiptRecyclerAdapter extends RecyclerView.Adapter<ReceiptRecycler
         TextView amountTv;
         TextView typeTv;
         TextView memoTv;
+        TextView dateTv;
         ImageView typeIv;
 
         public ReceiptViewHolder(View itemView) {
@@ -100,6 +102,7 @@ public class ReceiptRecyclerAdapter extends RecyclerView.Adapter<ReceiptRecycler
             amountTv = itemView.findViewById(R.id.amount_tv);
             typeTv = itemView.findViewById(R.id.type_tv);
             memoTv = itemView.findViewById(R.id.memo_tv);
+            dateTv = itemView.findViewById(R.id.date_tv);
             typeIv = itemView.findViewById(R.id.type_iv);
 
         }

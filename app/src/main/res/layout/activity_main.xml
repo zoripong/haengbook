@@ -35,6 +35,12 @@
                 app:scale_height="100"
                 app:scale_textsize="35"
                 app:scale_width="720" />
+
+            <ImageView
+                android:id="@+id/setting_btn"
+                android:src="@drawable/basic_gps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
     </LinearLayout>
     <LinearLayout

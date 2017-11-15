@@ -3,7 +3,9 @@ package kr.hs.emirim.uuuuri.haegbook.Manager;
 import android.app.Activity;
 import android.content.SharedPreferences;
 
+import kr.hs.emirim.uuuuri.haegbook.Interface.NotificationTag;
 import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
+import kr.hs.emirim.uuuuri.haegbook.Interface.TravelDetailTag;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -69,6 +71,29 @@ public class SharedPreferenceManager {
         editor.putString(SharedPreferenceTag.END_DATE_TAG, "");
         editor.putInt(SharedPreferenceTag.FOREIGN_MONEY_TAG, 0);
         editor.putInt(SharedPreferenceTag.KOR_MONEY_TAG, 0);
+
+        //알람 시작시간, 종료 시간
+        editor.putString(NotificationTag.START_TIME_TAG, "6:0");
+        editor.putString(NotificationTag.FINISH_TIME_TAG, "22:0");
+
+        //잡아놓은 한국돈
+        editor.putFloat(TravelDetailTag.TOTAL_KOREA_MONEY_TAG, 0.0f);
+        //남은돈
+        editor.putFloat(TravelDetailTag.REST_MONEY_TAG, 0.0f);
+
+        editor.putFloat(TravelDetailTag.FOOD_MONEY_TAG, 0.0f);
+        editor.putFloat(TravelDetailTag.TRAFFIC_MONEY_TAG, 0.0f);
+        editor.putFloat(TravelDetailTag.SHOPPING_MONEY_TAG, 0.0f);
+        editor.putFloat(TravelDetailTag.GIFT_MONEY_TAG, 0.0f);
+        editor.putFloat(TravelDetailTag.CULTURE_MONEY_TAG, 0.0f);
+        editor.putFloat(TravelDetailTag.ETC_MONEY_TAG, 0.0f);
+
+        editor.putInt(TravelDetailTag.FOOD_RATE_TAG, -1);
+        editor.putInt(TravelDetailTag.TRAFFIC_RATE_TAG, -1);
+        editor.putInt(TravelDetailTag.SHOPPING_RATE_TAG, -1);
+        editor.putInt(TravelDetailTag.GIFT_RATE_TAG, -1);
+        editor.putInt(TravelDetailTag.CULTURE_RATE_TAG, -1);
+        editor.putInt(TravelDetailTag.ETC_RATE_TAG, -1);
 
         editor.commit();
     }

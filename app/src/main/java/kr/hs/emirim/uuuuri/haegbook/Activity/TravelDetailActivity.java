@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -36,7 +35,9 @@ import java.util.Map;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.PhotoFragment;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.ReceiptFragment;
 import kr.hs.emirim.uuuuri.haegbook.Interface.SelectedFragment;
+import kr.hs.emirim.uuuuri.haegbook.Interface.TravelDetailTag;
 import kr.hs.emirim.uuuuri.haegbook.Manager.DateListManager;
+import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Model.Receipt;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
@@ -47,7 +48,7 @@ import kr.hs.emirim.uuuuri.haegbook.R;
 // TODO: 2017-11-12 : 폴더 이름으로 불러오기
 
 // TODO: 2017-11-12 : 다른 카메라 사용시 파일 삭제
-public class TravelDetailActivity extends AppCompatActivity implements SelectedFragment{
+public class TravelDetailActivity extends BaseActivity implements SelectedFragment{
 
     private final String LOG = "TRAVEL_DETAIL_ACTIVITY";
     private final int TAB_COUNT = 2;
@@ -71,6 +72,13 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
     ReceiptFragment mReceiptFragment;
 
     ArrayList<String> dateList;
+
+
+    Float[] mTravelMoney=new Float[6];
+    Float[] mTravelRate=new Float[6];
+    Float mKoreaMoney=0.0f;
+    Float mRestMoney =0.0f;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +88,9 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
         Intent intent = getIntent();
         mBookCode = intent.getStringExtra("BOOK_CODE");
         mPeriod = intent.getStringExtra("DATE");
+
+        //TODO : 돈 가져와서 SPM에
+        getDetailInfo();
         Toast.makeText(getApplicationContext(), mBookCode, Toast.LENGTH_SHORT).show();
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -171,7 +182,7 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
 
                                 Log.e("파베"+String.valueOf(mDateSp.getSelectedItem().toString()),"");
                                 updateFB(String.valueOf(mDateSp.getSelectedItem().toString()) ,typeIndex,String.valueOf(mTitleEt.getText()),
-                                        String.valueOf(mAmountEt.getText()),currencySymbolSp.getSelectedItem().toString(),String.valueOf(mMemoEt.getText()));
+                                        String.valueOf(mAmountEt.getText()).replaceAll(" ",""),currencySymbolSp.getSelectedItem().toString(),String.valueOf(mMemoEt.getText()));
                                 mDialog.dismiss();
 
 
@@ -304,13 +315,22 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.e("입력값",date+"        "+title+amount+memo);
-                if(date.replaceAll(" ","").equals("") || title.equals("") || amount.equals("") || memo.equals("")){
+                if(date.replaceAll(" ","").equals("") || title.replaceAll(" ","").equals("") || amount.replaceAll(" ","").equals("") || memo.replaceAll(" ","").equals("")){
                     Toast.makeText(getApplicationContext(), "입력해주세요.", Toast.LENGTH_SHORT).show();
                 }else {
-                    keyIndex = dataSnapshot.getChildrenCount();
-                    Map<String, Object> receiptUpdates = new HashMap<String, Object>();
-                    receiptUpdates.put(String.valueOf(keyIndex + 1), new Receipt(date, title, amount+symbol, type, memo));
-                    receiptRef.updateChildren(receiptUpdates);
+                    SharedPreferenceManager spm = new SharedPreferenceManager(TravelDetailActivity.this);
+                    Float restMoney = spm.retrieveFloat(TravelDetailTag.REST_MONEY_TAG);
+
+                    if (restMoney < Float.parseFloat(amount)) {
+                        Toast.makeText(getApplicationContext(), "예정한 금액보다 더 많은 금액을 소비하셨습니다.", Toast.LENGTH_SHORT).show();
+                        //// TODO: 2017-11-15  다이얼로그 , 금액 늘리게
+                    } else {
+                        updateTypeMoney(type,amount);
+                        keyIndex = dataSnapshot.getChildrenCount();
+                        Map<String, Object> receiptUpdates = new HashMap<String, Object>();
+                        receiptUpdates.put(String.valueOf(keyIndex + 1), new Receipt(date, title, amount + symbol, type, memo));
+                        receiptRef.updateChildren(receiptUpdates);
+                    }
                 }
             }
 
@@ -320,4 +340,102 @@ public class TravelDetailActivity extends AppCompatActivity implements SelectedF
         Log.e("파베", String.valueOf(isUpdateNull));
 
     }
+    public void updateTypeMoney(final int type, final String amount){
+        mDatabase = FirebaseDatabase.getInstance();
+        final DatabaseReference receiptRef = mDatabase.getReference("TravelMoney/"+mBookCode);
+
+
+        SharedPreferenceManager spm = new SharedPreferenceManager(TravelDetailActivity.this);
+        Float restMoney = spm.retrieveFloat(TravelDetailTag.REST_MONEY_TAG);
+        Float typeMoney = 0.0f;
+        switch (type){
+            case 0://음식
+                typeMoney = spm.retrieveFloat(TravelDetailTag.FOOD_MONEY_TAG);
+                break;
+            case 1:
+                typeMoney = spm.retrieveFloat(TravelDetailTag.TRAFFIC_MONEY_TAG);
+                break;
+            case 2:
+                typeMoney = spm.retrieveFloat(TravelDetailTag.SHOPPING_MONEY_TAG);
+                break;
+            case 3:
+                typeMoney = spm.retrieveFloat(TravelDetailTag.GIFT_MONEY_TAG);
+                break;
+            case 4:
+                typeMoney = spm.retrieveFloat(TravelDetailTag.CULTURE_MONEY_TAG);
+                break;
+            case 5:
+                typeMoney = spm.retrieveFloat(TravelDetailTag.ETC_MONEY_TAG);
+                break;
+        }
+
+        //restmonet -- 타입머니 ++ 만약 예정한 타입머니보다 많이 썻다면 토스트
+
+        Map<String, Object> restMoneyUpdates = new HashMap<String, Object>();
+        restMoneyUpdates.put("restKorea", new Float(restMoney - Float.parseFloat(amount)));
+        receiptRef.child("Total").updateChildren(restMoneyUpdates);
+
+        Map<String, Object> typeMoneyUpdates = new HashMap<String, Object>();
+        typeMoneyUpdates.put(String.valueOf(type+1), new Float(Float.parseFloat(amount)+typeMoney));
+        receiptRef.child("Money").updateChildren(typeMoneyUpdates);
+
+
+    }
+
+    public void getDetailInfo(){
+
+//// TODO: 2017-11-15 photo 도 가져오기
+
+        mDatabase = FirebaseDatabase.getInstance();
+        final DatabaseReference travleDeatilRef = mDatabase.getReference("TravelMoney/"+mBookCode);
+
+        showProgressDialog();
+        travleDeatilRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for(int i=1;i<7;i++){
+                    mTravelMoney[i-1]=dataSnapshot.child("Money").child(String.valueOf(i)).getValue(Float.class);
+                    mTravelRate[i-1]=dataSnapshot.child("Rate").child(String.valueOf(i)).getValue(Float.class);
+                    mKoreaMoney = dataSnapshot.child("Total").child("korea").getValue(Float.class);
+                    mRestMoney = dataSnapshot.child("Total").child("restKorea").getValue(Float.class);
+
+                }
+                saveData();
+                hideProgressDialog();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+
+    }
+
+    public void saveData(){
+        SharedPreferenceManager spm = new SharedPreferenceManager(this);
+        spm.save(TravelDetailTag.FOOD_MONEY_TAG,mTravelMoney[0]);
+        spm.save(TravelDetailTag.TRAFFIC_MONEY_TAG,mTravelMoney[1]);
+        spm.save(TravelDetailTag.SHOPPING_MONEY_TAG,mTravelMoney[2]);
+        spm.save(TravelDetailTag.GIFT_MONEY_TAG,mTravelMoney[3]);
+        spm.save(TravelDetailTag.CULTURE_MONEY_TAG,mTravelMoney[4]);
+        spm.save(TravelDetailTag.ETC_MONEY_TAG,mTravelMoney[5]);
+
+        spm.save(TravelDetailTag.FOOD_RATE_TAG,mTravelRate[0]);
+        spm.save(TravelDetailTag.TRAFFIC_RATE_TAG,mTravelRate[1]);
+        spm.save(TravelDetailTag.SHOPPING_RATE_TAG,mTravelRate[2]);
+        spm.save(TravelDetailTag.GIFT_RATE_TAG,mTravelRate[3]);
+        spm.save(TravelDetailTag.CULTURE_RATE_TAG,mTravelRate[4]);
+        spm.save(TravelDetailTag.ETC_RATE_TAG,mTravelRate[5]);
+
+        spm.save(TravelDetailTag.TOTAL_KOREA_MONEY_TAG,mKoreaMoney);
+        spm.save(TravelDetailTag.REST_MONEY_TAG, mRestMoney);
+
+        for(int i=0;i<6;i++) {
+            Log.e("트레블 디테일", String.valueOf(mTravelMoney[i]));
+        }
+        Log.e("트레블 코리아", String.valueOf(mKoreaMoney));
+        Log.e("트레블 포린", String.valueOf(mRestMoney));
+
+    }
 }
+

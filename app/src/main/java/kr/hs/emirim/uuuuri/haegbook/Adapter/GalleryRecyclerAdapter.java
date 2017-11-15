@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -162,6 +163,7 @@ public class GalleryRecyclerAdapter extends RecyclerView.Adapter<GalleryRecycler
                                 dialog.show();
                             }
                         });
+                ((TextView)dialog.findViewById(R.id.path_tv)).setText("파일 위치 : "+galleryImage.getImgPath());
 
                 return true;
             }

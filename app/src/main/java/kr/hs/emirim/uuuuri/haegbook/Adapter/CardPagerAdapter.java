@@ -69,9 +69,10 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
 
         for(int i = 0; i<items.size(); i++){
 //            Log.e(TAG, "킬킬"+items.get(i).toString());
-
-            mViews.add(null);
-            mData.add(items.get(i));
+            if(items.get(i).isShowing()) {
+                mViews.add(null);
+                mData.add(items.get(i));
+            }
         }
     }
 
@@ -149,7 +150,13 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
                 });
 //        Log.e(TAG, "<After> width : "+ cardView.getWidth() +" / height : " + cardView.getHeight());
 
-
+        cardView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Toast.makeText(mNowActivity, item.toString(), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
 
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override

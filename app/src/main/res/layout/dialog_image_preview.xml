@@ -11,16 +11,24 @@
     android:paddingBottom="80dp"
     >
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="100dp"
         android:paddingTop="100dp"
         android:background="#ffffff">
+
         <ImageView
             android:id="@+id/preview_iv"
             android:src="@drawable/barcode_traffic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#ffffff"/>
+        <TextView
+            android:id="@+id/path_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
+
 </LinearLayout>

@@ -13,9 +13,12 @@ import com.flipboard.bottomsheet.commons.BottomSheetFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import kr.hs.emirim.uuuuri.haegbook.Model.CardBook;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 public class BookCardListFragment extends BottomSheetFragment {
+    private final String TAG ="BookCardListFragment";
+    private final String BUNDLE_TAG ="BUNDLE_TAG";
 
     ListView mListview;
     List<String> mList = new ArrayList<>();
@@ -33,6 +36,8 @@ public class BookCardListFragment extends BottomSheetFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        ArrayList<CardBook> cardBooks = getArguments().getParcelableArrayList(BUNDLE_TAG);
+
         return inflater.inflate(R.layout.fragment_book_card_list, container, false);
     }
 
@@ -42,5 +47,10 @@ public class BookCardListFragment extends BottomSheetFragment {
         mListview = (ListView) view.findViewById(R.id.listview);
         mAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_multiple_choice, mList);
         mListview.setAdapter(mAdapter);
+
+        // 리스트 띄우기
+
+
+
     }
 }

@@ -23,11 +23,13 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.util.ArrayList;
 
+import kr.hs.emirim.uuuuri.haegbook.Adapter.ImageDetailRecyclerAdapter;
 import kr.hs.emirim.uuuuri.haegbook.Manager.ImageDetailRecyclerSetter;
 import kr.hs.emirim.uuuuri.haegbook.Model.FirebaseImage;
 import kr.hs.emirim.uuuuri.haegbook.Model.GalleryImage;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
+// TODO: 2017-11-16 이미지 코멘트 잘들어가나 테스트
 public class AddPhotoDetailActivity extends BaseActivity {
     private final String STRORAGE_PATH = "images/";
 
@@ -62,7 +64,7 @@ public class AddPhotoDetailActivity extends BaseActivity {
         Log.e(TAG , selectedList.toString());
 
         recyclerView = findViewById(R.id.recyclerview);
-        ImageDetailRecyclerSetter imageDetailRecyclerSetter = new ImageDetailRecyclerSetter(this, this);
+        final ImageDetailRecyclerSetter imageDetailRecyclerSetter = new ImageDetailRecyclerSetter(this, this);
         imageDetailRecyclerSetter.setRecyclerCardView(recyclerView, selectedList);
 
 
@@ -78,17 +80,21 @@ public class AddPhotoDetailActivity extends BaseActivity {
             public void onClick(View view) {
                 firebaseImages = new ArrayList<FirebaseImage>();
 
-                for(int i = 0; i<selectedList.size(); i++){
-                    firebaseImages.add(new FirebaseImage("", selectedList.get(i).getImgPath(), mToday));
-                }
+                ImageDetailRecyclerAdapter adapter = imageDetailRecyclerSetter.getAdapter();
 
-                UploadImageFileToFirebaseStorage();
+                if(adapter != null) {
+                    firebaseImages = adapter.getImageList(mToday);
+                    UploadImageFileToFirebaseStorage();
+                }else{
+                    Toast.makeText(AddPhotoDetailActivity.this, "업로드 실패", Toast.LENGTH_SHORT).show();
+                }
 
                 Intent intent = new Intent(AddPhotoDetailActivity.this, TravelDetailActivity.class);
                 intent.putExtra("BOOK_CODE",mBookCode);
                 intent.putExtra("DATE", mPeriod);
                 startActivity(intent);
                 finish();
+
 
             }
         });

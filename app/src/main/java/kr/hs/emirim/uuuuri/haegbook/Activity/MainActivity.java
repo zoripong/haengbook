@@ -44,7 +44,7 @@ import kr.hs.emirim.uuuuri.haegbook.fcm.FirebaseInstanceIDService;
 
 public class MainActivity extends BaseActivity {
     private final String TAG = "MainActivity";
-
+    private final String BUNDLE_TAG ="BUNDLE_TAG";
 
     private EditText bookCodeEt;
 
@@ -201,7 +201,21 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onSwipeTop() {
-                new BookCardListFragment().show(getSupportFragmentManager(), R.id.design_bottom_sheet);
+/*
+ Bundle bundle = new Bundle();
+        String myMessage = "Stackoverflow is cool!";
+        bundle.putString("message", myMessage );
+        FragmentClass fragInfo = new FragmentClass();
+        fragInfo.setArguments(bundle);
+        transaction.replace(R.id.fragment_single, fragInfo);
+        transaction.commit();
+ */
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList(BUNDLE_TAG, mCardBooks);
+                BookCardListFragment fragment = new BookCardListFragment();
+                fragment.setArguments(bundle);
+                fragment.show(getSupportFragmentManager(), R.id.design_bottom_sheet);
+//                new BookCardListFragment().show(getSupportFragmentManager(), R.id.design_bottom_sheet);
             }
 
             @Override

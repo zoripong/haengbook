@@ -16,10 +16,6 @@ public class GalleryImage implements Serializable {
         return imgPath;
     }
 
-    public void setImgPath(String imgPath) {
-        this.imgPath = imgPath;
-    }
-
     public boolean isSelected() {
         return selected;
     }

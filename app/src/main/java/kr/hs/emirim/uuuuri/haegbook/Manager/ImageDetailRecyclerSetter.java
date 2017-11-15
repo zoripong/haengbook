@@ -34,4 +34,7 @@ public class ImageDetailRecyclerSetter {
         return true;
     }
 
+    public ImageDetailRecyclerAdapter getAdapter(){
+        return adapter;
+    }
 }

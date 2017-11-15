@@ -92,11 +92,11 @@ public class ImageDetailRecyclerAdapter extends RecyclerView.Adapter<ImageDetail
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mComments.set(i, charSequence.toString());
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
+                mComments.set(position, holder.commentEt.getText().toString());
             }
         });
 

@@ -58,23 +58,20 @@ public class MainActivity extends BaseActivity {
     private CardPagerAdapter mCardAdapter;
     private ShadowTransformer mCardShadowTransformer;
 
-    LinearLayout card_item;
-    int setLRPadding;
-    int setTBPadding;
-    int setMargin;
-
+    private SharedPreferenceManager spm;
+    private LinearLayout card_item;
+    private int setLRPadding;
+    private int setTBPadding;
+    private int setMargin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         initialize();
         getDatabase();
         getUserToken();
-
-
 
         DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
         int w = dm.widthPixels; //디바이스 해상도 구하기
@@ -102,6 +99,8 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initialize() {
+        spm = new SharedPreferenceManager(MainActivity.this);
+
         mDatabase = FirebaseDatabase.getInstance();
 
         mCardBookAddress = new ArrayList<>();
@@ -304,8 +303,6 @@ public class MainActivity extends BaseActivity {
                         String period = bookCodeSnapShot.child("Registration").child("period").getValue(String.class);
                         String title = bookCodeSnapShot.child("Registration").child("title").getValue(String.class);
 
-                        // TODO: 2017-11-14
-                        // TODO: 2017-11-14  period 여부 체크
                         DateListManager dateListManager = new DateListManager();
                         Date dates[] = dateListManager.convertDates(period);
 
@@ -316,11 +313,12 @@ public class MainActivity extends BaseActivity {
                         Log.e(TAG, dates[0].toString()+"/"+dates[1].toString()+"/"+now.toString());
                         if(dates[0].getTime() <= now.getTime() && dates[1].getTime() >= now.getTime()){
                             isTraveling[0] = true;
-                            Log.e(TAG, "adfasd");
-                        }else{
-                            Log.e(TAG, "이제좀 되라");
+                            spm.save(SharedPreferenceTag.DEFAULT_DIRECTORY, title);
+                            Log.e(TAG, "여행 중");
+                            Log.e(TAG, "default directory name : "+spm.retrieveString(SharedPreferenceTag.DEFAULT_DIRECTORY));
                         }
 
+                        // TODO: 2017-11-15 여행카드 날짜순 sort
 
                         if(Boolean.parseBoolean(bookCodeSnapShot.child("isShowing").getValue().toString())){ // 이미지가 있으면 불러오는 것
                             // isShowing == true
@@ -344,7 +342,6 @@ public class MainActivity extends BaseActivity {
                     mCardAdapter.addCardItem(new CardBook("test", "test", "test", "test", "test"));
                 mViewPager.setAdapter(mCardAdapter);
 
-                SharedPreferenceManager spm = new SharedPreferenceManager(MainActivity.this);
                 spm.save(SharedPreferenceTag.IS_TRAVELING_TAG, isTraveling[0]);
                 Log.e(TAG, "그래서 여행중이라고?"+String.valueOf(spm.retrieveBoolean(SharedPreferenceTag.IS_TRAVELING_TAG)));
 

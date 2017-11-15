@@ -47,6 +47,8 @@ android {
         testCompile 'junit:junit:4.12'
 
         compile 'org.jetbrains:annotations-java5:15.0'
+
+        compile 'gun0912.ted:tedpermission:2.1.0'
     }
 
     packagingOptions {

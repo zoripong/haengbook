@@ -67,8 +67,13 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".Activity.IntroActivity"
+        <activity
+            android:name=".Activity.IntroActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".Activity.TakePicturesForServiceActivity"
+            android:noHistory="false"
+            android:theme="@android:style/Theme.Dialog"/>
     </application>
 
 </manifest>

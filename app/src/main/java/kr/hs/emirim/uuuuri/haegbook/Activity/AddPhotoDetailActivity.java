@@ -90,8 +90,6 @@ public class AddPhotoDetailActivity extends BaseActivity {
                 startActivity(intent);
                 finish();
 
-
-
             }
         });
     }

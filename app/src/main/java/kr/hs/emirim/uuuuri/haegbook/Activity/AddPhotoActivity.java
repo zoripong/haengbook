@@ -72,12 +72,12 @@ public class AddPhotoActivity extends AppCompatActivity {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 Toast.makeText(this, "이미지를 불러오는데 권한이 필요합니다.", Toast.LENGTH_SHORT).show();
-            } else {
+            }
                 // 권한 요청
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         READ_EXTERNAL_STORAGE_CODE);
-            }
+
         }else{
             // 권한이 있음
             initLayout();

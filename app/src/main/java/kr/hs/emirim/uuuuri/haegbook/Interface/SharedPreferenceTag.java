@@ -22,5 +22,7 @@ public interface SharedPreferenceTag {
     // to floating widget tag
     String IS_TRAVELING_TAG = "IS TRAVELING TAG";
 
+    String DEFAULT_DIRECTORY = "default directory";
+
 
 }

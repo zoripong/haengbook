@@ -1,6 +1,5 @@
 package kr.hs.emirim.uuuuri.haegbook.Widget;
 
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -11,21 +10,27 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.RemoteViews;
+import android.widget.TextView;
 
-import kr.hs.emirim.uuuuri.haegbook.Activity.TakePicturesActivity;
+import kr.hs.emirim.uuuuri.haegbook.Activity.TakePicturesForServiceActivity;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 // TODO: 2017-11-14 좌우에 붙어있게
-// TODO: 2017-11-14 앱 종료시에도 계속해서 켜져있게
+// TODO: 2017-11-15 가까이 가면 삭제 될 수 있도록
+// TODO: 2017-11-15 permission check 부분 test
+// TODO: 2017-11-16 directory 수정가능 다이얼로그 생성 & shared preference
+// 에 반영
 
 public class FloatingViewService extends Service {
+    private final String FILE_PATH_EXTRA = "FILE PATH EXTRA";
 
     private WindowManager mWindowManager;
     private View mFloatingView;
+    private TextView mPathTv;
 
-    public FloatingViewService() {
-    }
+    private String mDirectory;
+
+    public FloatingViewService() {}
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -33,10 +38,18 @@ public class FloatingViewService extends Service {
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        mDirectory = intent.getStringExtra(FILE_PATH_EXTRA);
+        mPathTv.setText(mDirectory);
+        return START_REDELIVER_INTENT;
+    }
+
+
+    @Override
     public void onCreate() {
         super.onCreate();
-        //Inflate the floating view layout we created
-        mFloatingView = LayoutInflater.from(this).inflate(R.layout.layout_floating_widget, null);
+        //Inflate the floating view layout we create
+         mFloatingView = LayoutInflater.from(this).inflate(R.layout.layout_floating_widget, null);
 
         //Add the view to the window.
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
@@ -57,7 +70,22 @@ public class FloatingViewService extends Service {
 
         //The root element of the collapsed view layout
         final View collapsedView = mFloatingView.findViewById(R.id.collapse_view);
+        //The root element of the expanded view layout
+        final View expandedView = mFloatingView.findViewById(R.id.expanded_container);
 
+        mFloatingView.findViewById(R.id.camera_iv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(FloatingViewService.this, TakePicturesForServiceActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(FILE_PATH_EXTRA, mDirectory);
+                startActivity(intent);
+                stopSelf();
+            }
+        });
+
+        mPathTv = mFloatingView.findViewById(R.id.path_tv);
+//        pathView.setText();
 
         //Set the close button
         ImageView closeButtonCollapsed = (ImageView) mFloatingView.findViewById(R.id.close_btn);
@@ -69,26 +97,31 @@ public class FloatingViewService extends Service {
             }
         });
 
-        mFloatingView.findViewById(R.id.collapse_view).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Open the application  click.
-//                Intent intent=new Intent(getApplicationContext(), TakePicturesActivity.class);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //Set the close button
+//        ImageView closeButton = (ImageView) mFloatingView.findViewById(R.id.close_button);
+//        closeButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                collapsedView.setVisibility(View.VISIBLE);
+//                expandedView.setVisibility(View.GONE);
+//            }
+//        });
+
+//        //Open the application on thi button click
+//        ImageView openButton = (ImageView) mFloatingView.findViewById(R.id.open_button);
+//        openButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //Open the application  click.
+//                Intent intent = new Intent(FloatingViewService.this, MainActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                startActivity(intent);
+//
+//                //close the service and remove view from the view hierarchy
+//                stopSelf();
+//            }
+//        });
 
-
-                RemoteViews views = new RemoteViews(getApplicationContext().getPackageName(), R.layout.camera_widget);
-
-
-                Intent intent=new Intent(getApplicationContext(), TakePicturesActivity.class);
-                PendingIntent pe= PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
-                views.setOnClickPendingIntent(R.id.button, pe);
-
-                stopSelf();
-
-            }
-        });
 
         //Drag and move floating view using user's touch action.
         mFloatingView.findViewById(R.id.root_container).setOnTouchListener(new View.OnTouchListener() {
@@ -122,7 +155,7 @@ public class FloatingViewService extends Service {
                                 //visibility of the collapsed layout will be changed to "View.GONE"
                                 //and expanded view will become visible.
                                 collapsedView.setVisibility(View.GONE);
-//                                expandedView.setVisibility(View.VISIBLE);
+                                expandedView.setVisibility(View.VISIBLE);
                             }
                         }
                         return true;
@@ -139,6 +172,7 @@ public class FloatingViewService extends Service {
             }
         });
     }
+
 
     /**
      * Detect if the floating view is collapsed or expanded.

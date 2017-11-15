@@ -21,6 +21,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.viewpagerindicator.UnderlinePageIndicator;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,7 +30,7 @@ import java.util.Map;
 
 import kr.hs.emirim.uuuuri.haegbook.Adapter.CardPagerAdapter;
 import kr.hs.emirim.uuuuri.haegbook.Adapter.OnSwipeTouchListener;
-import kr.hs.emirim.uuuuri.haegbook.Fragment.MyFragment;
+import kr.hs.emirim.uuuuri.haegbook.Fragment.BookCardListFragment;
 import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
 import kr.hs.emirim.uuuuri.haegbook.Manager.DateListManager;
 import kr.hs.emirim.uuuuri.haegbook.Manager.ShadowTransformer;
@@ -86,12 +88,12 @@ public class MainActivity extends BaseActivity {
         double deviceDPI = displayMetrics.xdpi;
         double mm = 25.4f / deviceDPI;
 
-//        Log.e(TAG, "해상도 가로의 값은 무엇일까요요용요ㅛ요요요요 : "+(mm*w)+" mm : "+mm); //1px에 따른 mm*화면 px개수
+        Log.e(TAG, "해상도 가로의 값은 무엇일까요요용요ㅛ요요요요 : "+(mm*w)+" mm : "+mm); //1px에 따른 mm*화면 px개수
 
-        setLRPadding = (int) (mm*600);
-        setTBPadding=(int)(mm*200);
+        setLRPadding = (int) (mm*1800);
+        setTBPadding=(int)(mm*600);
         mViewPager.setPadding(setLRPadding, setTBPadding, setLRPadding, setTBPadding);
-//        Log.e(TAG, "디바이스 양쪽 패딩의 값은...? : "+setLRPadding); //1px에 따른 mm*화면 px개수
+        Log.e(TAG, "디바이스 양쪽 패딩의 값은...? : "+setLRPadding); //1px에 따른 mm*화면 px개수
 
     }
 
@@ -140,7 +142,6 @@ public class MainActivity extends BaseActivity {
                         inputDialog.findViewById(R.id.add_btn).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                //TODO
                                 updateFB(String.valueOf(bookCodeEt.getText()));
                                 inputDialog.hide();
                                 inputDialog.dismiss();
@@ -172,9 +173,8 @@ public class MainActivity extends BaseActivity {
         mViewPager = findViewById(R.id.viewPager);
         mCardAdapter = new CardPagerAdapter(this);
 
-        // TODO: 2017-11-07 debug
         // TODO: 2017-11-16 튜토리얼로 만들기
-        mCardAdapter.addCardItem(new CardBook("test", "test", "test", "test", "test"));
+        mCardAdapter.addCardItem(new CardBook("test", "test", "test", "test", "test", false));
 
         mCardShadowTransformer = new ShadowTransformer(mViewPager, mCardAdapter);
         mCardShadowTransformer.enableScaling(true);
@@ -194,26 +194,18 @@ public class MainActivity extends BaseActivity {
 
         findViewById(R.id.handle).setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
             @Override
-            public void onSwipeRight() {
-                Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
-            }
+            public void onSwipeRight() {}
 
             @Override
-            public void onSwipeLeft() {
-                Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
-
-            }
+            public void onSwipeLeft() {}
 
             @Override
             public void onSwipeTop() {
-                new MyFragment().show(getSupportFragmentManager(), R.id.design_bottom_sheet);
+                new BookCardListFragment().show(getSupportFragmentManager(), R.id.design_bottom_sheet);
             }
 
             @Override
-            public void onSwipeBottom() {
-                Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
-
-            }
+            public void onSwipeBottom() {}
 
 
         });
@@ -339,6 +331,8 @@ public class MainActivity extends BaseActivity {
                         String location = bookCodeSnapShot.child("Registration").child("location").getValue(String.class);
                         String period = bookCodeSnapShot.child("Registration").child("period").getValue(String.class);
                         String title = bookCodeSnapShot.child("Registration").child("title").getValue(String.class);
+                        Boolean isShowing = Boolean.parseBoolean(bookCodeSnapShot.child("isShowing").getValue().toString());
+                        String image = bookCodeSnapShot.child("Registration").child("image").getValue(String.class);
 
                         DateListManager dateListManager = new DateListManager();
                         Date dates[] = dateListManager.convertDates(period);
@@ -356,27 +350,21 @@ public class MainActivity extends BaseActivity {
                         }
 
                         // TODO: 2017-11-15 여행카드 날짜순 sort
-
-                        if(Boolean.parseBoolean(bookCodeSnapShot.child("isShowing").getValue().toString())){ // 이미지가 있으면 불러오는 것
-                            // isShowing == true
-                            String image = bookCodeSnapShot.child("Registration").child("image").getValue(String.class);
-                            //(String period, String location, String title, String bookCode, String url)
-                            // param
-                            mCardBooks.add(new CardBook(period, location, title, bookCode, image));
-                        }else{
-                            mReserveBooks.add(new CardBook(period, location, title, bookCode, null));
-                        }
-
+                        CardBook cardBook = new CardBook(period, location, title, bookCode, image, isShowing);
+                        mCardBooks.add(cardBook);
                     }
 
                 }
 
+//                Log.e(TAG, "sort 전 카드북 : "+mCardBooks.toString());
+                DescendingObj descending = new DescendingObj();
+                Collections.sort(mCardBooks, descending);
+//                Log.e(TAG, "sort 후 카드북 : "+mCardBooks.toString());
 
-//                Log.e(TAG, "카드북 : "+mCardBooks.toString());
-//                Log.e(TAG, "예약들 : "+mReserveBooks.toString());
                 mCardAdapter.addCardItems(mCardBooks);
+
                 if(mCardBooks.size() == 0)
-                    mCardAdapter.addCardItem(new CardBook("test", "test", "test", "test", "test"));
+                    mCardAdapter.addCardItem(new CardBook("test", "test", "test", "test", "test", false));
                 mViewPager.setAdapter(mCardAdapter);
 
                 spm.save(SharedPreferenceTag.IS_TRAVELING_TAG, isTraveling[0]);
@@ -396,4 +384,22 @@ public class MainActivity extends BaseActivity {
 
 
     }
+
+    // String 내림차순
+    class DescendingObj implements Comparator<CardBook> {
+
+        @Override
+        public int compare(CardBook cardBook, CardBook t1) {
+
+            DateListManager dateListManager = new DateListManager();
+            Date fBookDates[] = dateListManager.convertDates(cardBook.getPeriod());
+            Date sBookDates[] = dateListManager.convertDates(t1.getPeriod());
+
+            Long fTime = fBookDates[0].getTime();
+            Long sTime = sBookDates[0].getTime();
+
+            return sTime.compareTo(fTime);
+        }
+    }
+
 }

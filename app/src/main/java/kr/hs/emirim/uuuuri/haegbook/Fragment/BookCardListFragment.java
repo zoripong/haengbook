@@ -15,7 +15,7 @@ import java.util.List;
 
 import kr.hs.emirim.uuuuri.haegbook.R;
 
-public class MyFragment extends BottomSheetFragment {
+public class BookCardListFragment extends BottomSheetFragment {
 
     ListView mListview;
     List<String> mList = new ArrayList<>();
@@ -33,7 +33,7 @@ public class MyFragment extends BottomSheetFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_my, container, false);
+        return inflater.inflate(R.layout.fragment_book_card_list, container, false);
     }
 
     @Override

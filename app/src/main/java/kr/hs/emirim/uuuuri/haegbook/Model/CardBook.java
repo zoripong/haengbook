@@ -10,6 +10,8 @@ public class CardBook {
     String title;
     String bookCode;
     String image;
+    boolean isShowing;
+
     public CardBook(String period, String location, String title, String image) {
         this.period = period;
         this.location = location;
@@ -17,12 +19,13 @@ public class CardBook {
         this.image = image;
     }
 
-    public CardBook(String period, String location, String title, String bookCode, String image) {
+    public CardBook(String period, String location, String title, String bookCode, String image, boolean isShowing) {
         this.period = period;
         this.location = location;
         this.title = title;
         this.bookCode = bookCode;
         this.image = image;
+        this.isShowing = isShowing;
     }
 
     @Override
@@ -34,6 +37,14 @@ public class CardBook {
                 ", bookCode='" + bookCode + '\'' +
                 ", image='" + image + '\'' +
                 '}';
+    }
+
+    public boolean isShowing() {
+        return isShowing;
+    }
+
+    public void setShowing(boolean showing) {
+        isShowing = showing;
     }
 
     public String getPeriod() {

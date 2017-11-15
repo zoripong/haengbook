@@ -143,9 +143,8 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
                     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                     @Override
                     public void onResourceReady(GlideDrawable resource, GlideAnimation anim) {
-                        CardView myView = this.view;
-                        // Set your resource on myView and/or start your animation here.
-                        myView.setBackground(resource);
+                        ImageView imageV= view.findViewById(R.id.linear); ////수정
+                        imageV.setBackground(resource); //수정
                     }
                 });
 //        Log.e(TAG, "<After> width : "+ cardView.getWidth() +" / height : " + cardView.getHeight());
@@ -190,8 +189,6 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
                         intent.setType("text/plain");
                         Intent chooser = Intent.createChooser(intent, "친구에게 공유하기");
                         view.getContext().startActivity(chooser);
-
-
                         mDialog.dismiss();
 
                     }

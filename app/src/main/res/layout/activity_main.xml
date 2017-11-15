@@ -7,121 +7,124 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     >
-<LinearLayout
-    android:id="@+id/linear"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#FFF"
-    tools:context="kr.hs.emirim.uuuuri.haegbook.Activity.MainActivity">
     <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="3.4"
-        android:elevation="3dp">
+        android:orientation="vertical"
+        android:background="#FFF"
+        tools:context="kr.hs.emirim.uuuuri.haegbook.Activity.MainActivity">
 
-        <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:background="#FFF"
-            android:elevation="3dp"
-            app:scale_base_height="100"
-            app:scale_base_width="720">
+            android:layout_height="match_parent"
+            android:layout_weight="3.4"
+            android:elevation="3dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="top"
                 android:background="#FFF"
                 android:elevation="3dp"
-                android:gravity="center"
-                android:text="HAENGBOOK"
-                android:textColor="#f8971c"
-                android:textStyle="bold"
-                app:scale_height="100"
-                app:scale_textsize="35"
-                app:scale_width="720" />
+                app:scale_base_height="100"
+                app:scale_base_width="720">
 
-            <ImageView
-                android:id="@+id/setting_btn"
-                android:src="@drawable/basic_gps"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
-        </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical">
-        <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#FFF"
+                    android:elevation="3dp"
+                    android:gravity="center"
+                    android:text="HAENGBOOK"
+                    android:textColor="#f8971c"
+                    android:textStyle="bold"
+                    app:scale_height="100"
+                    app:scale_textsize="35"
+                    app:scale_width="720" />
+                <ImageView
+                    android:id="@+id/setting_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src ="@drawable/dropdown_icon"/>
+            </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="bottom"
-            app:scale_base_width="720"
-            app:scale_base_height="70">
-            <TextView
-                android:id="@+id/test"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="MY BOOK"
-                android:layout_gravity="bottom"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:scale_height="40"
-                app:scale_left="30"
-                app:scale_width="170"
-                app:scale_textsize="32"/>
-        </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewPager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:clipToPadding="false"
-            android:overScrollMode="never"/>
-        <com.viewpagerindicator.UnderlinePageIndicator
-            android:id="@+id/activity_view_pager_indicator_underline"
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:layout_gravity="center"
-            android:gravity="top"
-            android:textColor="#3e3e3e"
-            app:fades="false"
-            app:scale_width="720"
-            app:selectedColor="@color/colorPrimary" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="3.1"
-        android:gravity="center">
-        <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="bottom"
-            app:scale_base_width="800">
-            <Button
-                android:id="@+id/add_schedule_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+            <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:background="@drawable/main_btn_background"
-                android:text="새로운 여행 추가하기"
-                android:textColor="#f8971c"
-                app:scale_textsize="35"
-                app:scale_height="80"
-                app:scale_width="409" />
-        </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
-    </LinearLayout>
+                android:gravity="bottom"
+                app:scale_base_width="720"
+                app:scale_base_height="70">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MY BOOK"
+                    android:layout_gravity="bottom"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:scale_height="40"
+                    app:scale_left="30"
+                    app:scale_width="170"
+                    app:scale_textsize="32"/>
+            </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:clipToPadding="false"
+                android:overScrollMode="never"/>
+            <com.viewpagerindicator.UnderlinePageIndicator
+                android:id="@+id/activity_view_pager_indicator_underline"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_gravity="center"
+                android:gravity="top"
+                android:textColor="#3e3e3e"
+                app:fades="false"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                app:selectedColor="@color/colorPrimary" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="3.1"
+            android:gravity="center">
+            <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="bottom"
+                app:scale_base_width="800">
+                <Button
+                    android:id="@+id/add_schedule_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/main_btn_background"
+                    android:text="새로운 여행 추가하기"
+                    android:textColor="#f8971c"
+                    app:scale_textsize="35"
+                    app:scale_height="80"
+                    app:scale_width="409"/>
+            </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
+        </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/handle"
@@ -131,6 +134,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:background="@drawable/handle"/>
-</LinearLayout>
 
-    </com.flipboard.bottomsheet.BottomSheetLayout>
+    </LinearLayout>
+</com.flipboard.bottomsheet.BottomSheetLayout>

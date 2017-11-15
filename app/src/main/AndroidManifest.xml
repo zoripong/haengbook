@@ -28,7 +28,6 @@
         </activity>
         <activity
             android:name=".Activity.TravelDetailActivity"
-            android:label="@string/title_activity_travel_detail"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activity.AddPhotoActivity"

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_marginBottom="5dp">
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardview"
@@ -16,7 +17,7 @@
         <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:scale_base_height="300"
+            app:scale_base_height="322"
             app:scale_base_width="720">
 
             <ImageView
@@ -24,8 +25,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/barcode_culture"
-                app:scale_height="228"
-                app:scale_top="33"
+                app:scale_height="268"
+                app:scale_top="28"
                 app:scale_width="90" />
 
             <TextView
@@ -38,19 +39,6 @@
                 app:scale_textsize="40"
                 app:scale_top="30"
                 app:scale_width="290" />
-
-            <TextView
-                android:id="@+id/date_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#acacac"
-                android:text="2017.11.14"
-                app:scale_height="40"
-                app:scale_left="350"
-                app:scale_textsize="30"
-                app:scale_top="50"
-                app:scale_width="200" />
-
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -102,6 +90,7 @@
                 app:scale_top="160"
                 app:scale_width="100" />
 
+
             <TextView
                 android:id="@+id/type_tv"
                 android:layout_width="wrap_content"
@@ -120,7 +109,7 @@
                 app:scale_height="50"
                 app:scale_left="120"
                 app:scale_textsize="33"
-                app:scale_top="230"
+                app:scale_top="210"
                 app:scale_width="120" />
 
             <TextView
@@ -130,7 +119,19 @@
                 app:scale_height="50"
                 app:scale_left="240"
                 app:scale_textsize="33"
-                app:scale_top="230"
+                app:scale_top="210"
+                app:scale_width="470" />
+
+            <TextView
+                android:id="@+id/date_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="2017.09.09"
+                app:scale_height="50"
+                app:scale_left="220"
+                app:scale_textsize="33"
+                app:scale_top="260"
                 app:scale_width="470" />
 
         </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>

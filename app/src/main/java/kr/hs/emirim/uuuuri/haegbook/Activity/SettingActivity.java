@@ -59,13 +59,22 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if(isChecked) {
-                    TedPermission.with(SettingActivity.this)
-                            .setPermissionListener(permissionlistener)
-                            .setDeniedMessage("권한이 없을 경우, 플로팅 위젯 기능을 사용 할 수 없습니다.\n\nPlease turn on permissions at [Setting] > [Permission]")
-                            .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.SYSTEM_ALERT_WINDOW)
-                            .check();
+                    if(spm.retrieveBoolean(SharedPreferenceTag.IS_TRAVELING_TAG)) {
+
+                        TedPermission.with(SettingActivity.this)
+                                .setPermissionListener(permissionlistener)
+                                .setDeniedMessage("권한이 없을 경우, 플로팅 위젯 기능을 사용 할 수 없습니다.\n\nPlease turn on permissions at [Setting] > [Permission]")
+                                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.SYSTEM_ALERT_WINDOW)
+                                .check();
+                    }else{
+                        Toast.makeText(SettingActivity.this, "여행중에만 이용가능한 서비스 입니다.", Toast.LENGTH_SHORT).show();
+                        floatingWidgetSwitch.setChecked(false);
+                    }
                 }else{
-                    stopService(mServiceIntent);
+                    if(mServiceIntent!=null) {
+                        stopService(mServiceIntent);
+                        mServiceIntent = null;
+                    }
                 }
             }
         });

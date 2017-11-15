@@ -39,16 +39,15 @@ android {
         compile 'com.google.firebase:firebase-storage:11.4.2'
 
         compile 'com.github.JakeWharton:ViewPagerIndicator:2.4.1'
-
-        compile 'com.github.bumptech.glide:glide:3.7.0' // dependencies 안에 추가해주세요~
-
+        compile 'com.github.bumptech.glide:glide:3.7.0'
         compile 'org.jsoup:jsoup:1.10.3'
 
         testCompile 'junit:junit:4.12'
 
         compile 'org.jetbrains:annotations-java5:15.0'
-
         compile 'gun0912.ted:tedpermission:2.1.0'
+        compile 'com.flipboard:bottomsheet-core:1.5.3'
+        compile 'com.flipboard:bottomsheet-commons:1.5.3' // optional
     }
 
     packagingOptions {

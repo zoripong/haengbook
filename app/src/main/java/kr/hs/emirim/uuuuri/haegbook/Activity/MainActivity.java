@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +27,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import kr.hs.emirim.uuuuri.haegbook.Adapter.CardPagerAdapter;
+import kr.hs.emirim.uuuuri.haegbook.Adapter.OnSwipeTouchListener;
+import kr.hs.emirim.uuuuri.haegbook.Fragment.MyFragment;
 import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
 import kr.hs.emirim.uuuuri.haegbook.Manager.DateListManager;
 import kr.hs.emirim.uuuuri.haegbook.Manager.ShadowTransformer;
@@ -63,6 +66,8 @@ public class MainActivity extends BaseActivity {
     private int setLRPadding;
     private int setTBPadding;
     private int setMargin;
+
+    private BottomSheetLayout bottomSheetLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,7 +163,8 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.setting_btn).setOnClickListener(new View.OnClickListener() {
                                                               @Override
                                                               public void onClick(View view) {
-                                                                  Intent intent = new Intent(MainActivity.this, SettingActivity.class);startActivity(intent);
+
+                                                                  Intent intent = new Intent(MainActivity.this, SettingActivity.class);
                                                                   startActivity(intent);
                                                               }
                                                           }
@@ -167,6 +173,7 @@ public class MainActivity extends BaseActivity {
         mCardAdapter = new CardPagerAdapter(this);
 
         // TODO: 2017-11-07 debug
+        // TODO: 2017-11-16 튜토리얼로 만들기
         mCardAdapter.addCardItem(new CardBook("test", "test", "test", "test", "test"));
 
         mCardShadowTransformer = new ShadowTransformer(mViewPager, mCardAdapter);
@@ -180,6 +187,36 @@ public class MainActivity extends BaseActivity {
         ViewPager.SimpleOnPageChangeListener pagerSyncronizer = getPagerSynchronizer();
         indicatorUnderline.setViewPager(mViewPager);
         indicatorUnderline.setOnPageChangeListener(pagerSyncronizer);
+
+        /*bottom Sheet*/
+        bottomSheetLayout = findViewById(R.id.design_bottom_sheet);
+        bottomSheetLayout.setInterceptContentTouch(true);
+
+        findViewById(R.id.handle).setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
+            @Override
+            public void onSwipeRight() {
+                Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSwipeLeft() {
+                Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onSwipeTop() {
+                new MyFragment().show(getSupportFragmentManager(), R.id.design_bottom_sheet);
+            }
+
+            @Override
+            public void onSwipeBottom() {
+                Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
+
+            }
+
+
+        });
 
     }
 

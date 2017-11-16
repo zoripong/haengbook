@@ -1,10 +1,12 @@
 package kr.hs.emirim.uuuuri.haegbook.Activity;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +20,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 import com.viewpagerindicator.UnderlinePageIndicator;
 
 import java.util.ArrayList;
@@ -71,6 +75,10 @@ public class MainActivity extends BaseActivity {
 
     private BottomSheetLayout bottomSheetLayout;
 
+    PermissionListener permissionlistener;
+
+    private String PhoneNum;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +86,11 @@ public class MainActivity extends BaseActivity {
 
         initialize();
         getDatabase();
-        getUserToken();
+
+
+
+        getUserPhoneNumber();
+
 
         DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
         int w = dm.widthPixels; //디바이스 해상도 구하기
@@ -97,7 +109,39 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    public void getUserPhoneNumber(){
+        permissionlistener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+                TelephonyManager telManger = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+                PhoneNum = telManger.getLine1Number();
 
+                if(PhoneNum == null) {//테스트 시 공기계일 경우를 위해서...
+                    PhoneNum = "01086352026";
+                }
+                if(PhoneNum.startsWith("+82")){
+                    PhoneNum = PhoneNum.replace("+82","0");
+                }
+
+
+                Log.e("내 핸드폰 번호",PhoneNum);
+
+                SharedPreferenceManager spm = new SharedPreferenceManager(MainActivity.this);
+                spm.save(SharedPreferenceTag.USER_TOKEN_TAG, PhoneNum);
+            }
+            @Override
+            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+                Toast.makeText(MainActivity.this, "권한이 없을 경우, 행북을 사용하실 수 없습니다.", Toast.LENGTH_SHORT).show();
+            }
+
+        };
+
+        TedPermission.with(this)
+                .setPermissionListener(permissionlistener)
+                .setDeniedMessage("권한이 없을 경우, 행북을 사용 할 수 없습니다.\n\nPlease turn on permissions at [Setting] > [Permission]")
+                .setPermissions(Manifest.permission.READ_PHONE_STATE)
+                .check();
+    }
 
     private void getUserToken(){
         FirebaseInstanceIDService tokenService = new FirebaseInstanceIDService();

@@ -10,6 +10,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -158,7 +159,7 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
             }
         });
 
-        cardView.setOnClickListener(new View.OnClickListener() {
+        cardView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mNowActivity, TravelDetailActivity.class);
@@ -168,7 +169,7 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
             }
         });
 
-        sharedImageView.setOnClickListener(new View.OnClickListener() {
+        sharedImageView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 final String cardBookCode=item.getBookCode();
@@ -176,19 +177,17 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
                 mDialog.setContentView(R.layout.dialog_share);
                 final TextView codeTv=(TextView)mDialog.findViewById(R.id.card_book_code_tv);
                 codeTv.setText(cardBookCode);
-                mDialog.findViewById(R.id.dialog_button_copy).setOnClickListener(new View.OnClickListener(){
+                codeTv.setOnLongClickListener(new View.OnLongClickListener(){
                     @Override
-                    public void onClick(View view) {
+                    public boolean onLongClick(View view) {
                         final ClipboardManager clipboardManager =  (ClipboardManager) view.getContext().getSystemService(CLIPBOARD_SERVICE);
                         clipboardManager.setText(codeTv.getText());
                         Toast.makeText(view.getContext(), "북코드가 복사되었습니다.", Toast.LENGTH_SHORT).show();
-
-                        mDialog.dismiss();
-
-
+                        return false;
                     }
+
                 });
-                mDialog.findViewById(R.id.dialog_button_share).setOnClickListener(new View.OnClickListener(){
+                mDialog.findViewById(R.id.dialog_button_share).setOnClickListener(new OnClickListener(){
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(android.content.Intent.ACTION_SEND);

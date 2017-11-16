@@ -41,7 +41,6 @@ import kr.hs.emirim.uuuuri.haegbook.Manager.ShadowTransformer;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Model.CardBook;
 import kr.hs.emirim.uuuuri.haegbook.R;
-import kr.hs.emirim.uuuuri.haegbook.fcm.FirebaseInstanceIDService;
 
 // TODO: 2017-11-12 : MainActivity => 파이어베이스 로딩중 클릭시 취소 방지
 // TODO: 2017-11-12 : 이미지 로딩 화면 제공
@@ -141,12 +140,6 @@ public class MainActivity extends BaseActivity {
                 .setDeniedMessage("권한이 없을 경우, 행북을 사용 할 수 없습니다.\n\nPlease turn on permissions at [Setting] > [Permission]")
                 .setPermissions(Manifest.permission.READ_PHONE_STATE)
                 .check();
-    }
-
-    private void getUserToken(){
-        FirebaseInstanceIDService tokenService = new FirebaseInstanceIDService();
-        SharedPreferenceManager spm = new SharedPreferenceManager(this);
-        spm.save(SharedPreferenceTag.USER_TOKEN_TAG, tokenService.sendRegistrationToServer());
     }
 
     private void initialize() {

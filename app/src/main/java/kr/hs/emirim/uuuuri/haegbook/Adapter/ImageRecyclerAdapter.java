@@ -1,14 +1,20 @@
 package kr.hs.emirim.uuuuri.haegbook.Adapter;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 
 import java.util.ArrayList;
 
@@ -20,6 +26,8 @@ import kr.hs.emirim.uuuuri.haegbook.R;
  */
 
 public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdapter.ImageViewHolder> {
+    private final String TAG = "ImageRecyclerAdapter";
+
     Activity mActivity;
 
     ArrayList<FirebaseImage> items;
@@ -46,7 +54,38 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
                 .crossFade()
                 .into(holder.imageView);
 
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                final Dialog dialog = new Dialog(mActivity, R.style.MyDialog);
+                dialog.setContentView(R.layout.dialog_image_preview);
 
+                final ImageView preView = dialog.findViewById(R.id.preview_iv);
+                Log.e(TAG, "Dialog : "+firebaseImage.getImageURI());
+
+                dialog.findViewById(R.id.root).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
+                Glide.with(mActivity)
+                        .load(firebaseImage.getImageURI())
+                        .asBitmap()
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                                // Do something with bitmap here.
+                                preView.setImageBitmap(bitmap);
+                                dialog.show();
+                            }
+                        });
+                ((TextView)dialog.findViewById(R.id.path_tv)).setText("파일 위치 : "+firebaseImage.getImageURI());
+
+                return true;
+            }
+        });
     }
 
     @Override

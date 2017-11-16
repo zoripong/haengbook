@@ -55,7 +55,7 @@ public class SharedPreferenceManager {
     }
 
     public float retrieveFloat(String tag){
-        return sharedpreferences.getFloat(tag, -1.0f);
+        return sharedpreferences.getFloat(tag, 0.0f);
     }
 
     public boolean retrieveBoolean(String tag){
@@ -69,8 +69,8 @@ public class SharedPreferenceManager {
         editor.putString(SharedPreferenceTag.LOCATION_TAG, "");
         editor.putString(SharedPreferenceTag.START_DATE_TAG, "");
         editor.putString(SharedPreferenceTag.END_DATE_TAG, "");
-        editor.putInt(SharedPreferenceTag.FOREIGN_MONEY_TAG, 0);
-        editor.putInt(SharedPreferenceTag.KOR_MONEY_TAG, 0);
+        editor.putFloat(SharedPreferenceTag.FOREIGN_MONEY_TAG, 0.0f);
+        editor.putFloat(SharedPreferenceTag.KOR_MONEY_TAG, 0.0f);
 
         //알람 시작시간, 종료 시간
         editor.putString(NotificationTag.START_TIME_TAG, "6:0");

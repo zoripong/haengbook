@@ -45,6 +45,7 @@ import kr.hs.emirim.uuuuri.haegbook.R;
 // TODO: 2017-11-12 : MainActivity => 파이어베이스 로딩중 클릭시 취소 방지
 // TODO: 2017-11-12 : 이미지 로딩 화면 제공
 
+// TODO: 2017-11-18 : 다이얼로그 open 시 animation 
 public class MainActivity extends BaseActivity {
     private final String TAG = "MainActivity";
     private final String BUNDLE_TAG ="BUNDLE_TAG";

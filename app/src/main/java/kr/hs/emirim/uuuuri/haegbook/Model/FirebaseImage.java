@@ -9,7 +9,7 @@ public class FirebaseImage {
     public String imageComment;
     public String imageURI;
     public String date;
-
+    public boolean isSelected;
     public FirebaseImage() {
 
     }
@@ -18,6 +18,14 @@ public class FirebaseImage {
         this.imageComment = imageComment;
         this.imageURI = imageURI;
         this.date = date;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public String getImageComment() {

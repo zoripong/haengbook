@@ -10,14 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import kr.hs.emirim.uuuuri.haegbook.Interface.OnItemClickListener;
 import kr.hs.emirim.uuuuri.haegbook.Model.FirebaseImage;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
@@ -28,15 +29,23 @@ import kr.hs.emirim.uuuuri.haegbook.R;
 public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdapter.ImageViewHolder> {
     private final String TAG = "ImageRecyclerAdapter";
 
-    Activity mActivity;
+    private Activity mActivity;
+    private ArrayList<FirebaseImage> photoList;
+    private boolean isPhotoFragment;
 
-    ArrayList<FirebaseImage> items;
+    private OnItemClickListener onItemClickListener;
 
-
-    public ImageRecyclerAdapter(Activity activity,ArrayList<FirebaseImage> items){
+    public ImageRecyclerAdapter(Activity activity,ArrayList<FirebaseImage> items, boolean isPhotoFragment){
         this.mActivity = activity;
-        this.items = items;
+        this.photoList = items;
+        this.isPhotoFragment = isPhotoFragment;
     }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+
 
     @Override
     public ImageViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -46,51 +55,72 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
     }
 
     @Override
-    public void onBindViewHolder(final ImageViewHolder holder, int position) {
-        final FirebaseImage firebaseImage = items.get(position);
+    public void onBindViewHolder(final ImageViewHolder holder, final int position) {
+        final FirebaseImage firebaseImage = photoList.get(position);
         Glide.with(mActivity)
                 .load(firebaseImage.getImageURI())
                 .centerCrop()
                 .crossFade()
                 .into(holder.imageView);
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+
+
+        if(!isPhotoFragment) {
+            if(firebaseImage.isSelected()){
+                holder.layoutSelect.setVisibility(View.VISIBLE);
+            }else{
+                holder.layoutSelect.setVisibility(View.INVISIBLE);
+            }
+        }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-                final Dialog dialog = new Dialog(mActivity, R.style.MyDialog);
-                dialog.setContentView(R.layout.dialog_image_preview);
+            public void onClick(View view) {
 
-                final ImageView preView = dialog.findViewById(R.id.preview_iv);
-                Log.e(TAG, "Dialog : "+firebaseImage.getImageURI());
+                if(isPhotoFragment) {
+                    final Dialog dialog = new Dialog(mActivity, R.style.MyDialog);
+                    dialog.setContentView(R.layout.dialog_image_preview);
 
-                dialog.findViewById(R.id.root).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialog.dismiss();
+                    final ImageView preView = dialog.findViewById(R.id.preview_iv);
+                    Log.e(TAG, "Dialog : " + firebaseImage.getImageURI());
+
+                    dialog.findViewById(R.id.root).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    Glide.with(mActivity)
+                            .load(firebaseImage.getImageURI())
+                            .asBitmap()
+                            .into(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                                    // Do something with bitmap here.
+                                    preView.setImageBitmap(bitmap);
+                                    dialog.show();
+                                }
+                            });
+                }else{
+
+                    if (onItemClickListener != null) {
+                        onItemClickListener.OnItemClick(holder, position);
                     }
-                });
 
-                Glide.with(mActivity)
-                        .load(firebaseImage.getImageURI())
-                        .asBitmap()
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-                                // Do something with bitmap here.
-                                preView.setImageBitmap(bitmap);
-                                dialog.show();
-                            }
-                        });
-                ((TextView)dialog.findViewById(R.id.path_tv)).setText("파일 위치 : "+firebaseImage.getImageURI());
-
-                return true;
+                }
             }
         });
     }
 
+    public List<FirebaseImage> getPhotoList() {
+        return photoList;
+    }
+
+
     @Override
     public int getItemCount() {
-        return items.size();
+        return photoList.size();
     }
 
     public static class ImageViewHolder extends RecyclerView.ViewHolder {
@@ -101,7 +131,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
         public ImageViewHolder(View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.photo_iv);
-            //  layoutSelect = (RelativeLayout) itemView.findViewById(R.id.select_check_layout);
+            layoutSelect = (RelativeLayout) itemView.findViewById(R.id.select_check_layout);
 
         }
     }

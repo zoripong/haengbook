@@ -67,7 +67,7 @@ public class PhotoFragment extends Fragment {
         mImages = new ArrayList<>();
 
         imageView= rootView.findViewById(R.id.image);
-        imageRecyclerSetter = new ImageRecyclerSetter(getActivity());
+        imageRecyclerSetter = new ImageRecyclerSetter(getActivity(), true);
 
 
         recyclerView = rootView.findViewById(R.id.recyclerview);
@@ -111,7 +111,7 @@ public class PhotoFragment extends Fragment {
                     else
                         ((TextView)rootView.findViewById(R.id.message_tv)).setText("");
 
-                    imageRecyclerSetter.setRecyclerCardView(recyclerView, mAllImages);
+                    imageRecyclerSetter.setRecyclerCardView(recyclerView, mAllImages, null);
                 }
                 else{
                     spinnerItemSelected(spinnerIndex);
@@ -153,7 +153,7 @@ public class PhotoFragment extends Fragment {
         else
             ((TextView)rootView.findViewById(R.id.message_tv)).setText("");
 
-        imageRecyclerSetter.setRecyclerCardView(recyclerView, mImages);
+        imageRecyclerSetter.setRecyclerCardView(recyclerView, mImages, null);
     }
 
     public void setDateList(ArrayList<String> dateList) {

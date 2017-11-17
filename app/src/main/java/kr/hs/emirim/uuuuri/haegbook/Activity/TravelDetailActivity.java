@@ -10,6 +10,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -30,14 +33,22 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import kr.hs.emirim.uuuuri.haegbook.Adapter.GalleryRecyclerAdapter;
+import kr.hs.emirim.uuuuri.haegbook.Adapter.ImageRecyclerAdapter;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.PhotoFragment;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.ReceiptFragment;
+import kr.hs.emirim.uuuuri.haegbook.Interface.OnItemClickListener;
 import kr.hs.emirim.uuuuri.haegbook.Interface.SelectedFragment;
 import kr.hs.emirim.uuuuri.haegbook.Interface.TravelDetailTag;
 import kr.hs.emirim.uuuuri.haegbook.Manager.DateListManager;
+import kr.hs.emirim.uuuuri.haegbook.Manager.GridDividerDecoration;
+import kr.hs.emirim.uuuuri.haegbook.Manager.ImageRecyclerSetter;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
+import kr.hs.emirim.uuuuri.haegbook.Model.FirebaseImage;
 import kr.hs.emirim.uuuuri.haegbook.Model.Receipt;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
@@ -50,11 +61,11 @@ import kr.hs.emirim.uuuuri.haegbook.R;
 // TODO: 2017-11-12 : 다른 카메라 사용시 파일 삭제
 public class TravelDetailActivity extends BaseActivity implements SelectedFragment{
 
-    private final String LOG = "TRAVEL_DETAIL_ACTIVITY";
+    private final String TAG = "TRAVEL_DETAIL_ACTIVITY";
     private final int TAB_COUNT = 2;
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
-
+    private DatabaseReference mRegistrationRef;
 
     private ViewPager mViewPager;
     private int mPosition = PHOTO; // DEFAULT PAGE
@@ -73,12 +84,17 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
 
     ArrayList<String> dateList;
 
+    private RecyclerView recyclerView;
+    private ArrayList<FirebaseImage> mImages;
+    private ImageRecyclerSetter imageRecyclerSetter;
 
-    Float[] mTravelMoney=new Float[6];
-    Float[] mTravelRate=new Float[6];
-    Float mKoreaMoney=0.0f;
-    Float mRestMoney =0.0f;
+    private Float[] mTravelMoney=new Float[6];
+    private Float[] mTravelRate=new Float[6];
+    private Float mKoreaMoney=0.0f;
+    private Float mRestMoney =0.0f;
 
+    private boolean isNotSelected;
+    private FirebaseImage mSelectImage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +104,8 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
         Intent intent = getIntent();
         mBookCode = intent.getStringExtra("BOOK_CODE");
         mPeriod = intent.getStringExtra("DATE");
+
+        isNotSelected = true;
 
         //TODO : 돈 가져와서 SPM에
         getDetailInfo();
@@ -139,7 +157,7 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i(LOG, String.valueOf(mPosition));
+                Log.i(TAG, String.valueOf(mPosition));
                 Intent intent;
                 switch (mPosition){
                     case PHOTO:
@@ -168,8 +186,7 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
                         String []stringArray = new String[dateList.size()];
                         stringArray = dateList.toArray(stringArray);
 
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
-                                android.R.layout.simple_spinner_item, stringArray);
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, stringArray);
 
                         mDateSp.setAdapter(adapter);
 
@@ -204,8 +221,10 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_travel_detail, menu);
 
-        MenuItem item = menu.findItem(R.id.date_spinner);
-        Spinner dateSpinner = (Spinner) MenuItemCompat.getActionView(item);
+        MenuItem spinnerItem = menu.findItem(R.id.date_spinner);
+        MenuItem publishItem = menu.findItem(R.id.publish_btn);
+
+        Spinner dateSpinner = (Spinner) MenuItemCompat.getActionView(spinnerItem);
 
         DateListManager dateListManager = new DateListManager();
         Date [] dates = dateListManager.convertDates(mPeriod);
@@ -246,6 +265,7 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
             }
         });
 
+
         return true;
     }
 
@@ -254,13 +274,80 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        // 출판 버튼
-        if (id == R.id.publish_btn) {
-            return true;
+        switch (id){
+            case R.id.publish_btn:
+                Toast.makeText(TravelDetailActivity.this, "publish", Toast.LENGTH_SHORT).show();
+
+                publishTravel();
+
+                break;
+
         }
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void publishTravel() {
+        Dialog publishDialog = new Dialog(TravelDetailActivity.this, R.style.MyDialog);
+        publishDialog.setContentView(R.layout.dialog_publish_travel);
+        publishDialog.show();
+
+        mImages = new ArrayList<FirebaseImage>();
+        recyclerView = publishDialog.findViewById(R.id.recyclerview);
+        imageRecyclerSetter = new ImageRecyclerSetter(TravelDetailActivity.this, false);
+
+        // // TODO: 2017-11-18 기기 마다 패딩 다르게
+        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new GridDividerDecoration(getResources(), R.drawable.divider_recycler_gallery));
+
+        getFBImage();
+
+        publishDialog.findViewById(R.id.publish_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 파베에 업데이트 이미지
+
+                mRegistrationRef = FirebaseDatabase.getInstance().getReference("BookInfo/"+mBookCode+"/Registration/image");
+                mRegistrationRef.setValue(mSelectImage.getImageURI());
+            }
+        });
+
+
+    }
+
+    public void getFBImage(){
+        mDatabase = FirebaseDatabase.getInstance();
+        final DatabaseReference imageRef = mDatabase.getReference("BookInfo/"+mBookCode+"/Content/Images");
+
+        showProgressDialog();
+        ValueEventListener imageListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot FBimage) {
+                mImages.clear();
+
+                Iterator<DataSnapshot> childIterator = FBimage.getChildren().iterator();
+                //users의 모든 자식들의 key값과 value 값들을 iterator로 참조
+                while(childIterator.hasNext()) {
+                    DataSnapshot imageSnapshot = childIterator.next();
+                    String imageComment=imageSnapshot.child("imageComment").getValue(String.class);
+                    String imageURI=imageSnapshot.child("imageURI").getValue(String.class);
+                    String date=imageSnapshot.child("date").getValue(String.class);
+
+                    mImages.add(new FirebaseImage(imageComment,imageURI,date));
+
+                }
+
+                imageRecyclerSetter.setRecyclerCardView(recyclerView, mImages, mOnItemClickListener);
+
+                hideProgressDialog();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        };
+        imageRef.addValueEventListener(imageListener);
     }
 
 
@@ -340,6 +427,40 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
         Log.e("파베", String.valueOf(isUpdateNull));
 
     }
+
+    private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
+
+        @Override
+        public void OnItemClick(GalleryRecyclerAdapter.PhotoViewHolder photoViewHolder, int position) {}
+
+        @Override
+        public void OnItemClick(ImageRecyclerAdapter.ImageViewHolder imageViewHolder, int position) {
+            List<FirebaseImage> firebaseImages = imageRecyclerSetter.getPhotoList();
+            FirebaseImage firebaseImage = firebaseImages.get(position);
+            isNotSelected = false;
+            for(int i = 0; i<firebaseImages.size(); i++){
+                if(i == position)
+                    continue;
+                firebaseImages.get(i).setSelected(false);
+            }
+
+            if(firebaseImage.isSelected){
+                isNotSelected = true;
+                mSelectImage = null;
+                firebaseImage.setSelected(false);
+            }else{
+                mSelectImage = firebaseImage;
+                firebaseImage.setSelected(true);
+            }
+
+            Log.e(TAG, "선택되었나?" + isNotSelected);
+
+            imageRecyclerSetter.setRecyclerCardView(recyclerView, mImages, mOnItemClickListener);
+        }
+
+    };
+
+
     public void updateTypeMoney(final int type, final String amount){
         mDatabase = FirebaseDatabase.getInstance();
         final DatabaseReference receiptRef = mDatabase.getReference("TravelMoney/"+mBookCode);

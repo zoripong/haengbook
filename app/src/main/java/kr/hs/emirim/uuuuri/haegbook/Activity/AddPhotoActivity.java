@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 import kr.hs.emirim.uuuuri.haegbook.Adapter.GalleryRecyclerAdapter;
+import kr.hs.emirim.uuuuri.haegbook.Adapter.ImageRecyclerAdapter;
 import kr.hs.emirim.uuuuri.haegbook.Interface.OnItemClickListener;
 import kr.hs.emirim.uuuuri.haegbook.Manager.DateListManager;
 import kr.hs.emirim.uuuuri.haegbook.Manager.GalleryManager;
@@ -187,6 +188,10 @@ public class AddPhotoActivity extends AppCompatActivity {
         // TODO: 2017-11-11 intent & putExtra
         List<GalleryImage> selectedPhotoList = galleryRecyclerAdapter.getSelectedPhotoList();
 
+        if(selectedPhotoList.size()==0){
+            Toast.makeText(AddPhotoActivity.this, "이미지를 선택해주세요 :D", Toast.LENGTH_SHORT).show();
+            return;
+        }
 //        for (int i = 0; i < selectedPhotoList.size(); i++) {
 //            Log.e(TAG, ">>> selectedPhotoList   :  " + selectedPhotoList.get(i).getImgPath());
 //        }
@@ -237,6 +242,9 @@ public class AddPhotoActivity extends AppCompatActivity {
             List<GalleryImage> selectedPhotoList = galleryRecyclerAdapter.getSelectedPhotoList();
             thumbnailRecyclerSetter.setRecyclerCardView(thumbnailRecycler, selectedPhotoList);
         }
+
+        @Override
+        public void OnItemClick(ImageRecyclerAdapter.ImageViewHolder imageViewHolder, int position) {}
     };
 
     /*

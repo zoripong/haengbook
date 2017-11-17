@@ -126,8 +126,8 @@ public class AddPhotoDetailActivity extends BaseActivity {
         final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
         mBuilder.setContentTitle("Image Upload")
                 .setContentText("이미지를 업로드하고 있습니다.")
-                .setSmallIcon(R.drawable.ic_download);
-
+                .setSmallIcon(R.drawable.ic_upload)
+                .setOngoing(true);
 
         for(int i = 0; i<firebaseImages.size();i++){
             Uri uri = Uri.fromFile(new File(firebaseImages.get(i).getImageURI()));
@@ -145,9 +145,6 @@ public class AddPhotoDetailActivity extends BaseActivity {
                             String ImageUploadId = databaseReference.push().getKey();
                             databaseReference.child(ImageUploadId).setValue(firebaseImages.get(finalI));
 
-                            mBuilder.setContentText("Download complete")
-                                    .setProgress(0,0,false);
-                            mNotifyManager.notify(id, mBuilder.build());
                         }
                     })
                     // If something goes wrong .
@@ -168,9 +165,19 @@ public class AddPhotoDetailActivity extends BaseActivity {
                             // Setting progressDialog Title.
                             double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
                             Log.e(TAG,"Upload is " + progress + "% done");
+                            if(progress < 100.0){
                             mBuilder.setProgress(100, (int) progress, false);
                             // Displays the progress bar for the first time.
                             mNotifyManager.notify(id, mBuilder.build());
+
+
+                            }else{
+                                mBuilder.setContentText("Download complete")
+                                        .setProgress(0,0,false);
+                                mNotifyManager.notify(id, mBuilder.build());
+                                mBuilder.setOngoing(false);
+                            }
+
                         }
                     });
         }

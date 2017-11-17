@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dialog_background"
+        app:scale_base_height="330"
+        app:scale_base_width="720">
+        <EditText
+            android:id="@+id/update_path_et"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_left="50"
+            app:scale_textsize="33"
+            app:scale_top="60"
+            app:scale_width="620"/>
+        <Button
+            android:id="@+id/save_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_height="80"
+            app:scale_left="50"
+            app:scale_textsize="33"
+            app:scale_top="190"
+            app:scale_width="290"
+            android:text="저장"
+            android:textColor="#f8971c"
+            android:background="@drawable/button_background"/>
+        <Button
+            android:id="@+id/cancel_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_height="80"
+            app:scale_left="370"
+            app:scale_textsize="33"
+            app:scale_top="190"
+            app:scale_width="290"
+            android:text="취소"
+            android:textColor="#f8971c"
+            android:background="@drawable/button_background"/>
+    </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
+</LinearLayout>

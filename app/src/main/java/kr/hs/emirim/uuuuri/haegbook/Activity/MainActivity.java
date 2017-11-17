@@ -195,6 +195,12 @@ public class MainActivity extends BaseActivity {
                         startActivity(intent);
                     }
                 });
+                selectDialog.findViewById(R.id.dimiss_btn).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        selectDialog.dismiss();
+                    }
+                });
             }
         });
 

@@ -23,12 +23,12 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.ViewTarget;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Date;
 import java.util.List;
 
 import kr.hs.emirim.uuuuri.haegbook.Activity.TravelDetailActivity;
 import kr.hs.emirim.uuuuri.haegbook.Interface.CardAdapter;
+import kr.hs.emirim.uuuuri.haegbook.Manager.DateListManager;
 import kr.hs.emirim.uuuuri.haegbook.Model.CardBook;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
@@ -52,27 +52,23 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
         mData.add(item);
     }
 
-    public void addCardItems(HashSet<CardBook> items){
-        Iterator<CardBook> iterator = items.iterator();
-        while(iterator.hasNext()){
-            CardBook cardBook= iterator.next();
-//            Log.e(TAG,cardBook.toString());
-            mViews.add(null);
-            mData.add(cardBook);
-        }
-    }
-
     public void addCardItems(ArrayList<CardBook> items){
 //        Log.e(TAG, String.valueOf(items.size()));
 
         mData.clear();
         mViews.clear();
+        DateListManager dateListManager = new DateListManager();
+        Date now = new Date();
+        now = new Date(now.getYear(), now.getMonth(), now.getDate(), 0, 0, 0);
 
         for(int i = 0; i<items.size(); i++){
 //            Log.e(TAG, "킬킬"+items.get(i).toString());
-            if(items.get(i).isShowing()) {
+            Date dates[] = dateListManager.convertDates(items.get(i).getPeriod());
+
+            if(!(dates[0].getTime() > now.getTime() && dates[1].getTime()>now.getTime())){
                 mViews.add(null);
                 mData.add(items.get(i));
+
             }
         }
     }

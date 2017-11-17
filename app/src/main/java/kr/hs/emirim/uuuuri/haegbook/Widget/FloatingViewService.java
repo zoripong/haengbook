@@ -22,6 +22,7 @@ import kr.hs.emirim.uuuuri.haegbook.R;
 // TODO: 2017-11-16 위젯 유지 타이밍 수정
 
 public class FloatingViewService extends Service {
+    private final String TAG = "FLOATING VIEW SERVICE";
     private final String FILE_PATH_EXTRA = "FILE PATH EXTRA";
 
     private WindowManager mWindowManager;
@@ -73,6 +74,8 @@ public class FloatingViewService extends Service {
         //The root element of the expanded view layout
         final View expandedView = mFloatingView.findViewById(R.id.expanded_container);
 
+        mPathTv = mFloatingView.findViewById(R.id.path_tv);
+
         mFloatingView.findViewById(R.id.camera_iv).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,13 +88,24 @@ public class FloatingViewService extends Service {
             }
         });
 
-        mPathTv = mFloatingView.findViewById(R.id.path_tv);
 
         //Set the close button
         ImageView closeButtonCollapsed = (ImageView) mFloatingView.findViewById(R.id.close_btn);
         closeButtonCollapsed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                stopSelf();
+            }
+        });
+
+        mFloatingView.findViewById(R.id.update_path_iv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(FloatingViewService.this, TakePicturesForServiceActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                collapsedView.setVisibility(View.VISIBLE);
+                expandedView.setVisibility(View.GONE);
                 stopSelf();
             }
         });

@@ -1,10 +1,13 @@
 package kr.hs.emirim.uuuuri.haegbook.Activity;
 
+import android.app.NotificationManager;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +31,8 @@ import kr.hs.emirim.uuuuri.haegbook.Manager.ImageDetailRecyclerSetter;
 import kr.hs.emirim.uuuuri.haegbook.Model.FirebaseImage;
 import kr.hs.emirim.uuuuri.haegbook.Model.GalleryImage;
 import kr.hs.emirim.uuuuri.haegbook.R;
+
+import static android.R.attr.id;
 
 // TODO: 2017-11-16 이미지 코멘트 잘들어가나 테스트
 public class AddPhotoDetailActivity extends BaseActivity {
@@ -117,7 +122,12 @@ public class AddPhotoDetailActivity extends BaseActivity {
         storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference("BookInfo/"+mBookCode+"/Content/Images");
 
-        showProgressDialog();
+        final NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+        mBuilder.setContentTitle("Image Upload")
+                .setContentText("이미지를 업로드하고 있습니다.")
+                .setSmallIcon(R.drawable.ic_download);
+
 
         for(int i = 0; i<firebaseImages.size();i++){
             Uri uri = Uri.fromFile(new File(firebaseImages.get(i).getImageURI()));
@@ -130,11 +140,14 @@ public class AddPhotoDetailActivity extends BaseActivity {
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            hideProgressDialog();
                             Toast.makeText(getApplicationContext(), "Image Uploaded Successfully ", Toast.LENGTH_LONG).show();
                             @SuppressWarnings("VisibleForTests")
                             String ImageUploadId = databaseReference.push().getKey();
                             databaseReference.child(ImageUploadId).setValue(firebaseImages.get(finalI));
+
+                            mBuilder.setContentText("Download complete")
+                                    .setProgress(0,0,false);
+                            mNotifyManager.notify(id, mBuilder.build());
                         }
                     })
                     // If something goes wrong .
@@ -153,10 +166,14 @@ public class AddPhotoDetailActivity extends BaseActivity {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                             // Setting progressDialog Title.
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                            Log.e(TAG,"Upload is " + progress + "% done");
+                            mBuilder.setProgress(100, (int) progress, false);
+                            // Displays the progress bar for the first time.
+                            mNotifyManager.notify(id, mBuilder.build());
                         }
                     });
         }
-
     }
 
     public void onBackPressed(){

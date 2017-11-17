@@ -46,18 +46,27 @@
             android:layout_height="wrap_content"
             android:background="#F8BBD0"
             android:visibility="gone"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:padding="8dp">
+            <TextView
+                android:id="@+id/path_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/update_path_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/basic_gps"
+                />
+
 
             <ImageView
                 android:id="@+id/camera_iv"
                 android:src="@drawable/choose"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/path_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+
+
 
 
         </LinearLayout>

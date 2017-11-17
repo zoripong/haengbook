@@ -366,7 +366,7 @@ public class FifthInputFragment extends Fragment{
         Map<String, Object> showing = new HashMap<String, Object>();
 
         String period=mCardBookStartDate+"-"+mCardBookEndDate;
-        cardBooks.put("Registration", new CardBook(period,mCardBookLocation,mCardBookTitle,"url"));
+        cardBooks.put("Registration", new CardBook(period,mCardBookLocation,mCardBookTitle,null));
         showing.put("isShowing",new Boolean(checkIsShowing()));
         cardRef.setValue(cardBooks);
         cardRef.updateChildren(showing);

@@ -1,4 +1,4 @@
-package kr.hs.emirim.uuuuri.haegbook.Activity;
+package kr.hs.emirim.uuuuri.haegbook.Adapter;
 
 import android.Manifest;
 import android.app.Activity;

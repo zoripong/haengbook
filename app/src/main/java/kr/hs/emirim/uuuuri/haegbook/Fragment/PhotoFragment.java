@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -103,8 +104,15 @@ public class PhotoFragment extends Fragment {
                     mAllImages.add(new FirebaseImage(imageComment,imageURI,date));
 
                 }
-                if(dateList == null)
+                if(dateList == null){
+
+                    if(mAllImages.size() == 0)
+                        ((TextView)rootView.findViewById(R.id.message_tv)).setText("등록된 이미지가 없습니다 :(");
+                    else
+                        ((TextView)rootView.findViewById(R.id.message_tv)).setText("");
+
                     imageRecyclerSetter.setRecyclerCardView(recyclerView, mAllImages);
+                }
                 else{
                     spinnerItemSelected(spinnerIndex);
                 }
@@ -139,6 +147,11 @@ public class PhotoFragment extends Fragment {
                 }
             }
         }
+
+        if(mImages.size() == 0)
+            ((TextView)rootView.findViewById(R.id.message_tv)).setText("등록된 이미지가 없습니다 :(");
+        else
+            ((TextView)rootView.findViewById(R.id.message_tv)).setText("");
 
         imageRecyclerSetter.setRecyclerCardView(recyclerView, mImages);
     }

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -29,6 +30,8 @@ import kr.hs.emirim.uuuuri.haegbook.R;
 
 public class ReceiptFragment extends Fragment implements ReceiptType{
     private final String TAG = "ReceiptFragment";
+
+    private View rootView;
     private String mBookCode;
     private String mPeriod;
 
@@ -48,7 +51,7 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_receipt, container, false);
+        rootView = inflater.inflate(R.layout.fragment_receipt, container, false);
         mReceipts = new ArrayList<>();
 
         recyclerView = rootView.findViewById(R.id.recyclerview);
@@ -82,6 +85,12 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
             }
         }
 
+
+        if(mReceipts.size() == 0)
+            ((TextView)rootView.findViewById(R.id.message_tv)).setText("등록된 영수증이 없습니다 :(");
+        else
+            ((TextView)rootView.findViewById(R.id.message_tv)).setText("");
+
         receiptRecyclerSetter.setRecyclerCardView(recyclerView, mReceipts);
     }
 
@@ -102,6 +111,12 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
                 }
 
                 Log.e(TAG, mAllReceipts.toString());
+
+                if(mAllReceipts.size() == 0)
+                    ((TextView)rootView.findViewById(R.id.message_tv)).setText("등록된 영수증이 없습니다 :(");
+                else
+                    ((TextView)rootView.findViewById(R.id.message_tv)).setText("");
+
                 receiptRecyclerSetter.setRecyclerCardView(recyclerView, mAllReceipts);
 
 

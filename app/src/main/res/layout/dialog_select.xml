@@ -1,21 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="200dp"
-    android:layout_marginLeft="30dp"
-    android:layout_marginRight="30dp"
-    android:background="#ffffff"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
-    >
-    <Button
-        android:id="@+id/add_code_btn"
-        android:layout_width="wrap_content"
+    <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="코드 추가하기"/>
+        android:background="@drawable/dialog_background"
+        app:scale_base_height="380"
+        app:scale_base_width="512">
 
-    <Button
-        android:id="@+id/add_basic_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="직접 입력하여 추가하기"/>
+
+        <Button
+            android:id="@+id/dimiss_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_height="25"
+            app:scale_left="462"
+            app:scale_textsize="33"
+            app:scale_top="27"
+            app:scale_width="25"
+            android:background="@drawable/ic_x_btn"/>
+
+        <Button
+            android:id="@+id/add_code_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_height="123"
+            app:scale_left="91"
+            app:scale_top="109"
+            app:scale_width="123"
+            android:background="@drawable/add_code"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:scale_left="91"
+            app:scale_top="245"
+            app:scale_width="123"
+            app:scale_height="40"
+            app:scale_textsize="25"
+            android:textStyle="bold"
+            android:text="코드 추가"/>
+
+        <Button
+            android:id="@+id/add_basic_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_height="123"
+            app:scale_left="305"
+            app:scale_top="109"
+            app:scale_width="123"
+            android:background="@drawable/input_code"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:scale_left="305"
+            app:scale_top="245"
+            app:scale_width="123"
+            app:scale_height="40"
+            app:scale_textsize="25"
+            android:textStyle="bold"
+            android:text="직접 입력"/>
+
+    </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
 </LinearLayout>

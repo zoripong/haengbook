@@ -4,25 +4,64 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/canceL_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="취소" />
+            android:layout_weight="2.2"
+            android:background="#FFF"
+            android:textColor="#f8971c"
+            android:text="&#60; 취소"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:gravity="right|center"/>
 
-        <Spinner
-            android:id="@+id/date_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#FFF">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center|right"
+                android:text="날짜"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:background="#FFF"/>
+            <Spinner
+                android:id="@+id/date_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:textColor="#FFF"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/ic_circle"/>
+        </LinearLayout>
 
         <Button
             android:id="@+id/next_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="확인" />
+            android:layout_weight="2.2"
+            android:background="#FFF"
+            android:textColor="#f8971c"
+            android:text="확인 &#62; "
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:gravity="center|left"/>
     </LinearLayout>
 
     <LinearLayout

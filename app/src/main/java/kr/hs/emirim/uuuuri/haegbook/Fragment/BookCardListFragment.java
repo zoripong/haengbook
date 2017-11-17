@@ -27,6 +27,7 @@ public class BookCardListFragment extends BottomSheetFragment {
 
     private RecyclerView recyclerview;
 
+    ArrayList<CardBook> mPublishTravels;
     ArrayList<CardBook> mPastTravels;
     ArrayList<CardBook> mCurrentTravels;
     ArrayList<CardBook> mFutureTravels;
@@ -37,6 +38,7 @@ public class BookCardListFragment extends BottomSheetFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPublishTravels = new ArrayList<>();
         mPastTravels = new ArrayList<>();
         mCurrentTravels = new ArrayList<>();
         mFutureTravels = new ArrayList<>();
@@ -61,8 +63,10 @@ public class BookCardListFragment extends BottomSheetFragment {
                 Log.e(TAG, "여행 중 :"+cardBooks.get(i).getTitle()+ " ["+cardBooks.get(i).getPeriod()+"]");
                 mCurrentTravels.add(cardBooks.get(i));
             }else if(dates[0].getTime() < now.getTime() && dates[1].getTime() < now.getTime()){
+                if(cardBooks.get(i).getImage() == null)
+                    mPastTravels.add(cardBooks.get(i));
+                else mPublishTravels.add(cardBooks.get(i));
                 Log.e(TAG, "여행 끝 : "+cardBooks.get(i).getTitle()+ " ["+cardBooks.get(i).getPeriod()+"]");
-                mPastTravels.add(cardBooks.get(i));
             }else if(dates[0].getTime() > now.getTime() && dates[1].getTime() > now.getTime()){
                 Log.e(TAG, "여행 전 : "+ cardBooks.get(i).getTitle() + " ["+cardBooks.get(i).getPeriod()+"]");
                 mFutureTravels.add(cardBooks.get(i));
@@ -84,19 +88,21 @@ public class BookCardListFragment extends BottomSheetFragment {
 
         List<WholeCardBookListAdapter.Item> data = new ArrayList<>();
 
-        WholeCardBookListAdapter.Item after = new WholeCardBookListAdapter.Item(WholeCardBookListAdapter.HEADER, "즐거운 추억이에요.");
-        after.invisibleChildren = new ArrayList<>();
-        for(int i = 0; i < mPastTravels.size(); i++){
-            after.invisibleChildren.add(new WholeCardBookListAdapter.Item(WholeCardBookListAdapter.CHILD, mPastTravels.get(i)));
+        data.add(new WholeCardBookListAdapter.Item(WholeCardBookListAdapter.HEADER, "즐거운 추억이에요."));
+        for(int i = 0; i<mPublishTravels.size(); i++){
+            data.add(new WholeCardBookListAdapter.Item(WholeCardBookListAdapter.CHILD, mPublishTravels.get(i)));
         }
-        data.add(after);
 
-        WholeCardBookListAdapter.Item now = new WholeCardBookListAdapter.Item(WholeCardBookListAdapter.HEADER,  "지금 즐기고 있어요.");
-        now.invisibleChildren = new ArrayList<>();
-        for(int i = 0; i < mCurrentTravels.size(); i++){
-            now.invisibleChildren.add(new WholeCardBookListAdapter.Item(WholeCardBookListAdapter.CHILD,mCurrentTravels.get(i)));
+
+        data.add(new WholeCardBookListAdapter.Item(WholeCardBookListAdapter.HEADER, "마무리 짓고 있어요."));
+        for(int i = 0; i < mPastTravels.size(); i++){
+            data.add(new WholeCardBookListAdapter.Item(WholeCardBookListAdapter.CHILD, mPastTravels.get(i)));
         }
-        data.add(now);
+
+        data.add(new WholeCardBookListAdapter.Item(WholeCardBookListAdapter.HEADER,  "지금 즐기고 있어요."));
+        for(int i = 0; i < mCurrentTravels.size(); i++){
+            data.add(new WholeCardBookListAdapter.Item(WholeCardBookListAdapter.CHILD,mCurrentTravels.get(i)));
+        }
 
         data.add(new WholeCardBookListAdapter.Item(WholeCardBookListAdapter.HEADER, "두근두근 기대돼요."));
 

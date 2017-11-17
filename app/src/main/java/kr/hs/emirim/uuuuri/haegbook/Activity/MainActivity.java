@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flipboard.bottomsheet.BottomSheetLayout;
@@ -79,6 +80,7 @@ public class MainActivity extends BaseActivity {
 
     private String PhoneNum;
 
+    private ArrayList<CardBook> mNotPublishBook;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,11 +88,10 @@ public class MainActivity extends BaseActivity {
 
         initialize();
         getDatabase();
-
-
-
         getUserPhoneNumber();
 
+        if(mNotPublishBook.size()!=0)
+            notificationPublish();
 
         DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
         int w = dm.widthPixels; //디바이스 해상도 구하기
@@ -106,6 +107,39 @@ public class MainActivity extends BaseActivity {
         setTBPadding=(int)(mm*600);
         mViewPager.setPadding(setLRPadding, setTBPadding, setLRPadding, setTBPadding);
         Log.e(TAG, "디바이스 양쪽 패딩의 값은...? : "+setLRPadding); //1px에 따른 mm*화면 px개수
+
+    }
+
+    private void notificationPublish() {
+        final Dialog notifyDialog = new Dialog(MainActivity.this, R.style.MyDialog);
+        notifyDialog.setContentView(R.layout.dialog_notification);
+        StringBuffer message = new StringBuffer();
+        for(int i = 0; i<mNotPublishBook.size(); i++){
+            message.append("- " + mNotPublishBook.get(i).getTitle()+"\n");
+        }
+        message.append("\n여러분들의 추억이 완성되지 않고 있습니다. :(\n빨리 등록해주세요!");
+
+        notifyDialog.show();
+
+        ((TextView)notifyDialog.findViewById(R.id.message_tv)).setText(message.toString());
+        notifyDialog.findViewById(R.id.done_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                notifyDialog.dismiss();
+                Intent intent = new Intent(MainActivity.this, TravelDetailActivity.class);
+                intent.putExtra("BOOK_CODE", mNotPublishBook.get(0).getBookCode());
+                intent.putExtra("DATE", mNotPublishBook.get(0).getPeriod());
+                intent.putExtra("Image", mNotPublishBook.get(0).getImage());
+                startActivity(intent);
+            }
+        });
+
+        notifyDialog.findViewById(R.id.close_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                notifyDialog.dismiss();
+            }
+        });
 
     }
 
@@ -268,6 +302,7 @@ public class MainActivity extends BaseActivity {
 
         });
 
+        mNotPublishBook = new ArrayList<>();
     }
 
     private ViewPager.SimpleOnPageChangeListener getPagerSynchronizer() {
@@ -386,11 +421,15 @@ public class MainActivity extends BaseActivity {
                     String bookCode = bookCodeSnapShot.getKey().toString(); // key
                     if(mCardBookAddress.contains(bookCode)){
 
+
                         String location = bookCodeSnapShot.child("Registration").child("location").getValue(String.class);
                         String period = bookCodeSnapShot.child("Registration").child("period").getValue(String.class);
                         String title = bookCodeSnapShot.child("Registration").child("title").getValue(String.class);
                         Boolean isShowing = Boolean.parseBoolean(bookCodeSnapShot.child("isShowing").getValue().toString());
                         String image = bookCodeSnapShot.child("Registration").child("image").getValue(String.class);
+
+                        CardBook cardBook = new CardBook(period, location, title, bookCode, image, isShowing);
+                        mCardBooks.add(cardBook);
 
                         DateListManager dateListManager = new DateListManager();
                         Date dates[] = dateListManager.convertDates(period);
@@ -405,11 +444,10 @@ public class MainActivity extends BaseActivity {
                             spm.save(SharedPreferenceTag.DEFAULT_DIRECTORY, title);
                             Log.e(TAG, "여행 중");
                             Log.e(TAG, "default directory name : "+spm.retrieveString(SharedPreferenceTag.DEFAULT_DIRECTORY));
+                        }else if(dates[0].getTime() < now.getTime() && dates[1].getTime() < now.getTime() && image==null){
+                            Toast.makeText(MainActivity.this, title+"얼른 출판하세요.", Toast.LENGTH_SHORT).show();
+                            mNotPublishBook.add(cardBook);
                         }
-
-                        // TODO: 2017-11-15 여행카드 날짜순 sort
-                        CardBook cardBook = new CardBook(period, location, title, bookCode, image, isShowing);
-                        mCardBooks.add(cardBook);
                     }
 
                 }

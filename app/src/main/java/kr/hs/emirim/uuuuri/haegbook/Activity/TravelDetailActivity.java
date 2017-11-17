@@ -53,12 +53,8 @@ import kr.hs.emirim.uuuuri.haegbook.Model.Receipt;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 
-// TODO: 2017-11-12 : 갤러리 업데이트
-// TODO: 2017-11-12 : 이미지 업로드 시 로딩 화면 제공
-// TODO: 2017-11-12 : 앱 위젯 만들기
-// TODO: 2017-11-12 : 폴더 이름으로 불러오기
 
-// TODO: 2017-11-12 : 다른 카메라 사용시 파일 삭제
+// TODO: 2017-11-18 커스텀 액션바로 바꾸면 publishButton을 여행이 지난 날짜부터 볼 수 있게 set
 public class TravelDetailActivity extends BaseActivity implements SelectedFragment{
 
     private final String TAG = "TRAVEL_DETAIL_ACTIVITY";
@@ -104,6 +100,7 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
         Intent intent = getIntent();
         mBookCode = intent.getStringExtra("BOOK_CODE");
         mPeriod = intent.getStringExtra("DATE");
+        String image = intent.getStringExtra("Image");
 
         isNotSelected = true;
 
@@ -112,6 +109,11 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
         Toast.makeText(getApplicationContext(), mBookCode, Toast.LENGTH_SHORT).show();
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        if(image != null)
+            fab.hide();
+        else
+            fab.show();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -125,10 +127,6 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
 
         tabLayout.setupWithViewPager(mViewPager);
 
-        if(tabLayout.getSelectedTabPosition() == PHOTO)
-            fab.show();
-        else
-            fab.hide();
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
             @Override
@@ -224,6 +222,7 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
         MenuItem spinnerItem = menu.findItem(R.id.date_spinner);
         MenuItem publishItem = menu.findItem(R.id.publish_btn);
 
+
         Spinner dateSpinner = (Spinner) MenuItemCompat.getActionView(spinnerItem);
 
         DateListManager dateListManager = new DateListManager();
@@ -289,7 +288,7 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
     }
 
     private void publishTravel() {
-        Dialog publishDialog = new Dialog(TravelDetailActivity.this, R.style.MyDialog);
+        final Dialog publishDialog = new Dialog(TravelDetailActivity.this, R.style.MyDialog);
         publishDialog.setContentView(R.layout.dialog_publish_travel);
         publishDialog.show();
 
@@ -308,9 +307,14 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
             @Override
             public void onClick(View view) {
                 // 파베에 업데이트 이미지
-
+                showProgressDialog();
                 mRegistrationRef = FirebaseDatabase.getInstance().getReference("BookInfo/"+mBookCode+"/Registration/image");
                 mRegistrationRef.setValue(mSelectImage.getImageURI());
+                hideProgressDialog();
+                publishDialog.dismiss();
+                Intent intent = new Intent(TravelDetailActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 

@@ -172,10 +172,10 @@ public class AddPhotoDetailActivity extends BaseActivity {
 
 
                             }else{
+                                mBuilder.setOngoing(false);
                                 mBuilder.setContentText("Download complete")
                                         .setProgress(0,0,false);
                                 mNotifyManager.notify(id, mBuilder.build());
-                                mBuilder.setOngoing(false);
                             }
 
                         }

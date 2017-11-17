@@ -9,16 +9,38 @@
     android:paddingTop="80dp"
     android:paddingBottom="80dp">
     <LinearLayout
+        android:background="#FFF"
+        android:layout_weight="0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:src="@drawable/ic_notification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/close_btn"
+            android:src="@drawable/ic_x_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+</LinearLayout>
+    <LinearLayout
         android:background="#ffffff"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         >
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/message_tv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                />
+        </ScrollView>
     </LinearLayout>
 
     <LinearLayout
@@ -27,20 +49,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="100dp"
-            android:textColor="#f8971c"
-            android:textSize="13sp"
-            android:text="책의 표지를 선택하세요."/>
         <Button
-            android:id="@+id/publish_btn"
+            android:id="@+id/done_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFF"
             android:textColor="#f8971c"
-            android:text="완료 &#62; "
+            android:text="바로 등록하기 &#62; "
             android:textStyle="bold"
             android:textSize="15sp"
             android:gravity="center|right"

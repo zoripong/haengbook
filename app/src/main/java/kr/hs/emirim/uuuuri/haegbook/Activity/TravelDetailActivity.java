@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -26,6 +25,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.flyco.tablayout.CommonTabLayout;
+import com.flyco.tablayout.listener.CustomTabEntity;
+import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -57,8 +59,10 @@ import kr.hs.emirim.uuuuri.haegbook.Manager.DateListManager;
 import kr.hs.emirim.uuuuri.haegbook.Manager.GridDividerDecoration;
 import kr.hs.emirim.uuuuri.haegbook.Manager.ImageRecyclerSetter;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
+import kr.hs.emirim.uuuuri.haegbook.Manager.ViewFindUtils;
 import kr.hs.emirim.uuuuri.haegbook.Model.FirebaseImage;
 import kr.hs.emirim.uuuuri.haegbook.Model.Receipt;
+import kr.hs.emirim.uuuuri.haegbook.Model.TabEntity;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 
@@ -144,33 +148,55 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 
-        tabLayout.setupWithViewPager(mViewPager);
+        // START CUSTOM TAB
+        ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>();
+        mTabEntities.add(new TabEntity("PHOTO"));
+        mTabEntities.add(new TabEntity("RECEIPT"));
 
+        View mDecorView = getWindow().getDecorView();
+        mViewPager = ViewFindUtils.find(mDecorView, R.id.container);
 
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
+        final SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(sectionsPagerAdapter);
+
+        final CommonTabLayout tabLayout = ViewFindUtils.find(mDecorView, R.id.tabs);
+        tabLayout.setTabData(mTabEntities);
+
+        tabLayout.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab){
-                mPosition = tab.getPosition();
-                switch (mPosition){
-                    case PHOTO:
-                        break;
-                    case RECEIPT:
-                        break;
-                }
+            public void onTabSelect(int position) {
+                mPosition = position;
+                mViewPager.setCurrentItem(mPosition);
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                mPosition = tab.getPosition();
-            }
+            public void onTabReselect(int position) {
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                mPosition = tab.getPosition();
             }
         });
+
+        tabLayout.setCurrentTab(0);
+        mViewPager.setCurrentItem(0);
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                tabLayout.setCurrentTab(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        // END OF TAB
 
 
         fab.setOnClickListener(new View.OnClickListener() {

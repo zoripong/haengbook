@@ -95,7 +95,7 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View view = LayoutInflater.from(container.getContext())
-                .inflate(R.layout.viewpager_card, container, false);
+                .inflate(R.layout.item_card, container, false);
         container.addView(view);
         bind(mData.get(position), view);
         CardView cardView = (CardView) view.findViewById(R.id.card_view);
@@ -125,6 +125,10 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
         titleTextView.setText(item.getTitle());
         periodTextView.setText(item.getPeriod());
         locationTextView.setText(item.getLocation());
+
+        if(item.getLocation().equals("")) {
+            view.findViewById(R.id.gps_iv).setVisibility(View.GONE);
+        }
 
 //        Log.e(TAG, "<Before> width : "+ cardView.getWidth() +" / height : " + cardView.getHeight());
 //        Log.e(TAG, "url : " + item.getImage());

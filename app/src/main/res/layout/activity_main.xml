@@ -20,7 +20,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="3.4"
+            android:layout_weight="3.15"
             android:elevation="3dp">
 
             <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
@@ -36,19 +36,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="#FFF"
-                    android:elevation="3dp"
                     android:gravity="center"
                     android:text="HAENGBOOK"
                     android:textColor="#f8971c"
                     android:textStyle="bold"
                     app:scale_height="100"
+                    app:scale_left="225"
                     app:scale_textsize="35"
-                    app:scale_width="720" />
+                    app:scale_width="270" />
+
                 <ImageView
                     android:id="@+id/setting_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src ="@drawable/dropdown_icon"/>
+                    android:src="@drawable/settings"
+                    app:scale_height="40"
+                    app:scale_left="650"
+                    app:scale_top="30"
+                    app:scale_width="40" />
             </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
         </LinearLayout>
 
@@ -58,27 +63,30 @@
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
+
             <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="bottom"
-                app:scale_base_width="720"
-                app:scale_base_height="70">
+                app:scale_base_height="70"
+                app:scale_base_width="720">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="MY BOOK"
                     android:layout_gravity="bottom"
+                    android:text="MY BOOK"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:scale_height="40"
                     app:scale_left="30"
-                    app:scale_width="170"
-                    app:scale_textsize="32"/>
+                    app:scale_textsize="32"
+                    app:scale_width="170" />
             </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
+
             <android.support.v4.view.ViewPager
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"

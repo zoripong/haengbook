@@ -8,7 +8,7 @@
     <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/dialog_background"
+        android:background="@drawable/dialog_line_background"
         app:scale_base_height="380"
         app:scale_base_width="512">
         <EditText

@@ -13,43 +13,17 @@
         tools:ignore="UselessParent">
 
         <!--View while view is collapsed-->
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/collapse_view"
             android:layout_width="wrap_content"
             android:visibility="visible"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <!--Icon of floating widget -->
-            <ImageView
-                android:id="@+id/collapsed_iv"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginTop="8dp"
-                android:src="@drawable/ic_android_circle"
-                tools:ignore="ContentDescription"/>
-
-            <!--Close button-->
-            <ImageView
-                android:id="@+id/close_btn"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginLeft="40dp"
-                android:src="@drawable/ic_close"
-                tools:ignore="ContentDescription"/>
-        </RelativeLayout>
-
-        <!--View while view is expanded-->
-        <LinearLayout
-            android:id="@+id/expanded_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#F8BBD0"
-            android:visibility="gone"
             android:orientation="vertical"
-            android:padding="8dp">
+            android:background="@color/colorAccent">
+
+
             <TextView
-                android:id="@+id/path_tv"
+                android:id="@+id/detail_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <ImageView
@@ -67,8 +41,7 @@
                 android:layout_height="wrap_content" />
 
 
-
-
         </LinearLayout>
+
     </RelativeLayout>
 </FrameLayout>

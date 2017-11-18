@@ -19,6 +19,7 @@ public class IntroActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Intent intent = new Intent(IntroActivity.this, MainActivity.class);
+                intent.putExtra("SHOW NOTIFICATION", true);
                 startActivity(intent);
                 finish();
 

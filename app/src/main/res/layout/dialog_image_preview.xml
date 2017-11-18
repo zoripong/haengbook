@@ -14,20 +14,43 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="100dp"
-        android:paddingTop="100dp"
+        android:paddingBottom="50dp"
+        android:paddingTop="50dp"
         android:background="#ffffff">
 
         <ImageView
             android:id="@+id/preview_iv"
-            android:src="@drawable/barcode_traffic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ffffff"/>
-        <TextView
-            android:id="@+id/path_tv"
+            android:background="#ffffff"
+            android:layout_weight="1"/>
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="0">
+
+            <TextView
+                android:id="@+id/detail_tv"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/delete_iv"
+                android:layout_weight="0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src ="@drawable/ic_delete"/>
+
+            <ImageView
+                android:id="@+id/download_iv"
+                android:layout_weight="0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src ="@drawable/ic_download"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

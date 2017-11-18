@@ -17,7 +17,8 @@
             android:text="&#60; 취소"
             android:textStyle="bold"
             android:textSize="15sp"
-            android:gravity="right|center"/>
+            android:gravity="right|center"
+            style="?android:attr/borderlessButtonStyle"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -61,7 +62,8 @@
             android:text="확인 &#62; "
             android:textStyle="bold"
             android:textSize="15sp"
-            android:gravity="center|left"/>
+            android:gravity="center|left"
+            style="?android:attr/borderlessButtonStyle"/>
     </LinearLayout>
 
     <LinearLayout
@@ -72,7 +74,8 @@
             android:id="@+id/thumbnail_recycler"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:background="#FFF"/>
 
     </LinearLayout>
 
@@ -80,7 +83,8 @@
 
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="#FFF"/>
 
 
 </LinearLayout>

@@ -81,6 +81,7 @@ public class MainActivity extends BaseActivity {
     private String PhoneNum;
 
     private ArrayList<CardBook> mNotPublishBook;
+    private boolean isNotify;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,9 +90,8 @@ public class MainActivity extends BaseActivity {
         initialize();
         getDatabase();
         getUserPhoneNumber();
-
-        if(mNotPublishBook.size()!=0)
-            notificationPublish();
+        Log.e(TAG, "이친구는 언제 실행될까ㅏㅏ요?");
+//        if(mNotPublishBook.size()!=0)
 
         DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
         int w = dm.widthPixels; //디바이스 해상도 구하기
@@ -111,6 +111,8 @@ public class MainActivity extends BaseActivity {
     }
 
     private void notificationPublish() {
+        if(mNotPublishBook.size()==0)
+            return;
         final Dialog notifyDialog = new Dialog(MainActivity.this, R.style.MyDialog);
         notifyDialog.setContentView(R.layout.dialog_notification);
         StringBuffer message = new StringBuffer();
@@ -178,6 +180,9 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initialize() {
+        Intent intent = getIntent();
+        isNotify = intent.getBooleanExtra("SHOW NOTIFICATION", false);
+
         spm = new SharedPreferenceManager(MainActivity.this);
 
         mDatabase = FirebaseDatabase.getInstance();
@@ -228,6 +233,8 @@ public class MainActivity extends BaseActivity {
                     public void onClick(View view) {
                         Intent intent = new Intent(MainActivity.this, AddScheduleActivity.class);
                         startActivity(intent);
+                        finish();
+                        selectDialog.dismiss();
                     }
                 });
                 selectDialog.findViewById(R.id.dimiss_btn).setOnClickListener(new View.OnClickListener() {
@@ -251,8 +258,10 @@ public class MainActivity extends BaseActivity {
         mViewPager = findViewById(R.id.viewPager);
         mCardAdapter = new CardPagerAdapter(this);
 
-        // TODO: 2017-11-16 튜토리얼로 만들기
-        mCardAdapter.addCardItem(new CardBook("test", "test", "test", "test", "test", false));
+        /*
+        param : String period, String location, String title, String image
+        * */
+        mCardAdapter.addCardItem(new CardBook("자세히 보기 >", "", "혹시 행북이 처음이신가요?", "tutorial"));
 
         mCardShadowTransformer = new ShadowTransformer(mViewPager, mCardAdapter);
         mCardShadowTransformer.enableScaling(true);
@@ -445,7 +454,6 @@ public class MainActivity extends BaseActivity {
                             Log.e(TAG, "여행 중");
                             Log.e(TAG, "default directory name : "+spm.retrieveString(SharedPreferenceTag.DEFAULT_DIRECTORY));
                         }else if(dates[0].getTime() < now.getTime() && dates[1].getTime() < now.getTime() && image==null){
-                            Toast.makeText(MainActivity.this, title+"얼른 출판하세요.", Toast.LENGTH_SHORT).show();
                             mNotPublishBook.add(cardBook);
                         }
                     }
@@ -466,6 +474,10 @@ public class MainActivity extends BaseActivity {
                 spm.save(SharedPreferenceTag.IS_TRAVELING_TAG, isTraveling[0]);
                 Log.e(TAG, "그래서 여행중이라고?"+String.valueOf(spm.retrieveBoolean(SharedPreferenceTag.IS_TRAVELING_TAG)));
 
+                if(isNotify) {
+                    isNotify = false;
+                    notificationPublish();
+                }
                 hideProgressDialog();
             }
 

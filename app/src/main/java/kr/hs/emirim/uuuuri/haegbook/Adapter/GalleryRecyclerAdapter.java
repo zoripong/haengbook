@@ -3,12 +3,14 @@ package kr.hs.emirim.uuuuri.haegbook.Adapter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Bitmap;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -145,12 +147,27 @@ public class GalleryRecyclerAdapter extends RecyclerView.Adapter<GalleryRecycler
                 final ImageView preView = dialog.findViewById(R.id.preview_iv);
                 Log.e(TAG, "Dialog : "+galleryImage.getImgPath());
 
-                dialog.findViewById(R.id.root).setOnClickListener(new View.OnClickListener() {
+                final LinearLayout root = dialog.findViewById(R.id.root);
+
+                root.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         dialog.dismiss();
                     }
                 });
+
+
+                dialog.findViewById(R.id.delete_iv).setVisibility(View.GONE);
+                dialog.findViewById(R.id.download_iv).setVisibility(View.GONE);
+
+//                dialog.findViewById(R.id.close_btn).setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        dialog.dismiss();
+//                    }
+//                });
+
+
 
                 Glide.with(mActivity)
                         .load(galleryImage.getImgPath())
@@ -161,9 +178,16 @@ public class GalleryRecyclerAdapter extends RecyclerView.Adapter<GalleryRecycler
                                 // Do something with bitmap here.
                                 preView.setImageBitmap(bitmap);
                                 dialog.show();
+
+                                root.measure(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+                                int width = root.getMeasuredWidth();
+//                                int height = myImage.getMeasuredHeight();
+                                Log.e(TAG, "width : "+width);
+
+
                             }
                         });
-                ((TextView)dialog.findViewById(R.id.path_tv)).setText("파일 위치 : "+galleryImage.getImgPath());
+                ((TextView)dialog.findViewById(R.id.detail_tv)).setText("파일 위치 : "+galleryImage.getImgPath());
 
                 return true;
             }

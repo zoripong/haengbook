@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import kr.hs.emirim.uuuuri.haegbook.Activity.TakePicturesForServiceActivity;
@@ -71,10 +70,8 @@ public class FloatingViewService extends Service {
 
         //The root element of the collapsed view layout
         final View collapsedView = mFloatingView.findViewById(R.id.collapse_view);
-        //The root element of the expanded view layout
-        final View expandedView = mFloatingView.findViewById(R.id.expanded_container);
 
-        mPathTv = mFloatingView.findViewById(R.id.path_tv);
+        mPathTv = mFloatingView.findViewById(R.id.detail_tv);
 
         mFloatingView.findViewById(R.id.camera_iv).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,20 +80,11 @@ public class FloatingViewService extends Service {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(FILE_PATH_EXTRA, mDirectory);
                 startActivity(intent);
-                collapsedView.setVisibility(View.VISIBLE);
-                expandedView.setVisibility(View.GONE);
             }
         });
 
 
         //Set the close button
-        ImageView closeButtonCollapsed = (ImageView) mFloatingView.findViewById(R.id.close_btn);
-        closeButtonCollapsed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                stopSelf();
-            }
-        });
 
         mFloatingView.findViewById(R.id.update_path_iv).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,8 +92,6 @@ public class FloatingViewService extends Service {
                 Intent intent = new Intent(FloatingViewService.this, TakePicturesForServiceActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                collapsedView.setVisibility(View.VISIBLE);
-                expandedView.setVisibility(View.GONE);
                 stopSelf();
             }
         });
@@ -135,8 +121,7 @@ public class FloatingViewService extends Service {
 
                         if (Xdiff < 10 && Ydiff < 10) {
                             if (isViewCollapsed()) {
-                                collapsedView.setVisibility(View.GONE);
-                                expandedView.setVisibility(View.VISIBLE);
+//                                collapsedView.setVisibility(View.GONE);
                             }
                         }
                         return true;

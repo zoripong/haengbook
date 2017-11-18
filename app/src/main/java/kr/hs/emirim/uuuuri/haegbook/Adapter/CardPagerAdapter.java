@@ -40,6 +40,7 @@ import java.util.Map;
 
 import kr.hs.emirim.uuuuri.haegbook.Activity.AddScheduleActivity;
 import kr.hs.emirim.uuuuri.haegbook.Activity.TravelDetailActivity;
+import kr.hs.emirim.uuuuri.haegbook.Activity.TutorialActivity;
 import kr.hs.emirim.uuuuri.haegbook.Interface.CardAdapter;
 import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
 import kr.hs.emirim.uuuuri.haegbook.Manager.DateListManager;
@@ -88,7 +89,10 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
 
             }
         }
-        //    public CardBook(String period, String location, String title, String image) {
+
+        if(items.size()==0)
+            addCardItem(new CardBook("tutorial", "tutorial", "tutorial", "tutorial"));
+
         mViews.add(null);
         mData.add(new CardBook(null, null, null, null));
 
@@ -182,14 +186,11 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
                             imageV.setBackground(resource); //수정
                         }
                     });
-        }else{
-            if(item.getTitle()==null){
+            if(item.getTitle().equals("tutorial")){
                 // 튜토리얼
-            }else{
+            }else if(item.getTitle() == null){
                 plusImageView.setVisibility(View.VISIBLE);
             }
-
-
         }
 
         cardView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -205,7 +206,11 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
             public void onClick(View view) {
                 if (item.getTitle() == null) {
                     selectDialog();
-                } else {
+                } else if(item.getTitle().equals("tutorial")){
+                    Intent intent = new Intent(mNowActivity, TutorialActivity.class);
+                    mNowActivity.startActivity(intent);
+
+                } else{
                     Intent intent = new Intent(mNowActivity, TravelDetailActivity.class);
                     intent.putExtra("BOOK_CODE", item.getBookCode());
                     intent.putExtra("DATE", item.getPeriod());

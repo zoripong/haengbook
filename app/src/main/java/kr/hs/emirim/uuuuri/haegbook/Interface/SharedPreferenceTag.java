@@ -27,4 +27,7 @@ public interface SharedPreferenceTag {
     String DEFAULT_DIRECTORY = "default directory";
 
 
+    // check the tutorial experience
+    String SHOW_TUTORIAL = "SHOW TUTORIAL";
+
 }

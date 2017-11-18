@@ -32,7 +32,6 @@
         <activity
             android:name=".Activity.AddPhotoActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activity.AddReceiptActivity" />
         <activity
             android:name=".Activity.AddScheduleActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -83,6 +82,9 @@
 
         <receiver android:name=".Notification.Broadcast"></receiver>
 
+        <activity android:name=".Activity.TutorialActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
     </application>
 
 </manifest>

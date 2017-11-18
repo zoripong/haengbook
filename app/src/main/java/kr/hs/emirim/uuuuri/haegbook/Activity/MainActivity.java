@@ -87,11 +87,11 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        showTutorial();
         getUserPhoneNumber();
         initialize();
         getDatabase();
         Log.e(TAG, "이친구는 언제 실행될까ㅏㅏ요?");
-//        if(mNotPublishBook.size()!=0)
 
         DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
         int w = dm.widthPixels; //디바이스 해상도 구하기
@@ -107,6 +107,17 @@ public class MainActivity extends BaseActivity {
         setTBPadding=(int)(mm*600);
         mViewPager.setPadding(setLRPadding, setTBPadding, setLRPadding, setTBPadding);
         Log.e(TAG, "디바이스 양쪽 패딩의 값은...? : "+setLRPadding); //1px에 따른 mm*화면 px개수
+
+    }
+
+    private void showTutorial() {
+        SharedPreferenceManager spm = new SharedPreferenceManager(this);
+        if(spm.retrieveBoolean(SharedPreferenceTag.SHOW_TUTORIAL))
+            return;
+
+        spm.save(SharedPreferenceTag.SHOW_TUTORIAL, true);
+        Intent intent = new Intent(this, TutorialActivity.class);
+        startActivity(intent);
 
     }
 
@@ -273,7 +284,7 @@ public class MainActivity extends BaseActivity {
         /*
         param : String period, String location, String title, String image
         * */
-        mCardAdapter.addCardItem(new CardBook("자세히 보기 >", "", "혹시 행북이 처음이신가요?", "tutorial"));
+        mCardAdapter.addCardItem(new CardBook("tutorial", "tutorial", "tutorial", "tutorial"));
 
         mCardShadowTransformer = new ShadowTransformer(mViewPager, mCardAdapter);
         mCardShadowTransformer.enableScaling(true);
@@ -495,8 +506,6 @@ public class MainActivity extends BaseActivity {
 
                 mCardAdapter.addCardItems(mCardBooks);
 
-                if(mCardBooks.size() == 0)
-                    mCardAdapter.addCardItem(new CardBook("test", "test", "test", "test", "test", false));
                 mViewPager.setAdapter(mCardAdapter);
 
                 spm.save(SharedPreferenceTag.IS_TRAVELING_TAG, isTraveling);

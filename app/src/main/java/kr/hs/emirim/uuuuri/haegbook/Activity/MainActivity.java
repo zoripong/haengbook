@@ -43,10 +43,7 @@ import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Model.CardBook;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
-// TODO: 2017-11-12 : MainActivity => 파이어베이스 로딩중 클릭시 취소 방지
 // TODO: 2017-11-12 : 이미지 로딩 화면 제공
-
-// TODO: 2017-11-18 : 다이얼로그 open 시 animation 
 public class MainActivity extends BaseActivity {
     private final String TAG = "MainActivity";
     private final String BUNDLE_TAG ="BUNDLE_TAG";
@@ -82,6 +79,9 @@ public class MainActivity extends BaseActivity {
 
     private ArrayList<CardBook> mNotPublishBook;
     private boolean isNotify;
+
+    private CardBook travelingCard;
+    private boolean isTraveling;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -195,56 +195,66 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.add_schedule_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Dialog selectDialog = new Dialog(MainActivity.this, R.style.MyDialog);
-                selectDialog.setContentView(R.layout.dialog_select);
-                selectDialog.show();
-                selectDialog.findViewById(R.id.add_code_btn).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        final Dialog inputDialog = new Dialog(MainActivity.this, R.style.MyDialog);
-                        inputDialog.setContentView(R.layout.dialog_code_input);
-                        selectDialog.hide();
-                        inputDialog.show();
-                        selectDialog.dismiss();
-                        final ClipboardManager clipboardManager =  (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                        bookCodeEt=inputDialog.findViewById(R.id.book_code_et);
-                        inputDialog.findViewById(R.id.paste_btn).setOnClickListener(new View.OnClickListener () {
-                                                                                        @Override
-                                                                                        public void onClick(View v) {
-                                                                                            bookCodeEt.setText(clipboardManager.getText());
+                if (isTraveling && travelingCard != null) {
+                    Intent intent = new Intent(MainActivity.this, TravelDetailActivity.class);
+                    intent.putExtra("BOOK_CODE", travelingCard.getBookCode());
+                    intent.putExtra("DATE", travelingCard.getPeriod());
+                    intent.putExtra("Image", travelingCard.getImage());
+                    startActivity(intent);
+
+                } else {
+                    final Dialog selectDialog = new Dialog(MainActivity.this, R.style.MyDialog);
+                    selectDialog.setContentView(R.layout.dialog_select);
+                    selectDialog.show();
+                    selectDialog.findViewById(R.id.add_code_btn).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            final Dialog inputDialog = new Dialog(MainActivity.this, R.style.MyDialog);
+                            inputDialog.setContentView(R.layout.dialog_code_input);
+                            selectDialog.hide();
+                            inputDialog.show();
+                            selectDialog.dismiss();
+                            final ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                            bookCodeEt = inputDialog.findViewById(R.id.book_code_et);
+                            inputDialog.findViewById(R.id.paste_btn).setOnClickListener(new View.OnClickListener() {
+                                                                                            @Override
+                                                                                            public void onClick(View v) {
+                                                                                                bookCodeEt.setText(clipboardManager.getText());
+                                                                                            }
                                                                                         }
-                                                                                    }
-                        );
+                            );
 
-                        inputDialog.findViewById(R.id.add_btn).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                updateFB(String.valueOf(bookCodeEt.getText()));
-                                inputDialog.hide();
-                                inputDialog.dismiss();
-                            }
-                        });
+                            inputDialog.findViewById(R.id.add_btn).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    updateFB(String.valueOf(bookCodeEt.getText()));
+                                    inputDialog.hide();
+                                    inputDialog.dismiss();
+                                }
+                            });
 
-                    }
-                });
+                        }
+                    });
 
-                selectDialog.findViewById(R.id.add_basic_btn).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(MainActivity.this, AddScheduleActivity.class);
-                        startActivity(intent);
-                        finish();
-                        selectDialog.dismiss();
-                    }
-                });
-                selectDialog.findViewById(R.id.dimiss_btn).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        selectDialog.dismiss();
-                    }
-                });
+                    selectDialog.findViewById(R.id.add_basic_btn).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(MainActivity.this, AddScheduleActivity.class);
+                            startActivity(intent);
+                            finish();
+                            selectDialog.dismiss();
+                        }
+                    });
+                    selectDialog.findViewById(R.id.dimiss_btn).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            selectDialog.dismiss();
+                        }
+                    });
+                }
             }
         });
+
 
         findViewById(R.id.setting_btn).setOnClickListener(new View.OnClickListener() {
                                                               @Override
@@ -312,6 +322,9 @@ public class MainActivity extends BaseActivity {
         });
 
         mNotPublishBook = new ArrayList<>();
+        isTraveling = false;
+        travelingCard = null;
+
     }
 
     private ViewPager.SimpleOnPageChangeListener getPagerSynchronizer() {
@@ -417,7 +430,6 @@ public class MainActivity extends BaseActivity {
         mCardBookListener = mCardBookRefer.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                final boolean[] isTraveling = {false};
                 mCardBooks.clear();
                 mReserveBooks.clear();
 
@@ -449,7 +461,8 @@ public class MainActivity extends BaseActivity {
                         Log.e(TAG, dates[0].getTime()+"/"+dates[1].getTime()+"/"+now.getTime());
                         Log.e(TAG, dates[0].toString()+"/"+dates[1].toString()+"/"+now.toString());
                         if(dates[0].getTime() <= now.getTime() && dates[1].getTime() >= now.getTime()){
-                            isTraveling[0] = true;
+                            isTraveling = true;
+                            travelingCard = cardBook;
                             spm.save(SharedPreferenceTag.DEFAULT_DIRECTORY, title);
                             Log.e(TAG, "여행 중");
                             Log.e(TAG, "default directory name : "+spm.retrieveString(SharedPreferenceTag.DEFAULT_DIRECTORY));
@@ -471,7 +484,7 @@ public class MainActivity extends BaseActivity {
                     mCardAdapter.addCardItem(new CardBook("test", "test", "test", "test", "test", false));
                 mViewPager.setAdapter(mCardAdapter);
 
-                spm.save(SharedPreferenceTag.IS_TRAVELING_TAG, isTraveling[0]);
+                spm.save(SharedPreferenceTag.IS_TRAVELING_TAG, isTraveling);
                 Log.e(TAG, "그래서 여행중이라고?"+String.valueOf(spm.retrieveBoolean(SharedPreferenceTag.IS_TRAVELING_TAG)));
 
                 hideProgressDialog();
@@ -481,8 +494,10 @@ public class MainActivity extends BaseActivity {
                     notificationPublish();
                 }
 
-                if(isTraveling[0])
+                if(isTraveling && travelingCard!=null){
                     ((TextView)findViewById(R.id.add_schedule_btn)).setText("현재 여행 바로가기 >");
+
+                }
             }
 
 

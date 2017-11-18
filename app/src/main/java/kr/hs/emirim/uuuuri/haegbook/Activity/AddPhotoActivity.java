@@ -31,9 +31,6 @@ import kr.hs.emirim.uuuuri.haegbook.Manager.ThumbnailRecyclerSetter;
 import kr.hs.emirim.uuuuri.haegbook.Model.GalleryImage;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
-// TODO: 2017-11-11 menu click -> add photoDetailActivity -> upload
-// TODO: 2017-11-12 카메라 바로가기... TakePicturesActivity 
-// TODO: 2017-11-12 floating widget : https://www.androidhive.info/2016/11/android-floating-widget-like-facebook-chat-head/
 public class AddPhotoActivity extends AppCompatActivity {
     private final String TAG = "AddPhotoActivity";
     private final String INTENT_PHOTO_EXTRA = "INTENT_PHOTO_EXTRA";
@@ -185,7 +182,6 @@ public class AddPhotoActivity extends AppCompatActivity {
      * 확인 버튼 선택 시
      */
     private void selectDone() {
-        // TODO: 2017-11-11 intent & putExtra
         List<GalleryImage> selectedPhotoList = galleryRecyclerAdapter.getSelectedPhotoList();
 
         if(selectedPhotoList.size()==0){

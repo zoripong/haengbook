@@ -34,7 +34,6 @@ import kr.hs.emirim.uuuuri.haegbook.R;
 
 import static android.R.attr.id;
 
-// TODO: 2017-11-16 이미지 코멘트 잘들어가나 테스트
 public class AddPhotoDetailActivity extends BaseActivity {
     private final String STRORAGE_PATH = "images/";
 

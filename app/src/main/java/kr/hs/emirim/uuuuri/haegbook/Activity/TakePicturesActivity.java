@@ -18,10 +18,6 @@ import java.util.ArrayList;
 import kr.hs.emirim.uuuuri.haegbook.Manager.CameraManager;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
-// TODO: 2017-11-15 타임스탬프
-
-
-// // TODO: 2017-11-12 sharedpreference에서 지정한 디렉토리명 가져오고 수정할 수 있게 한 다음 갱신까지..!!
 
 public class TakePicturesActivity extends Activity {
     private final String SERVICE_TAG = "service tag";

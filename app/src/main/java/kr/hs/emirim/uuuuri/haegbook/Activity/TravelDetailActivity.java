@@ -91,7 +91,7 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
     private FloatingActionButton fab;
 
     private FirebaseDatabase mDatabase;
-    private int typeIndex;
+    private int typeIndex=0;
     private boolean isUpdateNull=true;
 
     PhotoFragment mPhotoFragment;
@@ -188,6 +188,7 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
             @Override
             public void onPageSelected(int position) {
                 tabLayout.setCurrentTab(position);
+                mPosition=position;
             }
 
             @Override
@@ -217,7 +218,7 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
                         mDialog.setContentView(R.layout.dialog_regist_receipt);
 
                         final Spinner mDateSp=  mDialog.findViewById(R.id.date_sp);
-                        Spinner mTypeSp= mDialog.findViewById(R.id.type_sp);
+                        final Spinner mTypeSp= mDialog.findViewById(R.id.type_sp);
                         final EditText mTitleEt= mDialog.findViewById(R.id.title_et);
                         final EditText mAmountEt = mDialog.findViewById(R.id.amount_et);
                         final Spinner currencySymbolSp = mDialog.findViewById(R.id.currency_symbol_sp);
@@ -235,6 +236,17 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
 
                         mDateSp.setAdapter(adapter);
                         mDateSp.setSelection(stringArray.length-1);
+
+                        mTypeSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view,
+                                                       int position, long id) {
+                                typeIndex=position;
+                            }
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {}
+                        });
+
 
                         //TODO
                         String[] currencyArray;
@@ -282,8 +294,6 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
                                 Log.e("파베"+String.valueOf(mDateSp.getSelectedItem().toString()),"");
                                 updateFB(mDialog,String.valueOf(mDateSp.getSelectedItem().toString()) ,typeIndex,String.valueOf(mTitleEt.getText()),
                                         String.valueOf(mAmountEt.getText()).replaceAll(" ",""),currencySymbolSp.getSelectedItem().toString(),String.valueOf(mMemoEt.getText()));
-
-
 
 
                             }

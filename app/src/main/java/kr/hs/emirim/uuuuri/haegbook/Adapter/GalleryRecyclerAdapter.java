@@ -3,7 +3,6 @@ package kr.hs.emirim.uuuuri.haegbook.Adapter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Bitmap;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -160,36 +159,32 @@ public class GalleryRecyclerAdapter extends RecyclerView.Adapter<GalleryRecycler
                 dialog.findViewById(R.id.delete_iv).setVisibility(View.GONE);
                 dialog.findViewById(R.id.download_iv).setVisibility(View.GONE);
 
-//                dialog.findViewById(R.id.close_btn).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        dialog.dismiss();
-//                    }
-//                });
+                dialog.findViewById(R.id.close_btn).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
 
 
 
+                //// TODO: 2017-11-18 다이얼로그 가로만큼..
                 Glide.with(mActivity)
                         .load(galleryImage.getImgPath())
                         .asBitmap()
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-                                // Do something with bitmap here.
                                 preView.setImageBitmap(bitmap);
                                 dialog.show();
-
-                                root.measure(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
-                                int width = root.getMeasuredWidth();
-//                                int height = myImage.getMeasuredHeight();
-                                Log.e(TAG, "width : "+width);
-
-
+                                Log.e(TAG, "base : " + bitmap.getWidth()+" / resize : "+preView.getWidth());
                             }
                         });
-                ((TextView)dialog.findViewById(R.id.detail_tv)).setText("파일 위치 : "+galleryImage.getImgPath());
 
-                return true;
+                ((TextView)dialog.findViewById(R.id.detail_tv)).setText(galleryImage.getImgPath());
+
+
+                 return true;
             }
         });
     }

@@ -21,6 +21,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.ViewTarget;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -133,23 +136,29 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
 //        Log.e(TAG, "<Before> width : "+ cardView.getWidth() +" / height : " + cardView.getHeight());
 //        Log.e(TAG, "url : " + item.getImage());
 
+
         cardView.setPreventCornerOverlap(false);
+        StorageReference storageReference = null;
+        if(item.getImage() != null)
+            storageReference = FirebaseStorage.getInstance().getReference(item.getImage());
 
-
-        Glide.with(mNowActivity.getApplicationContext())
-                .load(item.getImage())
-                .fitCenter()
-                .placeholder(R.drawable.loading)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(new ViewTarget<CardView, GlideDrawable>(cardView) {
-                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-                    @Override
-                    public void onResourceReady(GlideDrawable resource, GlideAnimation anim) {
-                        ImageView imageV= view.findViewById(R.id.linear); ////수정
-                        imageV.setBackground(resource); //수정
-                    }
-                });
-//        Log.e(TAG, "<After> width : "+ cardView.getWidth() +" / height : " + cardView.getHeight());
+        if(storageReference != null) {
+            Glide.with(mNowActivity.getApplicationContext())
+                    .using(new FirebaseImageLoader())
+                    .load(storageReference)
+                    .fitCenter()
+                    .placeholder(R.drawable.loading)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .centerCrop()
+                    .into(new ViewTarget<CardView, GlideDrawable>(cardView) {
+                        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                        @Override
+                        public void onResourceReady(GlideDrawable resource, GlideAnimation anim) {
+                            ImageView imageV = view.findViewById(R.id.linear); ////수정
+                            imageV.setBackground(resource); //수정
+                        }
+                    });
+        }
 
         cardView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

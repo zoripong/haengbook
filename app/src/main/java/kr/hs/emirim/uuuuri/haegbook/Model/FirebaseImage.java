@@ -39,4 +39,8 @@ public class FirebaseImage {
     public String getDate() {
         return date;
     }
+
+    public void setImageURI(String imageURI) {
+        this.imageURI = imageURI;
+    }
 }

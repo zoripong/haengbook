@@ -132,8 +132,11 @@ public class AddPhotoDetailActivity extends BaseActivity {
         for(int i = 0; i<firebaseImages.size();i++){
             Uri uri = Uri.fromFile(new File(firebaseImages.get(i).getImageURI()));
 
+            long timeStamp = System.currentTimeMillis();
             // Creating second StorageReference.
-            StorageReference storageReference2nd = storageReference.child(STRORAGE_PATH + System.currentTimeMillis() + "." + GetFileExtension(uri));
+            StorageReference storageReference2nd = storageReference.child(STRORAGE_PATH + timeStamp + "." + GetFileExtension(uri));
+            firebaseImages.get(i).setImageURI(STRORAGE_PATH + timeStamp + "." + GetFileExtension(uri));
+
             // Adding addOnSuccessListener to second StorageReference.
             final int finalI = i;
             storageReference2nd.putFile(uri)

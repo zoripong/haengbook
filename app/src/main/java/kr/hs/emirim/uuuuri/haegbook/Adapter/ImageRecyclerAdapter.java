@@ -2,7 +2,7 @@ package kr.hs.emirim.uuuuri.haegbook.Adapter;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,11 +10,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,11 +68,21 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
     @Override
     public void onBindViewHolder(final ImageViewHolder holder, final int position) {
         final FirebaseImage firebaseImage = photoList.get(position);
-        Glide.with(mActivity)
-                .load(firebaseImage.getImageURI())
-                .centerCrop()
-                .crossFade()
-                .into(holder.imageView);
+        // Reference to an image file in Firebase Storage
+        StorageReference storageReference = null;
+        if (firebaseImage.getImageURI() != null) {
+
+            storageReference = FirebaseStorage.getInstance().getReference(firebaseImage.getImageURI());
+        }
+
+        if (storageReference != null) {
+            Glide.with(mActivity)
+                    .using(new FirebaseImageLoader())
+                    .load(storageReference)
+                    .centerCrop()
+                    .into(holder.imageView);
+
+        }
 
 
 
@@ -73,6 +94,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
             }
         }
 
+        final StorageReference finalStorageReference = storageReference;
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,6 +102,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
                 if(isPhotoFragment) {
                     final Dialog dialog = new Dialog(mActivity, R.style.MyDialog);
                     dialog.setContentView(R.layout.dialog_image_preview);
+
 
                     final ImageView preView = dialog.findViewById(R.id.preview_iv);
                     Log.e(TAG, "Dialog : " + firebaseImage.getImageURI());
@@ -91,17 +114,64 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
                         }
                     });
 
-                    Glide.with(mActivity)
-                            .load(firebaseImage.getImageURI())
-                            .asBitmap()
-                            .into(new SimpleTarget<Bitmap>() {
+
+
+                    if(finalStorageReference != null) {
+                        Glide.with(mActivity)
+                                .using(new FirebaseImageLoader())
+                                .load(finalStorageReference)
+                                .centerCrop()
+                                .into(new SimpleTarget<GlideDrawable>() {
+                                    @Override
+                                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                                        preView.setImageDrawable(resource);
+                                        dialog.show();
+                                    }
+                                });
+                    }
+
+                    ((TextView)dialog.findViewById(R.id.detail_tv)).setText(firebaseImage.getImageComment());
+                    dialog.findViewById(R.id.close_btn).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.findViewById(R.id.delete_iv).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // TODO: 2017-11-18 이미지 삭제하기
+                        }
+                    });
+                    dialog.findViewById(R.id.download_iv).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Toast.makeText(mActivity, firebaseImage.getImageURI(),Toast.LENGTH_SHORT).show();
+                            // TODO: 2017-11-18 : down load
+                            // 퍼미션 체크 후 다운로드
+
+                            File localFile = null;
+                            try {
+                                localFile = File.createTempFile("images", "jpg");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            StorageReference storageReference = FirebaseStorage.getInstance().getReference(firebaseImage.getImageURI());
+
+                            storageReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                 @Override
-                                public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-                                    // Do something with bitmap here.
-                                    preView.setImageBitmap(bitmap);
-                                    dialog.show();
+                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                    // Local temp file has been created
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    // Handle any errors
                                 }
                             });
+
+                        }
+                    });
                 }else{
 
                     if (onItemClickListener != null) {

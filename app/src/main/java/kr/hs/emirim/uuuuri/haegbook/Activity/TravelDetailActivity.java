@@ -17,7 +17,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -366,6 +365,24 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
             }
         });
 
+        dates[0] = new Date(dates[0].getYear(), dates[0].getMonth(), dates[0].getDate()-1, 0, 0, 0);
+        dates[1] = new Date(dates[1].getYear(), dates[1].getMonth(), dates[1].getDate()-1, 0, 0, 0);
+        Date now = new Date();
+        now = new Date(now.getYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+
+        Log.e(TAG, "dates[0] : "+dates[0].toString());
+        Log.e(TAG, "dates[1] : "+dates[1].toString());
+        Log.e(TAG, "now : "+now.toString());
+        if(dates[0].getTime() <now.getTime() && dates[1].getTime() < now.getTime())
+            actionbar.findViewById(R.id.publish_btn).setVisibility(View.VISIBLE);
+
+        actionbar.findViewById(R.id.publish_btn).setOnClickListener(new View.OnClickListener() {
+                                                                        @Override
+                                                                        public void onClick(View view) {
+                                                                            publishTravel();
+                                                                        }
+                                                                    }
+        );
 
 
         actionBar.setCustomView(actionbar);
@@ -375,35 +392,9 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
         parent.setContentInsetsAbsolute(0,0);
 
 
-        getMenuInflater().inflate(R.menu.menu_travel_detail, menu);
-        MenuItem publishItem = menu.findItem(R.id.publish_btn);
-//
-//
-//        Spinner dateSpinner = (Spinner) MenuItemCompat.getActionView(spinnerItem);
-//
-//
-
         return true;
     }
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id){
-            case R.id.publish_btn:
-                Toast.makeText(TravelDetailActivity.this, "publish", Toast.LENGTH_SHORT).show();
-
-                publishTravel();
-
-                break;
-
-        }
-
-
-        return super.onOptionsItemSelected(item);
-    }
 
     private void publishTravel() {
         final Dialog publishDialog = new Dialog(TravelDetailActivity.this, R.style.MyDialog);

@@ -10,5 +10,12 @@
         android:layout_centerVertical="true"
         android:background="@drawable/dropdown_icon"
        />
+    <TextView
+        android:visibility="gone"
+        android:layout_alignRight="@id/date_spinner"
+        android:text="PUBLISH"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/publish_btn"/>
 
 </RelativeLayout>

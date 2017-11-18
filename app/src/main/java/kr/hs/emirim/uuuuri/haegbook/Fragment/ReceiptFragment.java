@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import kr.hs.emirim.uuuuri.haegbook.Adapter.OnSwipeTouchListener;
 import kr.hs.emirim.uuuuri.haegbook.Interface.ReceiptType;
 import kr.hs.emirim.uuuuri.haegbook.Manager.ReceiptRecyclerSetter;
 import kr.hs.emirim.uuuuri.haegbook.Model.Receipt;
@@ -48,10 +50,51 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
     private ArrayList<String> dateList;
     public ReceiptFragment() {}
 
+    private BottomSheetLayout bottomSheetLayout;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_receipt, container, false);
+
+        bottomSheetLayout = rootView.findViewById(R.id.design_bottom_sheet);
+        bottomSheetLayout.setInterceptContentTouch(true);
+
+        bottomSheetLayout.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
+            @Override
+            public void onSwipeRight() {}
+
+            @Override
+            public void onSwipeLeft() {}
+
+            @Override
+            public void onSwipeTop() {
+/*
+ Bundle bundle = new Bundle();
+        String myMessage = "Stackoverflow is cool!";
+        bundle.putString("message", myMessage );
+        FragmentClass fragInfo = new FragmentClass();
+        fragInfo.setArguments(bundle);
+        transaction.replace(R.id.fragment_single, fragInfo);
+        transaction.commit();
+ */
+Log.e("헬로","슬라이딩");
+//                Bundle bundle = new Bundle();
+//                bundle.putParcelableArrayList(BUNDLE_TAG, mCardBooks);
+//                BookCardListFragment fragment = new BookCardListFragment();
+//                fragment.setArguments(bundle);
+//                fragment.show(getSupportFragmentManager(), R.id.design_bottom_sheet);
+////                new BookCardListFragment().show(getSupportFragmentManager(), R.id.design_bottom_sheet);
+            }
+
+            @Override
+            public void onSwipeBottom() {}
+
+
+        });
+
+
+
         mReceipts = new ArrayList<>();
 
         recyclerView = rootView.findViewById(R.id.recyclerview);

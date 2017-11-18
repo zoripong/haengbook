@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -71,6 +73,8 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int type) {
         View view = null;
+        LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         mContext = parent.getContext();
 
         spm = new SharedPreferenceManager((Activity) mContext);
@@ -97,26 +101,17 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 
         float dp = mContext.getResources().getDisplayMetrics().density;
-        int subItemPaddingLeft = (int) (18 * dp);
-        int subItemPaddingTopAndBottom = (int) (5 * dp);
+
         switch (type) {
             case HEADER:
-                LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = inflater.inflate(R.layout.list_setting_header, parent, false);
+                view = inflater.inflate(R.layout.item_setting_list_headr, parent, false);
                 ListHeaderViewHolder header = new ListHeaderViewHolder(view);
                 return header;
             case CHILD:
-                TextView itemTextView = new TextView(mContext);
-                itemTextView.setPadding(subItemPaddingLeft, subItemPaddingTopAndBottom, 0, subItemPaddingTopAndBottom);
-                itemTextView.setTextColor(0x88000000);
-                itemTextView.setLayoutParams(
-                        new ViewGroup.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.WRAP_CONTENT));
+                view = inflater.inflate(R.layout.item_list_setting_child, parent, false);
+                ListChildViewHolder child = new ListChildViewHolder(view);
 
-
-                return new RecyclerView.ViewHolder(itemTextView) {
-                };
+                return child ;
         }
         return null;
     }
@@ -129,12 +124,11 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 final ListHeaderViewHolder itemController = (ListHeaderViewHolder) holder;
                 itemController.refferalItem = item;
                 itemController.header_title.setText(item.text);
-                if (item.invisibleChildren == null) {
-                  //  itemController.floatingWidgetSwitch.setImageResource(R.mipmap.ic_launcher);
-                } else {
-                //    itemController.floatingWidgetSwitch.setImageResource(R.mipmap.ic_launcher);
+                if(item.text.contains("Notification")){
+                    itemController.setting_switch.setChecked(true);
                 }
 //
+
 
 
                 itemController.setting_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -159,64 +153,73 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 break;
             case CHILD:
                 SharedPreferenceManager spm=new SharedPreferenceManager((Activity) mContext);
-                final TextView itemTextView = (TextView) holder.itemView;
-                if(item.text.contains("시작")) {
-                    itemTextView.setText(data.get(position).text + "        " + spm.retrieveString(NotificationTag.START_TIME_TAG));
-                }else{
-                    itemTextView.setText(data.get(position).text + "        " + spm.retrieveString(NotificationTag.FINISH_TIME_TAG));
+
+                final ListChildViewHolder childViewHolder = (ListChildViewHolder)holder;
+                Log.e("이름",item.text);
+                childViewHolder.dateBtn.setText(item.text);
+                if(item.text.contains("하루 시작")) {
+                    Log.e("처음","시작");
+                    childViewHolder.dateTv.setText(spm.retrieveString(NotificationTag.START_TIME_TAG));
                 }
-                itemTextView.setOnClickListener(new View.OnClickListener() {
+                else {
+                    Log.e("처음","종료");
+                    childViewHolder.dateTv.setText(spm.retrieveString(NotificationTag.FINISH_TIME_TAG));
+                }
+                childViewHolder.dateBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View view) {
                         TimePickerDialog dialog = new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker timePicker, int hour, int min) {
-
-
                                 SharedPreferenceManager spm = new SharedPreferenceManager((Activity) mContext);
-                                if(item.text.contains("시작")){
-                                    spm.save(NotificationTag.START_TIME_TAG, hour+":"+min);
-                                    Log.e("시작 시간",spm.retrieveString(NotificationTag.START_TIME_TAG));
-                                    itemTextView.setText(data.get(position).text + "        " + spm.retrieveString(NotificationTag.START_TIME_TAG));
+                                Log.e("이름",item.text);
 
-                                }else{
-                                    spm.save(NotificationTag.FINISH_TIME_TAG, hour+":"+min);
-                                    Log.e("종료 시간",spm.retrieveString(NotificationTag.FINISH_TIME_TAG));
-                                    itemTextView.setText(data.get(position).text + "        " + spm.retrieveString(NotificationTag.FINISH_TIME_TAG));
-
-                                    new AlarmReceiver(mContext).Alarm();
-
+                                if(item.text.contains("시작")) {
+                                    spm.save(NotificationTag.START_TIME_TAG, hour + ":" + min);
+                                    Log.e("시간", spm.retrieveString(NotificationTag.START_TIME_TAG));
+                                    childViewHolder.dateTv.setText(spm.retrieveString(NotificationTag.START_TIME_TAG));
                                 }
+                                else{
+                                    spm.save(NotificationTag.FINISH_TIME_TAG, hour + ":" + min);
+                                    Log.e("시간", spm.retrieveString(NotificationTag.FINISH_TIME_TAG));
+                                    childViewHolder.dateTv.setText(spm.retrieveString(NotificationTag.FINISH_TIME_TAG));
+                                }
+
+                                new AlarmReceiver(mContext).Alarm();
+
+
                             }
                         }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);  //마지막 boolean 값은 시간을 24시간으로 보일지 아닐지
 
                         dialog.show();
 
+
                     }
                 });
-                break;
+
+
         }
     }
 
     public void changeCameraWidget(Item item,ListHeaderViewHolder itemController,boolean isChecked){
         if(isChecked) {
-                    if(spm.retrieveBoolean(SharedPreferenceTag.IS_TRAVELING_TAG)) {
+            if(spm.retrieveBoolean(SharedPreferenceTag.IS_TRAVELING_TAG)) {
 
-                        TedPermission.with(mContext)
-                                .setPermissionListener(permissionlistener)
-                                .setDeniedMessage("권한이 없을 경우, 플로팅 위젯 기능을 사용 할 수 없습니다.\n\nPlease turn on permissions at [Setting] > [Permission]")
-                                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.SYSTEM_ALERT_WINDOW)
-                                .check();
-                    }else{
-                        Toast.makeText(mContext, "여행중에만 이용가능한 서비스 입니다.", Toast.LENGTH_SHORT).show();
-                        itemController.setting_switch.setChecked(false);
-                    }
-                }else{
-                    if(mServiceIntent!=null) {
-                        mContext.stopService(mServiceIntent);
-                        mServiceIntent = null;
-                    }
-                }
+                TedPermission.with(mContext)
+                        .setPermissionListener(permissionlistener)
+                        .setDeniedMessage("권한이 없을 경우, 플로팅 위젯 기능을 사용 할 수 없습니다.\n\nPlease turn on permissions at [Setting] > [Permission]")
+                        .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.SYSTEM_ALERT_WINDOW)
+                        .check();
+            }else{
+                Toast.makeText(mContext, "여행중에만 이용가능한 서비스 입니다.", Toast.LENGTH_SHORT).show();
+                itemController.setting_switch.setChecked(false);
+            }
+        }else{
+            if(mServiceIntent!=null) {
+                mContext.stopService(mServiceIntent);
+                mServiceIntent = null;
+            }
+        }
 
 
 
@@ -265,6 +268,18 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             super(itemView);
             header_title = (TextView) itemView.findViewById(R.id.header_title);
             setting_switch = itemView.findViewById(R.id.child_switch);
+        }
+    }
+    private class ListChildViewHolder extends RecyclerView.ViewHolder{
+        LinearLayout root;
+        Button dateBtn;
+        TextView dateTv;
+
+        public ListChildViewHolder(View itemView) {
+            super(itemView);
+            root = itemView.findViewById(R.id.root);
+            dateBtn = itemView.findViewById(R.id.date_set_btn);
+            dateTv = itemView.findViewById(R.id.date_tv);
         }
     }
 

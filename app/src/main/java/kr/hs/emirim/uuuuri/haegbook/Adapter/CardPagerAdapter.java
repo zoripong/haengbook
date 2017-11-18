@@ -34,6 +34,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -302,7 +303,7 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
         });
     }
 
-    private void updateFB(final String inputCode){
+    public void updateFB(final String inputCode){
         SharedPreferenceManager spm = new SharedPreferenceManager(mNowActivity);
         final String uid = spm.retrieveString(SharedPreferenceTag.USER_TOKEN_TAG);
 
@@ -313,8 +314,13 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getChildrenCount()<1){
-                    Toast.makeText(mNowActivity, "유효하지않은 코드입니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mNowActivity.getApplicationContext(), "유효하지않은 코드입니다.", Toast.LENGTH_SHORT).show();
                     return;
+                }
+                if(inputCode.replaceAll(" ","").equals("")){
+                    Toast.makeText(mNowActivity.getApplicationContext(), "코드를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+
                 }
                 //uid에 카드 업데이트
 
@@ -325,15 +331,24 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
 
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.child(inputCode) != null){
-                            Toast.makeText(mNowActivity, "이미 등록된 코드입니다.", Toast.LENGTH_SHORT).show();
-                            return;
+                        Iterator<DataSnapshot> childIterator = dataSnapshot.getChildren().iterator();
+                        //users의 모든 자식들의 key값과 value 값들을 iterator로 참조
+                        while(childIterator.hasNext()) {
+                            DataSnapshot snapshotIterator = childIterator.next();
+                            String cardCode=snapshotIterator.getValue(String.class);
+                            if(cardCode.equals(inputCode)){
+                                Toast.makeText(mNowActivity.getApplicationContext(), "이미 등록된 코드입니다.", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
                         }
+
                         keyIndex = dataSnapshot.getChildrenCount();
                         Map<String, Object> haveCardBookUpdates = new HashMap<String, Object>();
                         haveCardBookUpdates.put(String.valueOf(keyIndex+1), inputCode);
                         userInfoRef.updateChildren(haveCardBookUpdates);
                     }
+
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {}
@@ -347,5 +362,6 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
         });
 
     }
+
 
 }

@@ -87,9 +87,9 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getUserPhoneNumber();
         initialize();
         getDatabase();
-        getUserPhoneNumber();
         Log.e(TAG, "이친구는 언제 실행될까ㅏㅏ요?");
 //        if(mNotPublishBook.size()!=0)
 
@@ -146,6 +146,8 @@ public class MainActivity extends BaseActivity {
     }
 
     public void getUserPhoneNumber(){
+        showProgressDialog();
+
         permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
@@ -353,7 +355,6 @@ public class MainActivity extends BaseActivity {
         SharedPreferenceManager spm = new SharedPreferenceManager(this);
 
         String uid = spm.retrieveString(SharedPreferenceTag.USER_TOKEN_TAG);
-        showProgressDialog();
         mUserRefer = mDatabase.getReference("UserInfo/"+uid);
 
         mUserListener = mUserRefer.addValueEventListener(new ValueEventListener() {
@@ -377,7 +378,7 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    private void updateFB(final String inputCode){
+    public void updateFB(final String inputCode){
         SharedPreferenceManager spm = new SharedPreferenceManager(this);
         final String uid = spm.retrieveString(SharedPreferenceTag.USER_TOKEN_TAG);
 
@@ -391,6 +392,11 @@ public class MainActivity extends BaseActivity {
                     Toast.makeText(MainActivity.this, "유효하지않은 코드입니다.", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if(inputCode.replaceAll(" ","").equals("")){
+                    Toast.makeText(MainActivity.this, "코드를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+
+                }
                 //uid에 카드 업데이트
 
                 final DatabaseReference userInfoRef = mDatabase.getReference("UserInfo/"+uid);
@@ -400,15 +406,24 @@ public class MainActivity extends BaseActivity {
 
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.child(inputCode) != null){
-                            Toast.makeText(MainActivity.this, "이미 등록된 코드입니다.", Toast.LENGTH_SHORT).show();
-                            return;
+                        Iterator<DataSnapshot> childIterator = dataSnapshot.getChildren().iterator();
+                        //users의 모든 자식들의 key값과 value 값들을 iterator로 참조
+                        while(childIterator.hasNext()) {
+                            DataSnapshot snapshotIterator = childIterator.next();
+                            String cardCode=snapshotIterator.getValue(String.class);
+                            if(cardCode.equals(inputCode)){
+                                Toast.makeText(MainActivity.this, "이미 등록된 코드입니다.", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
                         }
+
                         keyIndex = dataSnapshot.getChildrenCount();
                         Map<String, Object> haveCardBookUpdates = new HashMap<String, Object>();
                         haveCardBookUpdates.put(String.valueOf(keyIndex+1), inputCode);
                         userInfoRef.updateChildren(haveCardBookUpdates);
                     }
+
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {}

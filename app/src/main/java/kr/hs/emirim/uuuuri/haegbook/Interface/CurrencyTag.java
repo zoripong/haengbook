@@ -6,7 +6,7 @@ package kr.hs.emirim.uuuuri.haegbook.Interface;
 
 public interface CurrencyTag {
     String CHOOSE_CURRENCY_TAG = "CHOOSE CURRENCY";
-
-
-
+    //currency
+    String CURRENCY_SYMBOL_TAG = "CURRENCY SYMBOL";
+    String CURRENCY_COUNTRY_TAG = "CURRENCY COUNTRY";
 }

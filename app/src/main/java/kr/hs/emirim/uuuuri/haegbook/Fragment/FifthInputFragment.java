@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import kr.hs.emirim.uuuuri.haegbook.Interface.CurrencyTag;
 import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Model.CardBook;
@@ -48,6 +49,9 @@ public class FifthInputFragment extends Fragment{
     private String mCardBookStartDate;
     private String mCardBookEndDate;
     private String mUserToken;
+
+    private String mCurrencySymbol;
+    private String mCurrencyName;
 
 
     //시크바
@@ -111,6 +115,10 @@ public class FifthInputFragment extends Fragment{
 
         mCardBookKorMoney = spm.retrieveFloat(SharedPreferenceTag.KOR_MONEY_TAG);
         mCardBookForeignMoney = spm.retrieveFloat(SharedPreferenceTag.FOREIGN_MONEY_TAG);
+
+        mCurrencySymbol=spm.retrieveString(CurrencyTag.CURRENCY_SYMBOL_TAG);
+        mCurrencyName=spm.retrieveString(CurrencyTag.CURRENCY_COUNTRY_TAG);
+
 
         firedate();
         initialize();
@@ -393,6 +401,12 @@ public class FifthInputFragment extends Fragment{
         totalMoneyMap.put("foreign",new Float(mCardBookForeignMoney));
         totalMoneyMap.put("restKorea",new Float(mCardBookKorMoney));
         moneyRef.child("Total").updateChildren(totalMoneyMap);
+
+        Map<String, Object> currencyMap = new HashMap<String, Object>();
+        currencyMap.put("symbol",mCurrencySymbol);
+        currencyMap.put("name",mCurrencyName);
+        moneyRef.child("Currency").updateChildren(currencyMap);
+
 
         //uid에 카드 업데이트
 

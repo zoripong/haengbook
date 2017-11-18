@@ -2,19 +2,21 @@ package kr.hs.emirim.uuuuri.haegbook.Activity;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +32,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -41,8 +48,10 @@ import kr.hs.emirim.uuuuri.haegbook.Adapter.GalleryRecyclerAdapter;
 import kr.hs.emirim.uuuuri.haegbook.Adapter.ImageRecyclerAdapter;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.PhotoFragment;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.ReceiptFragment;
+import kr.hs.emirim.uuuuri.haegbook.Interface.CurrencyTag;
 import kr.hs.emirim.uuuuri.haegbook.Interface.OnItemClickListener;
 import kr.hs.emirim.uuuuri.haegbook.Interface.SelectedFragment;
+import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
 import kr.hs.emirim.uuuuri.haegbook.Interface.TravelDetailTag;
 import kr.hs.emirim.uuuuri.haegbook.Manager.DateListManager;
 import kr.hs.emirim.uuuuri.haegbook.Manager.GridDividerDecoration;
@@ -51,7 +60,6 @@ import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Model.FirebaseImage;
 import kr.hs.emirim.uuuuri.haegbook.Model.Receipt;
 import kr.hs.emirim.uuuuri.haegbook.R;
-
 
 
 // TODO: 2017-11-18 커스텀 액션바로 바꾸면 publishButton을 여행이 지난 날짜부터 볼 수 있게 set
@@ -63,11 +71,18 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
 
     private DatabaseReference mRegistrationRef;
 
+    private Spinner mDateSpinner;
     private ViewPager mViewPager;
     private int mPosition = PHOTO; // DEFAULT PAGE
 
     private String mBookCode;
     private String mPeriod;
+
+    private String mCurrencyName;
+    private String mCurrencySymbol;
+
+    private boolean mIsKorea;
+
 
     private FloatingActionButton fab;
 
@@ -91,11 +106,17 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
 
     private boolean isNotSelected;
     private FirebaseImage mSelectImage;
+
+    private int selectCurrencySymbol=0;
+
+    SharedPreferenceManager spm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_detail);
 
+        spm = new SharedPreferenceManager(this);
 
         Intent intent = getIntent();
         mBookCode = intent.getStringExtra("BOOK_CODE");
@@ -187,8 +208,45 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
                         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, stringArray);
 
                         mDateSp.setAdapter(adapter);
-
                         mDateSp.setSelection(stringArray.length-1);
+
+                        //TODO
+                        String[] currencyArray;
+
+                        if(mIsKorea){
+                            int currencySize=1;
+                            currencyArray = new String[currencySize];
+                            currencyArray[0]="\uFFE6";
+
+                        }else{
+                            int currencySize=2;
+                            currencyArray = new String[currencySize];
+                            currencyArray[0]= "\uFFE6";
+                            currencyArray[1]=mCurrencySymbol;
+                        }
+
+                        ArrayAdapter<String> currencyAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, currencyArray);
+
+                        currencySymbolSp.setAdapter(currencyAdapter);
+
+                        currencySymbolSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view,
+                                                       int position, long id) {
+                                //todo
+                                selectCurrencySymbol=position;
+                            }
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {}
+                        });
+
+
+                        mDialog.findViewById(R.id.exit_btn).setOnClickListener(new View.OnClickListener(){
+                            @Override
+                            public void onClick(View view) {
+                                mDialog.dismiss();
+                            }
+                        });
 
 
                         mDialog.findViewById(R.id.add_receipt_btn).setOnClickListener(new View.OnClickListener(){
@@ -196,9 +254,10 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
                             public void onClick(View view) {
 
                                 Log.e("파베"+String.valueOf(mDateSp.getSelectedItem().toString()),"");
-                                updateFB(String.valueOf(mDateSp.getSelectedItem().toString()) ,typeIndex,String.valueOf(mTitleEt.getText()),
+                                updateFB(mDialog,String.valueOf(mDateSp.getSelectedItem().toString()) ,typeIndex,String.valueOf(mTitleEt.getText()),
                                         String.valueOf(mAmountEt.getText()).replaceAll(" ",""),currencySymbolSp.getSelectedItem().toString(),String.valueOf(mMemoEt.getText()));
-                                mDialog.dismiss();
+
+
 
 
                             }
@@ -217,13 +276,20 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_travel_detail, menu);
+        ActionBar actionBar = getSupportActionBar();
 
-        MenuItem spinnerItem = menu.findItem(R.id.date_spinner);
-        MenuItem publishItem = menu.findItem(R.id.publish_btn);
+        // Custom Actionbar를 사용하기 위해 CustomEnabled을 true 시키고 필요 없는 것은 false 시킨다
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(false);            //액션바 아이콘을 업 네비게이션 형태로 표시합니다.
+        actionBar.setDisplayShowTitleEnabled(false);        //액션바에 표시되는 제목의 표시유무를 설정합니다.
+        actionBar.setDisplayShowHomeEnabled(false);            //홈 아이콘을 숨김처리합니다.
 
 
-        Spinner dateSpinner = (Spinner) MenuItemCompat.getActionView(spinnerItem);
+        //layout을 가지고 와서 actionbar에 포팅을 시킵니다.
+        LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+        View actionbar = inflater.inflate(R.layout.actionbar_travel_detail, null);
+
+        mDateSpinner = actionbar.findViewById(R.id.date_spinner);
 
         DateListManager dateListManager = new DateListManager();
         Date [] dates = dateListManager.convertDates(mPeriod);
@@ -236,9 +302,9 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, stringArray);
 
-        dateSpinner.setAdapter(adapter);
+        mDateSpinner.setAdapter(adapter);
 
-        dateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mDateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (mPosition){
@@ -264,6 +330,22 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
             }
         });
 
+
+
+        actionBar.setCustomView(actionbar);
+
+        //액션바 양쪽 공백 없애기
+        Toolbar parent = (Toolbar)actionbar.getParent();
+        parent.setContentInsetsAbsolute(0,0);
+
+
+        getMenuInflater().inflate(R.menu.menu_travel_detail, menu);
+        MenuItem publishItem = menu.findItem(R.id.publish_btn);
+//
+//
+//        Spinner dateSpinner = (Spinner) MenuItemCompat.getActionView(spinnerItem);
+//
+//
 
         return true;
     }
@@ -397,7 +479,7 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
     }
 
 
-    public void updateFB(final String date, final int type, final String title, final String amount, final String symbol, final String memo){
+    public void updateFB(final Dialog mDialog, final String date, final int type, final String title, final String amount, final String symbol, final String memo){
         mDatabase = FirebaseDatabase.getInstance();
         final DatabaseReference receiptRef = mDatabase.getReference("BookInfo/"+mBookCode+"/Content/Receipt");
 
@@ -408,19 +490,21 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
                 Log.e("입력값",date+"        "+title+amount+memo);
                 if(date.replaceAll(" ","").equals("") || title.replaceAll(" ","").equals("") || amount.replaceAll(" ","").equals("") || memo.replaceAll(" ","").equals("")){
                     Toast.makeText(getApplicationContext(), "입력해주세요.", Toast.LENGTH_SHORT).show();
+
                 }else {
-                    SharedPreferenceManager spm = new SharedPreferenceManager(TravelDetailActivity.this);
                     Float restMoney = spm.retrieveFloat(TravelDetailTag.REST_MONEY_TAG);
 
                     if (restMoney < Float.parseFloat(amount)) {
                         Toast.makeText(getApplicationContext(), "예정한 금액보다 더 많은 금액을 소비하셨습니다.", Toast.LENGTH_SHORT).show();
                         //// TODO: 2017-11-15  다이얼로그 , 금액 늘리게
+
                     } else {
                         updateTypeMoney(type,amount);
                         keyIndex = dataSnapshot.getChildrenCount();
                         Map<String, Object> receiptUpdates = new HashMap<String, Object>();
                         receiptUpdates.put(String.valueOf(keyIndex + 1), new Receipt(date, title, amount + symbol, type, memo));
                         receiptRef.updateChildren(receiptUpdates);
+                        mDialog.dismiss();
                     }
                 }
             }
@@ -465,12 +549,12 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
     };
 
 
-    public void updateTypeMoney(final int type, final String amount){
+    public void updateTypeMoney(final int type, String amount){
         mDatabase = FirebaseDatabase.getInstance();
         final DatabaseReference receiptRef = mDatabase.getReference("TravelMoney/"+mBookCode);
 
 
-        SharedPreferenceManager spm = new SharedPreferenceManager(TravelDetailActivity.this);
+
         Float restMoney = spm.retrieveFloat(TravelDetailTag.REST_MONEY_TAG);
         Float typeMoney = 0.0f;
         switch (type){
@@ -495,6 +579,14 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
         }
 
         //restmonet -- 타입머니 ++ 만약 예정한 타입머니보다 많이 썻다면 토스트
+        //TODO 만약 ㅁ외국돈으로 선택됫다면 (float) (Math.round(afterMoney / rate[currencyIndex] * 1000) / 1000.0)
+
+        if(selectCurrencySymbol == 1){
+            Log.e("영수증 돈 변환 전 ",amount);
+            float rate = spm.retrieveFloat(CurrencyTag.CHOOSE_CURRENCY_TAG);
+            amount= String.valueOf((float) (Math.round( Float.parseFloat(amount) / rate * 1000) / 1000.0));
+            Log.e("영수증 돈 변환 ","환율은 : "+rate+"변환:"+amount);
+        }
 
         Map<String, Object> restMoneyUpdates = new HashMap<String, Object>();
         restMoneyUpdates.put("restKorea", new Float(restMoney - Float.parseFloat(amount)));
@@ -524,10 +616,13 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
                     mTravelRate[i-1]=dataSnapshot.child("Rate").child(String.valueOf(i)).getValue(Float.class);
                     mKoreaMoney = dataSnapshot.child("Total").child("korea").getValue(Float.class);
                     mRestMoney = dataSnapshot.child("Total").child("restKorea").getValue(Float.class);
+                    mCurrencyName = dataSnapshot.child("Currency").child("name").getValue(String.class);
+                    mCurrencySymbol = dataSnapshot.child("Currency").child("symbol").getValue(String.class);
+                    if(mCurrencyName.equals(""))
+                        mIsKorea=true;
 
                 }
                 saveData();
-                hideProgressDialog();
             }
 
             @Override
@@ -536,8 +631,48 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
 
     }
 
+    private class getRate extends AsyncTask<Void,Void,Void> {
+        private Elements titleElement;//나라이름
+        private Elements saleElement;//환율
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                Document doc = Jsoup.connect("http://info.finance.naver.com/marketindex/exchangeList.nhn").get();
+                titleElement = doc.select(".tit");
+                saleElement = doc.select(".sale");
+                for(int i=0;i<titleElement.size();i++) {
+                    String parsingCountry = titleElement.get(i).text().replaceAll("[^\uAC00-\uD7AF\u1100-\u11FF\u3130-\u318F]", "");
+                    parsingCountry = parsingCountry.replaceAll("엔", "");
+                    double sale = Double.parseDouble(saleElement.get(i).text().replaceAll(",", ""));
+                    if(mCurrencyName.equals(parsingCountry)){
+                        Log.e("선택한 국가", parsingCountry);
+                        Log.e("환율", String.valueOf(sale));
+                        double rate= Math.round(1 / sale * 100000000) / 100000000.0;
+                        if (parsingCountry.contains("일본")) {
+                            rate = Math.round(1 / (sale / 100) * 100000000) / 100000000.0;
+                        }
+                        spm.save(CurrencyTag.CHOOSE_CURRENCY_TAG, (float) rate);
+
+                        hideProgressDialog();
+                        return null;
+                    }
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
     public void saveData(){
-        SharedPreferenceManager spm = new SharedPreferenceManager(this);
         spm.save(TravelDetailTag.FOOD_MONEY_TAG,mTravelMoney[0]);
         spm.save(TravelDetailTag.TRAFFIC_MONEY_TAG,mTravelMoney[1]);
         spm.save(TravelDetailTag.SHOPPING_MONEY_TAG,mTravelMoney[2]);
@@ -555,11 +690,24 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
         spm.save(TravelDetailTag.TOTAL_KOREA_MONEY_TAG,mKoreaMoney);
         spm.save(TravelDetailTag.REST_MONEY_TAG, mRestMoney);
 
+        spm.save(CurrencyTag.CURRENCY_COUNTRY_TAG,mCurrencyName);
+        spm.save(CurrencyTag.CURRENCY_SYMBOL_TAG,mCurrencySymbol);
+        spm.save(SharedPreferenceTag.IS_KOR_TAG,mIsKorea);
+
+
+
         for(int i=0;i<6;i++) {
             Log.e("트레블 디테일", String.valueOf(mTravelMoney[i]));
         }
         Log.e("트레블 코리아", String.valueOf(mKoreaMoney));
         Log.e("트레블 포린", String.valueOf(mRestMoney));
+
+        if(mIsKorea)
+            hideProgressDialog();
+        else
+            new getRate().execute();
+
+
 
     }
 }

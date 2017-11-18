@@ -16,6 +16,8 @@ public interface SharedPreferenceTag {
     String KOR_MONEY_TAG = "KOREAN MONEY";
     String FOREIGN_MONEY_TAG = "FOREIGN MONEY";
 
+
+
     // add user token
     String USER_TOKEN_TAG = "USER TOKEN";
 

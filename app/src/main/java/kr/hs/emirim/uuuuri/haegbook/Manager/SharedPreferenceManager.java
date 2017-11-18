@@ -3,6 +3,7 @@ package kr.hs.emirim.uuuuri.haegbook.Manager;
 import android.app.Activity;
 import android.content.SharedPreferences;
 
+import kr.hs.emirim.uuuuri.haegbook.Interface.CurrencyTag;
 import kr.hs.emirim.uuuuri.haegbook.Interface.NotificationTag;
 import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
 import kr.hs.emirim.uuuuri.haegbook.Interface.TravelDetailTag;
@@ -71,6 +72,12 @@ public class SharedPreferenceManager {
         editor.putString(SharedPreferenceTag.END_DATE_TAG, "");
         editor.putFloat(SharedPreferenceTag.FOREIGN_MONEY_TAG, 0.0f);
         editor.putFloat(SharedPreferenceTag.KOR_MONEY_TAG, 0.0f);
+
+        //환율
+        editor.putFloat(CurrencyTag.CHOOSE_CURRENCY_TAG, 0.0f);
+        editor.putString(CurrencyTag.CURRENCY_SYMBOL_TAG, "");
+        editor.putString(CurrencyTag.CURRENCY_COUNTRY_TAG, "");
+
 
         //알람 시작시간, 종료 시간
         editor.putString(NotificationTag.START_TIME_TAG, "6:0");

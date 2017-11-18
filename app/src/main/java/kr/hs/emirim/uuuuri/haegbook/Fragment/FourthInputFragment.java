@@ -22,6 +22,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
+import kr.hs.emirim.uuuuri.haegbook.Interface.CurrencyTag;
 import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.R;
@@ -201,8 +202,14 @@ public class FourthInputFragment extends Fragment{
         SharedPreferenceManager spm = new SharedPreferenceManager(getActivity());
         spm.save(SharedPreferenceTag.KOR_MONEY_TAG, beforeMoney);
 
-        if(!isKoreaTravel)
+
+        if(!isKoreaTravel) {
             spm.save(SharedPreferenceTag.FOREIGN_MONEY_TAG, afterMoney);
+            spm.save(CurrencyTag.CURRENCY_COUNTRY_TAG, spinnerCountry[currencyIndex]);
+            spm.save(CurrencyTag.CURRENCY_SYMBOL_TAG, currency[currencyIndex]);
+            spm.save(SharedPreferenceTag.KOR_MONEY_TAG, beforeMoney);
+        }
+
         return true;
     }
 
@@ -227,6 +234,7 @@ public class FourthInputFragment extends Fragment{
 
             gettingRateDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             gettingRateDialog.setMessage("로딩중입니다..");
+            gettingRateDialog.setCancelable(false);
             gettingRateDialog.show();
             super.onPreExecute();
         }

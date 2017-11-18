@@ -24,11 +24,16 @@ public class FloatingViewService extends Service {
     private final String TAG = "FLOATING VIEW SERVICE";
     private final String FILE_PATH_EXTRA = "FILE PATH EXTRA";
 
+
     private WindowManager mWindowManager;
     private View mFloatingView;
     private TextView mPathTv;
 
     private String mDirectory;
+
+    private int mDeviceWidth;
+    private int mLeftWall;
+    private int mRightWall;
 
     public FloatingViewService() {}
 
@@ -67,6 +72,10 @@ public class FloatingViewService extends Service {
         //Add the view to the window
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         mWindowManager.addView(mFloatingView, params);
+
+        mDeviceWidth  = mWindowManager.getDefaultDisplay().getWidth();
+        mLeftWall = 10;
+        mRightWall = mDeviceWidth - mLeftWall;
 
         //The root element of the collapsed view layout
         final View collapsedView = mFloatingView.findViewById(R.id.collapse_view);
@@ -119,17 +128,18 @@ public class FloatingViewService extends Service {
                         int Xdiff = (int) (event.getRawX() - initialTouchX);
                         int Ydiff = (int) (event.getRawY() - initialTouchY);
 
-                        if (Xdiff < 10 && Ydiff < 10) {
-                            if (isViewCollapsed()) {
-//                                collapsedView.setVisibility(View.GONE);
-                            }
+                        if(params.x - mDeviceWidth/2 < 0){
+                            params.x = mLeftWall;
+                        }else{
+                            params.x = mRightWall;
                         }
+                        mWindowManager.updateViewLayout(mFloatingView, params);
                         return true;
                     case MotionEvent.ACTION_MOVE:
                         params.x = initialX + (int) (event.getRawX() - initialTouchX);
                         params.y = initialY + (int) (event.getRawY() - initialTouchY);
-
                         mWindowManager.updateViewLayout(mFloatingView, params);
+
                         return true;
                 }
                 return false;

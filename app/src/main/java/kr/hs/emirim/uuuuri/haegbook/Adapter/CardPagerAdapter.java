@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,16 +23,26 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.ViewTarget;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import kr.hs.emirim.uuuuri.haegbook.Activity.AddScheduleActivity;
 import kr.hs.emirim.uuuuri.haegbook.Activity.TravelDetailActivity;
 import kr.hs.emirim.uuuuri.haegbook.Interface.CardAdapter;
+import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
 import kr.hs.emirim.uuuuri.haegbook.Manager.DateListManager;
+import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Model.CardBook;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
@@ -43,6 +54,8 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
     private List<CardBook> mData;
     private float mBaseElevation;
     private Activity mNowActivity;
+
+    private FirebaseDatabase mDatabase;
 
     public CardPagerAdapter(Activity activity) {
         mNowActivity = activity;
@@ -74,6 +87,10 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
 
             }
         }
+        //    public CardBook(String period, String location, String title, String image) {
+        mViews.add(null);
+        mData.add(new CardBook(null, null, null, null));
+
     }
 
     public float getBaseElevation() {
@@ -124,17 +141,23 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
         TextView locationTextView = (TextView) view.findViewById(R.id.location_tv);
         CardView cardView = view.findViewById(R.id.card_view);
         ImageView sharedImageView = view.findViewById(R.id.shared_iv);
+        ImageView plusImageView = view.findViewById(R.id.plus_iv);
 
+        if(item.getTitle()!=null)
         titleTextView.setText(item.getTitle());
+        if(item.getPeriod()!=null)
         periodTextView.setText(item.getPeriod());
+        if(item.getLocation()!=null)
         locationTextView.setText(item.getLocation());
 
-        if(item.getLocation().equals("")) {
+        if(item.getLocation() == null){
             view.findViewById(R.id.gps_iv).setVisibility(View.GONE);
+        }else{
+            if(item.getLocation().equals("")) {
+                view.findViewById(R.id.gps_iv).setVisibility(View.GONE);
+            }
         }
 
-//        Log.e(TAG, "<Before> width : "+ cardView.getWidth() +" / height : " + cardView.getHeight());
-//        Log.e(TAG, "url : " + item.getImage());
 
 
         cardView.setPreventCornerOverlap(false);
@@ -158,6 +181,14 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
                             imageV.setBackground(resource); //수정
                         }
                     });
+        }else{
+            if(item.getTitle()==null){
+                // 튜토리얼
+            }else{
+                plusImageView.setVisibility(View.VISIBLE);
+            }
+
+
         }
 
         cardView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -171,11 +202,15 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
         cardView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mNowActivity, TravelDetailActivity.class);
-                intent.putExtra("BOOK_CODE", item.getBookCode());
-                intent.putExtra("DATE", item.getPeriod());
-                intent.putExtra("Image", item.getImage());
-                mNowActivity.startActivity(intent);
+                if (item.getTitle() == null) {
+                    selectDialog();
+                } else {
+                    Intent intent = new Intent(mNowActivity, TravelDetailActivity.class);
+                    intent.putExtra("BOOK_CODE", item.getBookCode());
+                    intent.putExtra("DATE", item.getPeriod());
+                    intent.putExtra("Image", item.getImage());
+                    mNowActivity.startActivity(intent);
+                }
             }
         });
 
@@ -212,6 +247,103 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
 
                 mDialog.show();
             }
+        });
+
+    }
+
+    private void selectDialog(){
+        final Dialog selectDialog = new Dialog(mNowActivity, R.style.MyDialog);
+        selectDialog.setContentView(R.layout.dialog_select);
+        selectDialog.show();
+        selectDialog.findViewById(R.id.add_code_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Dialog inputDialog = new Dialog(mNowActivity, R.style.MyDialog);
+                inputDialog.setContentView(R.layout.dialog_code_input);
+                selectDialog.hide();
+                inputDialog.show();
+                selectDialog.dismiss();
+                final ClipboardManager clipboardManager =  (ClipboardManager) mNowActivity.getSystemService(CLIPBOARD_SERVICE);
+                final EditText bookCodeEt=inputDialog.findViewById(R.id.book_code_et);
+                inputDialog.findViewById(R.id.paste_btn).setOnClickListener(new View.OnClickListener () {
+                                                                                @Override
+                                                                                public void onClick(View v) {
+                                                                                    bookCodeEt.setText(clipboardManager.getText());
+                                                                                }
+                                                                            }
+                );
+
+                inputDialog.findViewById(R.id.add_btn).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        updateFB(String.valueOf(bookCodeEt.getText()));
+                        inputDialog.hide();
+                        inputDialog.dismiss();
+                    }
+                });
+
+            }
+        });
+
+        selectDialog.findViewById(R.id.add_basic_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mNowActivity, AddScheduleActivity.class);
+                mNowActivity.startActivity(intent);
+                mNowActivity.finish();
+                selectDialog.dismiss();
+            }
+        });
+        selectDialog.findViewById(R.id.dimiss_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectDialog.dismiss();
+            }
+        });
+    }
+
+    private void updateFB(final String inputCode){
+        SharedPreferenceManager spm = new SharedPreferenceManager(mNowActivity);
+        final String uid = spm.retrieveString(SharedPreferenceTag.USER_TOKEN_TAG);
+
+        mDatabase = FirebaseDatabase.getInstance();
+        final DatabaseReference receiptRef = mDatabase.getReference("BookInfo/"+inputCode);
+        receiptRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            long keyIndex;
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getChildrenCount()<1){
+                    Toast.makeText(mNowActivity, "유효하지않은 코드입니다.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                //uid에 카드 업데이트
+
+                final DatabaseReference userInfoRef = mDatabase.getReference("UserInfo/"+uid);
+
+                userInfoRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    long keyIndex;
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.child(inputCode) != null){
+                            Toast.makeText(mNowActivity, "이미 등록된 코드입니다.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        keyIndex = dataSnapshot.getChildrenCount();
+                        Map<String, Object> haveCardBookUpdates = new HashMap<String, Object>();
+                        haveCardBookUpdates.put(String.valueOf(keyIndex+1), inputCode);
+                        userInfoRef.updateChildren(haveCardBookUpdates);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {}
+                });
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
         });
 
     }

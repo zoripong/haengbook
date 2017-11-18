@@ -117,7 +117,6 @@ public class AddPhotoDetailActivity extends BaseActivity {
     }
 
 
-    // TODO: 2017-11-12 DEBUGGING
     public void UploadImageFileToFirebaseStorage() {
         storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference("BookInfo/"+mBookCode+"/Content/Images");
@@ -175,10 +174,12 @@ public class AddPhotoDetailActivity extends BaseActivity {
 
 
                             }else{
+                                if(finalI==firebaseImages.size()-1){
                                 mBuilder.setOngoing(false);
                                 mBuilder.setContentText("Upload complete")
                                         .setProgress(0,0,false);
                                 mNotifyManager.notify(id, mBuilder.build());
+                                }
                             }
 
                         }

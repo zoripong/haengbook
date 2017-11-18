@@ -2,7 +2,11 @@ package kr.hs.emirim.uuuuri.haegbook.Adapter;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.support.annotation.NonNull;
+import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,17 +18,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,8 +72,8 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
         final FirebaseImage firebaseImage = photoList.get(position);
         // Reference to an image file in Firebase Storage
         StorageReference storageReference = null;
-        if (firebaseImage.getImageURI() != null) {
 
+        if (firebaseImage.getImageURI() != null) {
             storageReference = FirebaseStorage.getInstance().getReference(firebaseImage.getImageURI());
         }
 
@@ -81,7 +83,6 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
                     .load(storageReference)
                     .centerCrop()
                     .into(holder.imageView);
-
         }
 
 
@@ -100,6 +101,12 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
             public void onClick(View view) {
 
                 if(isPhotoFragment) {
+                    final ProgressDialog mProgressDialog =  new ProgressDialog(mActivity);
+                    mProgressDialog.setMessage("이미지를 불러오고 있습니다.");
+                    mProgressDialog.setIndeterminate(true);
+                    mProgressDialog.setCancelable(false);
+                    mProgressDialog.show();
+
                     final Dialog dialog = new Dialog(mActivity, R.style.MyDialog);
                     dialog.setContentView(R.layout.dialog_image_preview);
 
@@ -114,21 +121,27 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
                         }
                     });
 
+                final Bitmap[] previewBitmap = new Bitmap[1];
 
-
-                    if(finalStorageReference != null) {
-                        Glide.with(mActivity)
-                                .using(new FirebaseImageLoader())
-                                .load(finalStorageReference)
-                                .centerCrop()
-                                .into(new SimpleTarget<GlideDrawable>() {
-                                    @Override
-                                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-                                        preView.setImageDrawable(resource);
-                                        dialog.show();
+                if(finalStorageReference != null) {
+                    Glide.with(mActivity)
+                            .using(new FirebaseImageLoader())
+                            .load(finalStorageReference)
+                            .asBitmap()
+                            .centerCrop()
+                            .into(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                                    preView.setImageBitmap(bitmap);
+                                    if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                                        mProgressDialog.dismiss();
                                     }
-                                });
-                    }
+
+                                    dialog.show();
+                                    previewBitmap[0] = bitmap;
+                                }
+                            });
+            }
 
                     ((TextView)dialog.findViewById(R.id.detail_tv)).setText(firebaseImage.getImageComment());
                     dialog.findViewById(R.id.close_btn).setOnClickListener(new View.OnClickListener() {
@@ -146,32 +159,49 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
                     dialog.findViewById(R.id.download_iv).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Toast.makeText(mActivity, firebaseImage.getImageURI(),Toast.LENGTH_SHORT).show();
-                            // TODO: 2017-11-18 : down load
-                            // 퍼미션 체크 후 다운로드
+                            String folderPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/HaengBook/Download";
+                            String filePath  = folderPath + "/" + System.currentTimeMillis() + ".jpg";
 
-                            File localFile = null;
+                            File fileFolderPath = new File(folderPath);
+                            if(!fileFolderPath.exists())
+                                fileFolderPath.mkdir();
+
+                            File file = new File(filePath);
                             try {
-                                localFile = File.createTempFile("images", "jpg");
+                                FileOutputStream fos = new FileOutputStream(file);
+
+                                if (fos != null && preView!=null) {
+                                    previewBitmap[0].compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                                    fos.close();
+                                }else{
+                                    Toast.makeText(mActivity, "다운로드 실패", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            StorageReference storageReference = FirebaseStorage.getInstance().getReference(firebaseImage.getImageURI());
 
-                            storageReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                    // Local temp file has been created
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception exception) {
-                                    // Handle any errors
-                                }
-                            });
+                            MediaScannerConnection.scanFile(mActivity,
+                                    new String[]{file.getAbsolutePath()},
+                                    null,
+                                    new MediaScannerConnection.MediaScannerConnectionClient() {
+                                        @Override
+                                        public void onMediaScannerConnected() {
+                                            Toast.makeText(mActivity, "다운로드 완료", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        @Override
+                                        public void onScanCompleted(String path, Uri uri) {
+                                            Log.e("File scan", "file:" + path + "was scanned successfully");
+                                        }
+                                    });
+
+                            dialog.dismiss();
 
                         }
                     });
+
                 }else{
 
                     if (onItemClickListener != null) {

@@ -364,7 +364,7 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    public void updateFB(final String inputCode){
+    private void updateFB(final String inputCode){
         SharedPreferenceManager spm = new SharedPreferenceManager(this);
         final String uid = spm.retrieveString(SharedPreferenceTag.USER_TOKEN_TAG);
 
@@ -474,11 +474,15 @@ public class MainActivity extends BaseActivity {
                 spm.save(SharedPreferenceTag.IS_TRAVELING_TAG, isTraveling[0]);
                 Log.e(TAG, "그래서 여행중이라고?"+String.valueOf(spm.retrieveBoolean(SharedPreferenceTag.IS_TRAVELING_TAG)));
 
+                hideProgressDialog();
+
                 if(isNotify) {
                     isNotify = false;
                     notificationPublish();
                 }
-                hideProgressDialog();
+
+                if(isTraveling[0])
+                    ((TextView)findViewById(R.id.add_schedule_btn)).setText("현재 여행 바로가기 >");
             }
 
 

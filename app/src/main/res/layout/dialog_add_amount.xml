@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dialog_line_background"
+        app:scale_base_height="340"
+        app:scale_base_width="512">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_left="120"
+            app:scale_textsize="23"
+            app:scale_top="70"
+            android:text="추가할 금액을 입력해주세요."
+            app:scale_width="274"
+            app:scale_height="67"
+            android:gravity="center"/>
+        <EditText
+            android:id="@+id/amount_et"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_left="100"
+            app:scale_textsize="23"
+            app:scale_top="120"
+            app:scale_width="250"
+            app:scale_height="67"
+            android:inputType="numberDecimal"
+            android:gravity="center"/>
+        <Spinner
+            android:id="@+id/currency_symbol_sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/dropdown_icon"
+            app:scale_left="340"
+            app:scale_textsize="29"
+            app:scale_top="120"
+            app:scale_width="80"></Spinner>
+        <Button
+            android:id="@+id/dialog_button_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_background"
+            app:scale_width="123"
+            app:scale_height="61"
+            app:scale_top="220"
+            app:scale_left="195"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            app:scale_textsize="25"
+            android:text="추가 >"/>
+
+
+
+    </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
+</LinearLayout>

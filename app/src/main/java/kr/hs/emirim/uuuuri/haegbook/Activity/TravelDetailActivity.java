@@ -117,6 +117,7 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
     private FirebaseImage mSelectImage;
 
     private int selectCurrencySymbol=0;
+    private int addSelectCurrencySymbol=0;
 
     SharedPreferenceManager spm;
 
@@ -124,6 +125,8 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
 
     private ArrayList<PurchaseAmount> mPurchases;
 
+    private EditText addPlanAmountEt;
+    private Spinner addCurrencySp;
     double mRate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -306,7 +309,6 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
                         });
 
 
-                        //TODO
                         String[] currencyArray;
 
                         if(mIsKorea){
@@ -324,12 +326,15 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
                         ArrayAdapter<String> currencyAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, currencyArray);
 
                         currencySymbolSp.setAdapter(currencyAdapter);
+                        if(!mIsKorea) {
+                            selectCurrencySymbol=1;
+                            currencySymbolSp.setSelection(1);
+                        }
 
                         currencySymbolSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view,
                                                        int position, long id) {
-                                //todo
                                 selectCurrencySymbol=position;
                             }
                             @Override
@@ -581,10 +586,17 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
 
                 }else {
                     Float restMoney = spm.retrieveFloat(TravelDetailTag.REST_MONEY_TAG);
+                    Float input =  Float.parseFloat(amount);
+                    if(selectCurrencySymbol ==1 ){
+                        float rate = spm.retrieveFloat(CurrencyTag.CHOOSE_CURRENCY_TAG);
+                        input= (float) (Math.round(input / rate * 1000) / 1000.0) ;
+                    }
 
-                    if (restMoney < Float.parseFloat(amount)) {
-                        Toast.makeText(getApplicationContext(), "예정한 금액보다 더 많은 금액을 소비하셨습니다.", Toast.LENGTH_SHORT).show();
+                    if (restMoney < input) {
                         //// TODO: 2017-11-15  다이얼로그 , 금액 늘리게
+                        mDialog.hide();
+                        addPlanAmount(mDialog);
+
 
                     } else {
                         updateTypeMoney(type,amount);
@@ -602,6 +614,92 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
             public void onCancelled(DatabaseError databaseError) {}
         });
         Log.e("파베", String.valueOf(isUpdateNull));
+
+    }
+
+    private void addPlanAmount(final Dialog mDialog){
+        final Dialog addAmountDialog = new Dialog(TravelDetailActivity.this, R.style.MyDialog);
+        addAmountDialog.setContentView(R.layout.dialog_add_amount);
+        addPlanAmountEt = addAmountDialog.findViewById(R.id.amount_et);
+        addCurrencySp = addAmountDialog.findViewById(R.id.currency_symbol_sp);
+        String[] currencyArray;
+        if(mIsKorea){
+            int currencySize=1;
+            currencyArray = new String[currencySize];
+            currencyArray[0]="\uFFE6";
+
+        }else{
+            int currencySize=2;
+            currencyArray = new String[currencySize];
+            currencyArray[0]= "\uFFE6";
+            currencyArray[1]=mCurrencySymbol;
+        }
+
+        ArrayAdapter<String> currencyAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, currencyArray);
+
+        addCurrencySp.setAdapter(currencyAdapter);
+        if(!mIsKorea) {
+            addSelectCurrencySymbol=1;
+            addCurrencySp.setSelection(1);
+        }
+
+        addCurrencySp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                addSelectCurrencySymbol=position;
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+
+
+
+        addAmountDialog.findViewById(R.id.dialog_button_add).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addAmountDialog.dismiss();
+
+                updatePlanAmout(mDialog,Float.parseFloat(String.valueOf(addPlanAmountEt.getText())));
+                //todo 파베 업데이트끝나면 show
+            }
+        });
+
+        final Dialog notifyDialog = new Dialog(TravelDetailActivity.this, R.style.MyDialog);
+        notifyDialog.setContentView(R.layout.dialog_fail_regist_receipt);
+        notifyDialog.findViewById(R.id.dialog_button_ok).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                notifyDialog.dismiss();
+                addAmountDialog.show();
+            }
+        });
+        notifyDialog.show();
+    }
+
+    private void updatePlanAmout(Dialog mDialog, float inputAmount){
+        showProgressDialog();
+
+        mDatabase = FirebaseDatabase.getInstance();
+        final DatabaseReference amountRef = mDatabase.getReference("TravelMoney/"+mBookCode+"/Total");
+
+
+        Map<String, Object> amountUpdates = new HashMap<String, Object>();
+
+        if(addSelectCurrencySymbol==1){
+            float rate = spm.retrieveFloat(CurrencyTag.CHOOSE_CURRENCY_TAG);
+            inputAmount= (float) (Math.round(inputAmount / rate * 1000) / 1000.0) ;
+        }
+        amountUpdates.put("korea", new Float(mKoreaMoney+inputAmount));
+        amountUpdates.put("restKorea", new Float(mRestMoney+inputAmount));
+
+        amountRef.updateChildren(amountUpdates);
+
+        hideProgressDialog();
+        mDialog.show();
+
+
 
     }
 

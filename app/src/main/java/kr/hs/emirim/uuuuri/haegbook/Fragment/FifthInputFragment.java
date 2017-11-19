@@ -90,7 +90,6 @@ public class FifthInputFragment extends Fragment{
     private int mMoneyRate[]={20,10,10,20,32,8};
 
     private Float mCardBookKorMoney = 0.0f;
-    private Float mCardBookForeignMoney = 0.0f;
 
     public FifthInputFragment() {
     }
@@ -115,7 +114,6 @@ public class FifthInputFragment extends Fragment{
         mUserToken=spm.retrieveString(SharedPreferenceTag.USER_TOKEN_TAG);
 
         mCardBookKorMoney = spm.retrieveFloat(SharedPreferenceTag.KOR_MONEY_TAG);
-        mCardBookForeignMoney = spm.retrieveFloat(SharedPreferenceTag.FOREIGN_MONEY_TAG);
 
         mCurrencySymbol=spm.retrieveString(CurrencyTag.CURRENCY_SYMBOL_TAG);
         mCurrencyName=spm.retrieveString(CurrencyTag.CURRENCY_COUNTRY_TAG);
@@ -399,7 +397,6 @@ public class FifthInputFragment extends Fragment{
 
         Map<String, Object> totalMoneyMap = new HashMap<String, Object>();
         totalMoneyMap.put("korea",new Float(mCardBookKorMoney));
-        totalMoneyMap.put("foreign",new Float(mCardBookForeignMoney));
         totalMoneyMap.put("restKorea",new Float(mCardBookKorMoney));
         moneyRef.child("Total").updateChildren(totalMoneyMap);
 

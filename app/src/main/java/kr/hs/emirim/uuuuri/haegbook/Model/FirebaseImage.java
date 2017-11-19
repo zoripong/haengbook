@@ -6,6 +6,7 @@ package kr.hs.emirim.uuuuri.haegbook.Model;
 
 public class FirebaseImage {
 
+    private String key;
     public String imageComment;
     public String imageURI;
     public String date;
@@ -18,6 +19,21 @@ public class FirebaseImage {
         this.imageComment = imageComment;
         this.imageURI = imageURI;
         this.date = date;
+    }
+
+    public FirebaseImage(String key, String imageComment, String imageURI, String date) {
+        this.key=key;
+        this.imageComment = imageComment;
+        this.imageURI = imageURI;
+        this.date = date;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public boolean isSelected() {

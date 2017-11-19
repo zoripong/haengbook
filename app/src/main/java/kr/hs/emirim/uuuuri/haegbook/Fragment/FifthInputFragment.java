@@ -53,6 +53,7 @@ public class FifthInputFragment extends Fragment{
     private String mCurrencySymbol;
     private String mCurrencyName;
 
+    private boolean mIsKorea;
 
     //시크바
 
@@ -119,7 +120,7 @@ public class FifthInputFragment extends Fragment{
         mCurrencySymbol=spm.retrieveString(CurrencyTag.CURRENCY_SYMBOL_TAG);
         mCurrencyName=spm.retrieveString(CurrencyTag.CURRENCY_COUNTRY_TAG);
 
-
+        mIsKorea =spm.retrieveBoolean(SharedPreferenceTag.IS_KOR_TAG);
         firedate();
         initialize();
         notifyalarm();
@@ -401,6 +402,11 @@ public class FifthInputFragment extends Fragment{
         totalMoneyMap.put("foreign",new Float(mCardBookForeignMoney));
         totalMoneyMap.put("restKorea",new Float(mCardBookKorMoney));
         moneyRef.child("Total").updateChildren(totalMoneyMap);
+
+        if(mIsKorea){
+            mCurrencySymbol="";
+            mCurrencyName="";
+        }
 
         Map<String, Object> currencyMap = new HashMap<String, Object>();
         currencyMap.put("symbol",mCurrencySymbol);

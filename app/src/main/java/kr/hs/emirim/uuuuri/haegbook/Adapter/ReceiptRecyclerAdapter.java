@@ -10,8 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
+import kr.hs.emirim.uuuuri.haegbook.Interface.TravelDetailTag;
+import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Model.Receipt;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
@@ -32,6 +37,9 @@ public class ReceiptRecyclerAdapter extends RecyclerView.Adapter<ReceiptRecycler
 
     ArrayList<Receipt> items;
 
+    private FirebaseDatabase mDatabase;
+
+    SharedPreferenceManager spm;
 
     public ReceiptRecyclerAdapter(Context context, Activity nowActivity, ArrayList<Receipt> items){
         this.context = context;
@@ -47,6 +55,8 @@ public class ReceiptRecyclerAdapter extends RecyclerView.Adapter<ReceiptRecycler
 
     @Override
     public void onBindViewHolder(final ReceiptViewHolder holder, int position) {
+        spm = new SharedPreferenceManager((Activity) context);
+
         final Receipt item = items.get(position);
         holder.titleTv.setText(item.getTitle());
         holder.amountTv.setText(String.valueOf(item.getAmount()));
@@ -74,13 +84,28 @@ public class ReceiptRecyclerAdapter extends RecyclerView.Adapter<ReceiptRecycler
                 holder.typeIv.setImageResource(R.drawable.barcode_etc);
                 break;
         }
-
+        holder.deleteIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteReceipt(item.getKey());
+            }
+        });
         holder.typeIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(context, item.toString(), Toast.LENGTH_SHORT).show();
             }
         });
+        //TODO DEBUG PUBLISHING 일때 GONE
+        if(spm.retrieveString(TravelDetailTag.IS_PUBLISHING_TAG)!=null)
+            holder.deleteIv.setVisibility(View.GONE);
+    }
+
+    private void deleteReceipt(String key){
+        mDatabase = FirebaseDatabase.getInstance();
+        String bookCode =  spm.retrieveString(TravelDetailTag.CARD_BOOK_CODE_TAG);
+        final DatabaseReference receiptRef = mDatabase.getReference("BookInfo/"+bookCode+"/Content/Receipt/"+key);
+        receiptRef.removeValue();
     }
 
     @Override
@@ -95,6 +120,7 @@ public class ReceiptRecyclerAdapter extends RecyclerView.Adapter<ReceiptRecycler
         TextView memoTv;
         TextView dateTv;
         ImageView typeIv;
+        ImageView deleteIv;
 
         public ReceiptViewHolder(View itemView) {
             super(itemView);
@@ -104,7 +130,7 @@ public class ReceiptRecyclerAdapter extends RecyclerView.Adapter<ReceiptRecycler
             memoTv = itemView.findViewById(R.id.memo_tv);
             dateTv = itemView.findViewById(R.id.date_tv);
             typeIv = itemView.findViewById(R.id.type_iv);
-
+            deleteIv = itemView.findViewById(R.id.delete_iv);
         }
     }
 }

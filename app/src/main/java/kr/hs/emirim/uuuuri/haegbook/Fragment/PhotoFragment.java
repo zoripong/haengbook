@@ -97,11 +97,12 @@ public class PhotoFragment extends Fragment {
                 //users의 모든 자식들의 key값과 value 값들을 iterator로 참조
                 while(childIterator.hasNext()) {
                     DataSnapshot imageSnapshot = childIterator.next();
+                    String key= imageSnapshot.getKey();
                     String imageComment=imageSnapshot.child("imageComment").getValue(String.class);
                     String imageURI=imageSnapshot.child("imageURI").getValue(String.class);
                     String date=imageSnapshot.child("date").getValue(String.class);
 
-                    mAllImages.add(new FirebaseImage(imageComment,imageURI,date));
+                    mAllImages.add(new FirebaseImage(key,imageComment,imageURI,date));
 
                 }
                 if(dateList == null){

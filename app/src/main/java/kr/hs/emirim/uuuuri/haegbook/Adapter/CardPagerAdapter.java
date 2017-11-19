@@ -89,10 +89,8 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
 
             }
         }
-
         if(items.size()==0)
             addCardItem(new CardBook("tutorial", "tutorial", "tutorial", "tutorial"));
-
         mViews.add(null);
         mData.add(new CardBook(null, null, null, null));
 
@@ -149,11 +147,11 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
         ImageView plusImageView = view.findViewById(R.id.plus_iv);
 
         if(item.getTitle()!=null)
-        titleTextView.setText(item.getTitle());
+            titleTextView.setText(item.getTitle());
         if(item.getPeriod()!=null)
-        periodTextView.setText(item.getPeriod());
+            periodTextView.setText(item.getPeriod());
         if(item.getLocation()!=null)
-        locationTextView.setText(item.getLocation());
+            locationTextView.setText(item.getLocation());
 
         if(item.getLocation() == null){
             view.findViewById(R.id.gps_iv).setVisibility(View.GONE);
@@ -191,6 +189,8 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
             }else if(item.getTitle() == null){
                 plusImageView.setVisibility(View.VISIBLE);
             }
+
+
         }
 
         cardView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -242,6 +242,8 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                        //TODO SHARE MESSAGE
+                        String message = "";
                         intent.putExtra(Intent.EXTRA_TEXT, cardBookCode);
                         intent.setType("text/plain");
                         Intent chooser = Intent.createChooser(intent, "친구에게 공유하기");

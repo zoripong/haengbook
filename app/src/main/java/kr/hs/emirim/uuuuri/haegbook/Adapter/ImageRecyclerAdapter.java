@@ -21,6 +21,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -32,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kr.hs.emirim.uuuuri.haegbook.Interface.OnItemClickListener;
+import kr.hs.emirim.uuuuri.haegbook.Interface.TravelDetailTag;
+import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Model.FirebaseImage;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
@@ -42,11 +46,16 @@ import kr.hs.emirim.uuuuri.haegbook.R;
 public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdapter.ImageViewHolder> {
     private final String TAG = "ImageRecyclerAdapter";
 
+    private FirebaseDatabase mDatabase;
+
+
     private Activity mActivity;
     private ArrayList<FirebaseImage> photoList;
     private boolean isPhotoFragment;
 
     private OnItemClickListener onItemClickListener;
+
+    SharedPreferenceManager spm;
 
     public ImageRecyclerAdapter(Activity activity,ArrayList<FirebaseImage> items, boolean isPhotoFragment){
         this.mActivity = activity;
@@ -69,6 +78,9 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
 
     @Override
     public void onBindViewHolder(final ImageViewHolder holder, final int position) {
+
+        spm = new SharedPreferenceManager(mActivity);
+
         final FirebaseImage firebaseImage = photoList.get(position);
         // Reference to an image file in Firebase Storage
         StorageReference storageReference = null;
@@ -121,27 +133,27 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
                         }
                     });
 
-                final Bitmap[] previewBitmap = new Bitmap[1];
+                    final Bitmap[] previewBitmap = new Bitmap[1];
 
-                if(finalStorageReference != null) {
-                    Glide.with(mActivity)
-                            .using(new FirebaseImageLoader())
-                            .load(finalStorageReference)
-                            .asBitmap()
-                            .centerCrop()
-                            .into(new SimpleTarget<Bitmap>() {
-                                @Override
-                                public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-                                    preView.setImageBitmap(bitmap);
-                                    if (mProgressDialog != null && mProgressDialog.isShowing()) {
-                                        mProgressDialog.dismiss();
+                    if(finalStorageReference != null) {
+                        Glide.with(mActivity)
+                                .using(new FirebaseImageLoader())
+                                .load(finalStorageReference)
+                                .asBitmap()
+                                .centerCrop()
+                                .into(new SimpleTarget<Bitmap>() {
+                                    @Override
+                                    public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                                        preView.setImageBitmap(bitmap);
+                                        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                                            mProgressDialog.dismiss();
+                                        }
+
+                                        dialog.show();
+                                        previewBitmap[0] = bitmap;
                                     }
-
-                                    dialog.show();
-                                    previewBitmap[0] = bitmap;
-                                }
-                            });
-            }
+                                });
+                    }
 
                     ((TextView)dialog.findViewById(R.id.detail_tv)).setText(firebaseImage.getImageComment());
                     dialog.findViewById(R.id.close_btn).setOnClickListener(new View.OnClickListener() {
@@ -154,8 +166,16 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
                         @Override
                         public void onClick(View view) {
                             // TODO: 2017-11-18 이미지 삭제하기
+                            deleteFirebaseImage(firebaseImage.getKey());
+                            Log.e("이미지 키",firebaseImage.getKey());
+                            Toast.makeText(mActivity, "사진이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
                         }
                     });
+                    //TODO DEBUG PUBLISHING GONE
+                    if(spm.retrieveString(TravelDetailTag.IS_PUBLISHING_TAG)!=null)
+                        dialog.findViewById(R.id.delete_iv).setVisibility(View.GONE);
+
                     dialog.findViewById(R.id.download_iv).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -212,7 +232,12 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
             }
         });
     }
-
+    private void deleteFirebaseImage(String key){
+        mDatabase = FirebaseDatabase.getInstance();
+        String bookCode =  spm.retrieveString(TravelDetailTag.CARD_BOOK_CODE_TAG);
+        final DatabaseReference receiptRef = mDatabase.getReference("BookInfo/"+bookCode+"/Content/Images/"+key);
+        receiptRef.removeValue();
+    }
     public List<FirebaseImage> getPhotoList() {
         return photoList;
     }

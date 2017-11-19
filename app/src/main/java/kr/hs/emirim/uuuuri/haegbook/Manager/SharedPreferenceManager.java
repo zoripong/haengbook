@@ -83,6 +83,10 @@ public class SharedPreferenceManager {
         editor.putString(NotificationTag.START_TIME_TAG, "6:0");
         editor.putString(NotificationTag.FINISH_TIME_TAG, "22:0");
 
+
+        editor.putString(TravelDetailTag.CARD_BOOK_CODE_TAG, "");
+        editor.putString(TravelDetailTag.IS_PUBLISHING_TAG, "");
+
         //잡아놓은 한국돈
         editor.putFloat(TravelDetailTag.TOTAL_KOREA_MONEY_TAG, 0.0f);
         //남은돈

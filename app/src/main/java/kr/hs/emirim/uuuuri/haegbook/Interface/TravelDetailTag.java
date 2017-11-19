@@ -5,6 +5,10 @@ package kr.hs.emirim.uuuuri.haegbook.Interface;
  */
 
 public interface TravelDetailTag {
+
+    String CARD_BOOK_CODE_TAG = "CARD BOOK CODE";
+    String IS_PUBLISHING_TAG = "IS PUBLISHING";
+
     String TOTAL_KOREA_MONEY_TAG = "KOREA MONEY";
     String REST_MONEY_TAG = "REST MONEY";
 

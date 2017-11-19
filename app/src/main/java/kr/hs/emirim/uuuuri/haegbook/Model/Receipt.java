@@ -5,6 +5,7 @@ package kr.hs.emirim.uuuuri.haegbook.Model;
  */
 
 public class Receipt {
+    private String key;
     private String date;
     private String title;
     private String amount;
@@ -12,12 +13,21 @@ public class Receipt {
     private String memo;
 
     public Receipt(){}
+
     public Receipt(String date, String title, String amount, int type, String memo) {
         this.date = date;
         this.title = title;
         this.amount = amount;
         this.type = type;
         this.memo = memo;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getTitle() {
@@ -63,9 +73,10 @@ public class Receipt {
     @Override
     public String toString() {
         return "Receipt{" +
-                "date='" + date + '\'' +
+                "key='" + key + '\'' +
+                ", date='" + date + '\'' +
                 ", title='" + title + '\'' +
-                ", amount=" + amount +
+                ", amount='" + amount + '\'' +
                 ", type=" + type +
                 ", memo='" + memo + '\'' +
                 '}';

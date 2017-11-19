@@ -1,0 +1,39 @@
+<LinearLayout
+    android:id="@+id/root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_margin="10dp"
+    android:paddingLeft="13dp"
+    android:paddingStart="13dp"
+    android:paddingRight="10dp"
+    android:paddingEnd="10dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/type_tv"
+        android:layout_weight="1"
+        android:gravity="left"
+        android:singleLine="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/foreign_amount_tv"
+        android:layout_weight="1.3"
+        android:gravity="right"
+        android:singleLine="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/korea_amount_tv"
+        android:layout_weight="1.3"
+        android:gravity="right"
+        android:singleLine="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

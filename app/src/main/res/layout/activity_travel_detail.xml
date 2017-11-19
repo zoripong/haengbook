@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<com.flipboard.bottomsheet.BottomSheetLayout
+    android:id="@+id/design_bottom_sheet"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    >
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tl="http://schemas.android.com/apk/res-auto"
@@ -56,4 +64,14 @@
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@drawable/dropdown_icon" />
 
+    <LinearLayout
+        android:id="@+id/handle"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:layout_weight="0"
+        />
+
 </android.support.design.widget.CoordinatorLayout>
+</com.flipboard.bottomsheet.BottomSheetLayout>

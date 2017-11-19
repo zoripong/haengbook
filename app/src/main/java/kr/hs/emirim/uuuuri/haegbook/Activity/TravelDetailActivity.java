@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
@@ -47,7 +48,9 @@ import java.util.Map;
 
 import kr.hs.emirim.uuuuri.haegbook.Adapter.GalleryRecyclerAdapter;
 import kr.hs.emirim.uuuuri.haegbook.Adapter.ImageRecyclerAdapter;
+import kr.hs.emirim.uuuuri.haegbook.Adapter.OnSwipeTouchListener;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.PhotoFragment;
+import kr.hs.emirim.uuuuri.haegbook.Fragment.PurchaseListFragment;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.ReceiptFragment;
 import kr.hs.emirim.uuuuri.haegbook.Interface.CurrencyTag;
 import kr.hs.emirim.uuuuri.haegbook.Interface.OnItemClickListener;
@@ -60,6 +63,7 @@ import kr.hs.emirim.uuuuri.haegbook.Manager.ImageRecyclerSetter;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Manager.ViewFindUtils;
 import kr.hs.emirim.uuuuri.haegbook.Model.FirebaseImage;
+import kr.hs.emirim.uuuuri.haegbook.Model.PurchaseAmount;
 import kr.hs.emirim.uuuuri.haegbook.Model.Receipt;
 import kr.hs.emirim.uuuuri.haegbook.Model.TabEntity;
 import kr.hs.emirim.uuuuri.haegbook.R;
@@ -69,6 +73,8 @@ import kr.hs.emirim.uuuuri.haegbook.R;
 public class TravelDetailActivity extends BaseActivity implements SelectedFragment{
 
     private final String TAG = "TRAVEL_DETAIL_ACTIVITY";
+    private final String BUNDLE_TAG ="BUNDLE_TAG";
+
     private final int TAB_COUNT = 2;
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -114,21 +120,68 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
 
     SharedPreferenceManager spm;
 
+    private BottomSheetLayout bottomSheetLayout;
+
+    private ArrayList<PurchaseAmount> mPurchases;
+
+    double mRate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_detail);
 
         spm = new SharedPreferenceManager(this);
+        mPurchases = new ArrayList<>();
 
         Intent intent = getIntent();
         mBookCode = intent.getStringExtra("BOOK_CODE");
         mPeriod = intent.getStringExtra("DATE");
         String image = intent.getStringExtra("Image");
 
+        spm.save(TravelDetailTag.CARD_BOOK_CODE_TAG,mBookCode);
+        spm.save(TravelDetailTag.IS_PUBLISHING_TAG,image);
+
+        //// TODO: 2017-11-19    bottomSheetLayout = rootView.findViewById(R.id.design_bottom_sheet);
+        bottomSheetLayout = findViewById(R.id.design_bottom_sheet);
+
+        bottomSheetLayout.setInterceptContentTouch(true);
+
+        findViewById(R.id.handle).setVisibility(View.GONE);
+        findViewById(R.id.handle).setOnTouchListener(new OnSwipeTouchListener(this) {
+            @Override
+            public void onSwipeRight() {}
+
+            @Override
+            public void onSwipeLeft() {}
+
+            @Override
+            public void onSwipeTop() {
+/*
+ Bundle bundle = new Bundle();
+        String myMessage = "Stackoverflow is cool!";
+        bundle.putString("message", myMessage );
+        FragmentClass fragInfo = new FragmentClass();
+        fragInfo.setArguments(bundle);
+        transaction.replace(R.id.fragment_single, fragInfo);
+        transaction.commit();
+ */
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList(BUNDLE_TAG, mPurchases);
+                PurchaseListFragment fragment = new PurchaseListFragment();
+                fragment.setArguments(bundle);
+                fragment.show(getSupportFragmentManager(), R.id.design_bottom_sheet);
+
+            }
+
+            @Override
+            public void onSwipeBottom() {}
+
+
+        });
+
+
         isNotSelected = true;
 
-        //TODO : 돈 가져와서 SPM에
         getDetailInfo();
         Toast.makeText(getApplicationContext(), mBookCode, Toast.LENGTH_SHORT).show();
 
@@ -153,7 +206,7 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
         mTabEntities.add(new TabEntity("PHOTO"));
         mTabEntities.add(new TabEntity("RECEIPT"));
 
-        View mDecorView = getWindow().getDecorView();
+        final View mDecorView = getWindow().getDecorView();
         mViewPager = ViewFindUtils.find(mDecorView, R.id.container);
 
         final SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -188,6 +241,12 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
             public void onPageSelected(int position) {
                 tabLayout.setCurrentTab(position);
                 mPosition=position;
+                Log.e("탭", String.valueOf(mPosition));
+                if(mPosition == PHOTO)
+                    findViewById(R.id.handle).setVisibility(View.GONE);
+                else
+                    findViewById(R.id.handle).setVisibility(View.VISIBLE);
+
             }
 
             @Override
@@ -385,12 +444,12 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
         );
 
 
+
         actionBar.setCustomView(actionbar);
 
         //액션바 양쪽 공백 없애기
         Toolbar parent = (Toolbar)actionbar.getParent();
         parent.setContentInsetsAbsolute(0,0);
-
 
         return true;
     }
@@ -444,11 +503,13 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
                 //users의 모든 자식들의 key값과 value 값들을 iterator로 참조
                 while(childIterator.hasNext()) {
                     DataSnapshot imageSnapshot = childIterator.next();
+                    String key =imageSnapshot.getKey();
+                    Log.e("키",key);
                     String imageComment=imageSnapshot.child("imageComment").getValue(String.class);
                     String imageURI=imageSnapshot.child("imageURI").getValue(String.class);
                     String date=imageSnapshot.child("date").getValue(String.class);
 
-                    mImages.add(new FirebaseImage(imageComment,imageURI,date));
+                    mImages.add(new FirebaseImage(key,imageComment,imageURI,date));
 
                 }
 
@@ -531,6 +592,7 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
                         Map<String, Object> receiptUpdates = new HashMap<String, Object>();
                         receiptUpdates.put(String.valueOf(keyIndex + 1), new Receipt(date, title, amount + symbol, type, memo));
                         receiptRef.updateChildren(receiptUpdates);
+                        saveData();
                         mDialog.dismiss();
                     }
                 }
@@ -629,7 +691,6 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
     public void getDetailInfo(){
 
 //// TODO: 2017-11-15 photo 도 가져오기
-
         mDatabase = FirebaseDatabase.getInstance();
         final DatabaseReference travleDeatilRef = mDatabase.getReference("TravelMoney/"+mBookCode);
 
@@ -681,11 +742,13 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
                     if(mCurrencyName.equals(parsingCountry)){
                         Log.e("선택한 국가", parsingCountry);
                         Log.e("환율", String.valueOf(sale));
-                        double rate= Math.round(1 / sale * 100000000) / 100000000.0;
+                        mRate= Math.round(1 / sale * 100000000) / 100000000.0;
                         if (parsingCountry.contains("일본")) {
-                            rate = Math.round(1 / (sale / 100) * 100000000) / 100000000.0;
+                            mRate = Math.round(1 / (sale / 100) * 100000000) / 100000000.0;
                         }
-                        spm.save(CurrencyTag.CHOOSE_CURRENCY_TAG, (float) rate);
+                        Log.e("왜왜왜로애로애로", String.valueOf(mRate));
+
+                        spm.save(CurrencyTag.CHOOSE_CURRENCY_TAG, (float) mRate);
 
                         hideProgressDialog();
                         return null;
@@ -700,6 +763,9 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
     }
 
     public void saveData(){
+        mPurchases.clear();
+        PurchaseAmount purchaseAmount;
+
         spm.save(TravelDetailTag.FOOD_MONEY_TAG,mTravelMoney[0]);
         spm.save(TravelDetailTag.TRAFFIC_MONEY_TAG,mTravelMoney[1]);
         spm.save(TravelDetailTag.SHOPPING_MONEY_TAG,mTravelMoney[2]);
@@ -707,12 +773,70 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
         spm.save(TravelDetailTag.CULTURE_MONEY_TAG,mTravelMoney[4]);
         spm.save(TravelDetailTag.ETC_MONEY_TAG,mTravelMoney[5]);
 
+
+
         spm.save(TravelDetailTag.FOOD_RATE_TAG,mTravelRate[0]);
         spm.save(TravelDetailTag.TRAFFIC_RATE_TAG,mTravelRate[1]);
         spm.save(TravelDetailTag.SHOPPING_RATE_TAG,mTravelRate[2]);
         spm.save(TravelDetailTag.GIFT_RATE_TAG,mTravelRate[3]);
         spm.save(TravelDetailTag.CULTURE_RATE_TAG,mTravelRate[4]);
         spm.save(TravelDetailTag.ETC_RATE_TAG,mTravelRate[5]);
+
+
+        String[] typeName={"음식","교통","쇼핑","기념품","문화","기타","합계"};
+        float presentTotal=0;
+        float restAmount=0;
+
+        float presentForeignAmount=0;
+        String pressent="";
+        float planForeignAmount=0;
+        String plan="";
+        float restForeignAmount=0;
+        String rest="";
+
+        mRate = spm.retrieveFloat(CurrencyTag.CHOOSE_CURRENCY_TAG);
+
+
+        for(int i=0;i<6;i++){
+            if(!mIsKorea) {
+                presentForeignAmount = (float) (Math.round((float) mTravelMoney[i] * mRate * 1000 )/ 1000.0);
+                pressent=presentForeignAmount+mCurrencySymbol;
+                planForeignAmount = (float) (Math.round(mTravelRate[i] / 100 * mKoreaMoney * mRate * 1000) / 1000.0);
+                plan=planForeignAmount+mCurrencySymbol;
+                restForeignAmount = planForeignAmount-presentForeignAmount;
+                rest=restForeignAmount+mCurrencySymbol;
+
+            }
+            purchaseAmount = new PurchaseAmount(1,typeName[i],pressent, mTravelMoney[i]+"\uFFE6");
+            presentTotal+=mTravelMoney[i];
+            mPurchases.add(purchaseAmount);
+
+            purchaseAmount = new PurchaseAmount(2,typeName[i],rest,String.valueOf((mTravelRate[i]/100 * mKoreaMoney - mTravelMoney[i])+"\uFFE6"));
+            restAmount+=mTravelRate[i]/100 * mKoreaMoney - mTravelMoney[i];
+            mPurchases.add(purchaseAmount);
+
+            purchaseAmount = new PurchaseAmount(3,typeName[i],plan,String.valueOf(mTravelRate[i]/100 * mKoreaMoney)+"\uFFE6");
+            mPurchases.add(purchaseAmount);
+        }
+        if(!mIsKorea) {
+            presentForeignAmount = (float) (Math.round((float) presentTotal * mRate * 1000) / 1000.0);
+            pressent=presentForeignAmount+mCurrencySymbol;
+            planForeignAmount = (float) (Math.round((float)mKoreaMoney *mRate* 1000) / 1000.0);
+            plan=planForeignAmount+mCurrencySymbol;
+            restForeignAmount = planForeignAmount-presentForeignAmount;
+            rest=restForeignAmount+mCurrencySymbol;
+
+
+        }
+        purchaseAmount = new PurchaseAmount(1,typeName[6],pressent,presentTotal+"\uFFE6");
+        mPurchases.add(purchaseAmount);
+        purchaseAmount = new PurchaseAmount(2,typeName[6],rest,restAmount+"\uFFE6");
+        mPurchases.add(purchaseAmount);
+        purchaseAmount = new PurchaseAmount(3,typeName[6],plan,mKoreaMoney+"\uFFE6");
+        mPurchases.add(purchaseAmount);
+
+
+
 
         spm.save(TravelDetailTag.TOTAL_KOREA_MONEY_TAG,mKoreaMoney);
         spm.save(TravelDetailTag.REST_MONEY_TAG, mRestMoney);

@@ -41,6 +41,7 @@ import kr.hs.emirim.uuuuri.haegbook.Manager.DateListManager;
 import kr.hs.emirim.uuuuri.haegbook.Manager.ShadowTransformer;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Model.CardBook;
+import kr.hs.emirim.uuuuri.haegbook.Notification.AlarmReceiver;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 // TODO: 2017-11-12 : 이미지 로딩 화면 제공
@@ -86,6 +87,8 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        new AlarmReceiver(this).Alarm();
 
         showTutorial();
         getUserPhoneNumber();

@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -52,6 +51,8 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     PermissionListener permissionlistener;
 
     private SharedPreferenceManager spm;
+
+    private boolean isNotification=true;
 
 
     public ExpandableListAdapter(List<Item> data) {
@@ -110,7 +111,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             case CHILD:
                 view = inflater.inflate(R.layout.item_list_setting_child, parent, false);
                 ListChildViewHolder child = new ListChildViewHolder(view);
-
+                view.setVisibility(View.VISIBLE);
                 return child ;
         }
         return null;
@@ -125,9 +126,10 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 itemController.refferalItem = item;
                 itemController.header_title.setText(item.text);
                 if(item.text.contains("Notification")){
-                    itemController.setting_switch.setChecked(true);
+                    //todo notification set
+                    isNotification = spm.retrieveBoolean(NotificationTag.NOTIFICATION_SET_TAG);
+                    itemController.setting_switch.setChecked(isNotification);
                 }
-//
 
 
 
@@ -141,6 +143,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                             case "D-Day":
                                 break;
                             case "Notification":
+                                spm.save(NotificationTag.NOTIFICATION_SET_TAG,isChecked);
                                 changeNotification(item,itemController,isChecked);
                                 break;
                             case "카메라 플로팅 위젯":
@@ -152,51 +155,46 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 });
                 break;
             case CHILD:
-                SharedPreferenceManager spm=new SharedPreferenceManager((Activity) mContext);
-
-                final ListChildViewHolder childViewHolder = (ListChildViewHolder)holder;
-                Log.e("이름",item.text);
-                childViewHolder.dateBtn.setText(item.text);
-                if(item.text.contains("하루 시작")) {
-                    Log.e("처음","시작");
-                    childViewHolder.dateTv.setText(spm.retrieveString(NotificationTag.START_TIME_TAG));
-                }
-                else {
-                    Log.e("처음","종료");
-                    childViewHolder.dateTv.setText(spm.retrieveString(NotificationTag.FINISH_TIME_TAG));
-                }
-                childViewHolder.dateBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        TimePickerDialog dialog = new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker timePicker, int hour, int min) {
-                                SharedPreferenceManager spm = new SharedPreferenceManager((Activity) mContext);
-                                Log.e("이름",item.text);
-
-                                if(item.text.contains("시작")) {
-                                    spm.save(NotificationTag.START_TIME_TAG, hour + ":" + min);
-                                    Log.e("시간", spm.retrieveString(NotificationTag.START_TIME_TAG));
-                                    childViewHolder.dateTv.setText(spm.retrieveString(NotificationTag.START_TIME_TAG));
-                                }
-                                else{
-                                    spm.save(NotificationTag.FINISH_TIME_TAG, hour + ":" + min);
-                                    Log.e("시간", spm.retrieveString(NotificationTag.FINISH_TIME_TAG));
-                                    childViewHolder.dateTv.setText(spm.retrieveString(NotificationTag.FINISH_TIME_TAG));
-                                }
-
-                                new AlarmReceiver(mContext).Alarm();
-
-
-                            }
-                        }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);  //마지막 boolean 값은 시간을 24시간으로 보일지 아닐지
-
-                        dialog.show();
-
-
+                    final ListChildViewHolder childViewHolder = (ListChildViewHolder) holder;
+                    Log.e("이름", item.text);
+                    childViewHolder.dateSetTv.setText(item.text);
+                    if (item.text.contains("하루 시작")) {
+                        Log.e("처음", "시작");
+                        childViewHolder.dateTv.setText(spm.retrieveString(NotificationTag.START_TIME_TAG));
+                    } else {
+                        Log.e("처음", "종료");
+                        childViewHolder.dateTv.setText(spm.retrieveString(NotificationTag.FINISH_TIME_TAG));
                     }
-                });
+                    childViewHolder.root.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            TimePickerDialog dialog = new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener() {
+                                @Override
+                                public void onTimeSet(TimePicker timePicker, int hour, int min) {
+                                    SharedPreferenceManager spm = new SharedPreferenceManager((Activity) mContext);
+                                    Log.e("이름", item.text);
 
+                                    if (item.text.contains("시작")) {
+                                        spm.save(NotificationTag.START_TIME_TAG, hour + ":" + min);
+                                        Log.e("시간", spm.retrieveString(NotificationTag.START_TIME_TAG));
+                                        childViewHolder.dateTv.setText(spm.retrieveString(NotificationTag.START_TIME_TAG));
+                                    } else {
+                                        spm.save(NotificationTag.FINISH_TIME_TAG, hour + ":" + min);
+                                        Log.e("시간", spm.retrieveString(NotificationTag.FINISH_TIME_TAG));
+                                        childViewHolder.dateTv.setText(spm.retrieveString(NotificationTag.FINISH_TIME_TAG));
+                                    }
+
+                                    new AlarmReceiver(mContext).Alarm();
+
+
+                                }
+                            }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);  //마지막 boolean 값은 시간을 24시간으로 보일지 아닐지
+
+                            dialog.show();
+
+
+                        }
+                    });
 
         }
     }
@@ -272,13 +270,13 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
     private class ListChildViewHolder extends RecyclerView.ViewHolder{
         LinearLayout root;
-        Button dateBtn;
+        TextView dateSetTv;
         TextView dateTv;
 
         public ListChildViewHolder(View itemView) {
             super(itemView);
             root = itemView.findViewById(R.id.root);
-            dateBtn = itemView.findViewById(R.id.date_set_btn);
+            dateSetTv = itemView.findViewById(R.id.date_set_tv);
             dateTv = itemView.findViewById(R.id.date_tv);
         }
     }

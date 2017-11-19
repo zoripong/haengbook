@@ -9,8 +9,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/date_set_btn"
+    <TextView
+        android:id="@+id/date_set_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1.3"

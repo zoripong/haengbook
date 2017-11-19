@@ -5,6 +5,7 @@ package kr.hs.emirim.uuuuri.haegbook.Interface;
  */
 
 public interface NotificationTag {
+    String NOTIFICATION_SET_TAG = "NOTIFICATION";
     String START_TIME_TAG = "START TIME";
     String FINISH_TIME_TAG = "FINISH TIME";
 

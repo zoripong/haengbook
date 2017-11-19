@@ -80,8 +80,9 @@ public class SharedPreferenceManager {
 
 
         //알람 시작시간, 종료 시간
-        editor.putString(NotificationTag.START_TIME_TAG, "6:0");
-        editor.putString(NotificationTag.FINISH_TIME_TAG, "22:0");
+        editor.putBoolean(NotificationTag.NOTIFICATION_SET_TAG, true);
+        editor.putString(NotificationTag.START_TIME_TAG, "06:00");
+        editor.putString(NotificationTag.FINISH_TIME_TAG, "22:00");
 
 
         editor.putString(TravelDetailTag.CARD_BOOK_CODE_TAG, "");

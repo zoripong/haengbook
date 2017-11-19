@@ -20,31 +20,35 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
-            android:background="#fff"
             >
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recyclerview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:background="#FFF"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
                     />
-                </LinearLayout>
+            </LinearLayout>
 
         </ScrollView>
 
         <LinearLayout
             android:id="@+id/handle"
-            android:orientation="vertical"
+            android:orientation="horizontal"
+            android:layout_gravity="bottom|center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:background="@drawable/handle" />
+            android:layout_weight="0"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="20dp"
+                android:background="@drawable/handle"/>
+        </LinearLayout>
     </FrameLayout>
 
 

@@ -41,8 +41,8 @@ public class SettingActivity extends AppCompatActivity {
 
         data.add(new ExpandableListAdapter.Item(ExpandableListAdapter.HEADER, "D-Day"));
         data.add(new ExpandableListAdapter.Item(ExpandableListAdapter.HEADER, "Notification"));
-        data.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "하루 시작 시간 설정  <"));
-        data.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "하루 끝 시간 설정  <"));
+        data.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "하루 시작 시간 설정  >"));
+        data.add(new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, "하루 끝 시간 설정  >"));
         ExpandableListAdapter.Item places = new ExpandableListAdapter.Item(ExpandableListAdapter.HEADER, "카메라 플로팅 위젯");
         data.add(places);
 

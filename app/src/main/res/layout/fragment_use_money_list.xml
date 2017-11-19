@@ -5,10 +5,18 @@
     android:background="@color/transparent"
     android:orientation="vertical">
 
-    <ImageView
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_gravity="bottom|center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/handle" />
+        android:layout_weight="0"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="20dp"
+            android:background="@drawable/handle"/>
+    </LinearLayout>
 
     <LinearLayout
         android:background="#ffffff"

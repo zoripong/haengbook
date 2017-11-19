@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.PagerAdapter;
@@ -14,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -145,6 +147,8 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
         CardView cardView = view.findViewById(R.id.card_view);
         ImageView sharedImageView = view.findViewById(R.id.shared_iv);
         ImageView plusImageView = view.findViewById(R.id.plus_iv);
+        ImageView gpsIconImageView = view.findViewById(R.id.gps_iv);
+        final LinearLayout linearLayout = view.findViewById(R.id.gray_linear);
 
         if(item.getTitle()!=null)
             titleTextView.setText(item.getTitle());
@@ -186,11 +190,31 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
                     });
             if(item.getTitle().equals("tutorial")){
                 // 튜토리얼
-            }else if(item.getTitle() == null){
-                plusImageView.setVisibility(View.VISIBLE);
+                Glide.with(mNowActivity.getApplicationContext())
+                        .load(R.drawable.tutorial_cover)
+                        .fitCenter()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .centerCrop()
+                        .into(new ViewTarget<CardView, GlideDrawable>(cardView) {
+                            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                            @Override
+                            public void onResourceReady(GlideDrawable resource, GlideAnimation anim) {
+                                ImageView imageV = view.findViewById(R.id.linear);
+                                imageV.setBackground(resource);
+                                linearLayout.setBackgroundColor(Color.parseColor("#00000000"));
+                            }
+                        });
+                titleTextView.setVisibility(View.GONE);
+                periodTextView.setVisibility(View.GONE);
+                locationTextView.setVisibility(View.GONE);
+                gpsIconImageView.setVisibility(View.GONE);
+                sharedImageView.setVisibility(View.GONE);
             }
 
-
+        }
+        if(item.getTitle() == null){
+            sharedImageView.setVisibility(View.GONE);
+            plusImageView.setVisibility(View.VISIBLE);
         }
 
         cardView.setOnLongClickListener(new View.OnLongClickListener() {

@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.Serializable;
@@ -237,6 +238,14 @@ public class AddPhotoActivity extends AppCompatActivity {
 
             List<GalleryImage> selectedPhotoList = galleryRecyclerAdapter.getSelectedPhotoList();
             thumbnailRecyclerSetter.setRecyclerCardView(thumbnailRecycler, selectedPhotoList);
+
+            if(selectedPhotoList.size() == 0)
+                findViewById(R.id.total_tv).setVisibility(View.INVISIBLE);
+            else{
+                findViewById(R.id.total_tv).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.total_tv)).setText(String.valueOf(selectedPhotoList.size()));
+            }
+
         }
 
         @Override

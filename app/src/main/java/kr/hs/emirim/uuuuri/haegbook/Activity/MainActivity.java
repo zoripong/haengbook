@@ -103,7 +103,7 @@ public class MainActivity extends BaseActivity {
 
         Log.e(TAG, "해상도 가로의 값은 무엇일까요요용요ㅛ요요요요 : "+(mm*w)+" mm : "+mm); //1px에 따른 mm*화면 px개수
 
-        setLRPadding = (int) (mm*1800);
+        setLRPadding = (int) (mm*2500);
         setTBPadding=(int)(mm*600);
         mViewPager.setPadding(setLRPadding, setTBPadding, setLRPadding, setTBPadding);
         Log.e(TAG, "디바이스 양쪽 패딩의 값은...? : "+setLRPadding); //1px에 따른 mm*화면 px개수

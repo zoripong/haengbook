@@ -104,7 +104,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         switch (type) {
             case HEADER:
-                view = inflater.inflate(R.layout.item_setting_list_headr, parent, false);
+                view = inflater.inflate(R.layout.item_setting_list_header, parent, false);
                 ListHeaderViewHolder header = new ListHeaderViewHolder(view);
                 return header;
             case CHILD:

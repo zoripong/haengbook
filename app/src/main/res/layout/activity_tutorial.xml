@@ -15,10 +15,9 @@
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         app:radius="3dp"
-        app:fillColor="#FF888888"
-        app:pageColor="#88FF0000"
+        app:fillColor="#FFFF"
+        app:pageColor="#f48804"
         app:strokeColor="#00000000"
-        app:strokeWidth="2dp"
         />
     <Button
         android:id="@+id/previous_btn"
@@ -27,6 +26,7 @@
         android:background="#00ffffff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="#FFF"
         android:text="PREVIOUS"/>
 
     <Button
@@ -36,5 +36,6 @@
         android:background="#00ffffff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="#FFF"
         android:text="NEXT"/>
 </FrameLayout>

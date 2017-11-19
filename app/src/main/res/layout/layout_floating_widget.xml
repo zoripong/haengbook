@@ -15,30 +15,42 @@
         <!--View while view is collapsed-->
         <LinearLayout
             android:id="@+id/collapse_view"
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
             android:visibility="visible"
-            android:layout_height="wrap_content"
+            android:layout_height="78dp"
             android:orientation="vertical"
-            android:background="@color/colorAccent">
+            android:background="@drawable/floating_background">
 
-
-            <TextView
-                android:id="@+id/detail_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <ImageView
+            <LinearLayout
                 android:id="@+id/update_path_iv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/basic_gps"
-                />
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp">
+                <TextView
+                    android:id="@+id/detail_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="#FFF"
+                    android:text="일이삼사오육칠팔구십"
+                    android:textSize="10sp"
+                    android:gravity="center"/>
+            </LinearLayout>
 
 
-            <ImageView
-                android:id="@+id/camera_iv"
-                android:src="@drawable/choose"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center">
+                <ImageView
+                    android:id="@+id/camera_iv"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"/>
+            </LinearLayout>
+
 
 
         </LinearLayout>

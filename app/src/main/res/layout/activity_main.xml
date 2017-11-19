@@ -134,14 +134,20 @@
         </LinearLayout>
 
 
-    <LinearLayout
-        android:id="@+id/handle"
-        android:orientation="horizontal"
-        android:layout_gravity="bottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:background="@drawable/handle"/>
+        <LinearLayout
+            android:id="@+id/handle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="0"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/handle" />
+        </LinearLayout>
 
     </LinearLayout>
 </com.flipboard.bottomsheet.BottomSheetLayout>

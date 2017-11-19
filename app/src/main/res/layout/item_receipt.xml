@@ -3,31 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_marginBottom="5dp">
+    android:orientation="vertical">
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="3dp"
         android:padding="50dp"
-        app:cardUseCompatPadding="true">
+        app:cardUseCompatPadding="false">
 
         <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:scale_base_height="322"
-            app:scale_base_width="720">
+            android:layout_height="match_parent"
+            app:scale_base_height="332"
+            app:scale_base_width="720"
+            android:background="@drawable/receipt">
 
             <ImageView
                 android:id="@+id/type_iv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/barcode_culture"
+                app:scale_left="8"
                 app:scale_height="268"
-                app:scale_top="28"
-                app:scale_width="90" />
+                app:scale_top="33"
+                app:scale_width="35"/>
 
             <TextView
                 android:id="@+id/title_tv"
@@ -35,13 +34,12 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 app:scale_height="60"
-                app:scale_left="120"
+                app:scale_left="65"
                 app:scale_textsize="40"
-                app:scale_top="30"
+                app:scale_top="33"
                 app:scale_width="290" />
 
             <ImageView
-                android:id="@+id/delete_iv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ic_x_btn"
@@ -51,21 +49,12 @@
                 app:scale_top="30"
                 app:scale_width="23" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#000"
-                app:scale_height="1"
-                app:scale_left="120"
-                app:scale_top="90"
-                app:scale_width="570"/>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="금액 :"
                 app:scale_height="50"
-                app:scale_left="120"
+                app:scale_left="65"
                 app:scale_textsize="33"
                 app:scale_top="110"
                 app:scale_width="100" />
@@ -75,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:scale_height="50"
-                app:scale_left="220"
+                app:scale_left="165"
                 app:scale_textsize="33"
                 app:scale_top="110"
                 app:scale_width="200" />
@@ -86,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:text="분야 :"
                 app:scale_height="50"
-                app:scale_left="120"
+                app:scale_left="65"
                 app:scale_textsize="33"
                 app:scale_top="160"
                 app:scale_width="100" />
@@ -97,7 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:scale_height="50"
-                app:scale_left="220"
+                app:scale_left="165"
                 app:scale_textsize="33"
                 app:scale_top="160"
                 app:scale_width="470" />
@@ -108,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:text="Memo :"
                 app:scale_height="50"
-                app:scale_left="120"
+                app:scale_left="65"
                 app:scale_textsize="33"
                 app:scale_top="210"
                 app:scale_width="120" />
@@ -118,7 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:scale_height="50"
-                app:scale_left="240"
+                app:scale_left="185"
                 app:scale_textsize="33"
                 app:scale_top="210"
                 app:scale_width="470" />
@@ -130,7 +119,7 @@
                 android:gravity="right"
                 android:text="2017.09.09"
                 app:scale_height="50"
-                app:scale_left="220"
+                app:scale_left="150"
                 app:scale_textsize="33"
                 app:scale_top="260"
                 app:scale_width="470" />

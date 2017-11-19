@@ -12,18 +12,21 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 public class TutorialActivity extends AppCompatActivity {
     int[] mResources = {
-            R.drawable.barcode_culture,
-            R.drawable.barcode_etc,
-            R.drawable.barcode_food,
-            R.drawable.barcode_gift,
-            R.drawable.barcode_shopping,
-            R.drawable.barcode_traffic
+            R.drawable.tutorial_01,
+            R.drawable.tutorial_02,
+            R.drawable.tutorial_03,
+            R.drawable.tutorial_04,
+            R.drawable.tutorial_05,
+            R.drawable.tutorial_06,
+            R.drawable.tutorial_07,
+            R.drawable.tutorial_08
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +112,13 @@ public class TutorialActivity extends AppCompatActivity {
             View itemView = mLayoutInflater.inflate(R.layout.item_tutorial, container, false);
 
             ImageView imageView = (ImageView) itemView.findViewById(R.id.imageView);
-            imageView.setImageResource(mResources[position]);
+//            imageView.setImageResource(mResources[position]);
+
+            Glide.with(TutorialActivity.this)
+                    .load(mResources[position])
+                    .fitCenter()
+                    .centerCrop()
+                    .into(imageView);
 
             container.addView(itemView);
 

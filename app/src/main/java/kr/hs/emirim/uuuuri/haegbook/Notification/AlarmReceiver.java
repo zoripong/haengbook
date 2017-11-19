@@ -21,7 +21,15 @@ public class AlarmReceiver {
         AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, Broadcast.class);
 
-        PendingIntent startSender = PendingIntent.getBroadcast(context, 0, intent, 0);
+//        PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        if (sender != null){
+//            am.cancel(sender);
+//            sender.cancel();
+//        }
+
+
+
+        PendingIntent startSender = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         Calendar calendar = Calendar.getInstance();
         //알람시간 calendar에 set해주기
@@ -38,7 +46,7 @@ public class AlarmReceiver {
 
         String[] finishTime = spm.retrieveString(NotificationTag.FINISH_TIME_TAG).split(":");
 
-        PendingIntent finishSender = PendingIntent.getBroadcast(context, 1, intent, 0);
+        PendingIntent finishSender = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), Integer.parseInt(finishTime[0]), Integer.parseInt(finishTime[1]), 0);
         Log.e("알람이...",finishTime[0]+":"+finishTime[1]);

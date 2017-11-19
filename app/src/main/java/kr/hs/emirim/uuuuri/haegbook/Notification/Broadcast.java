@@ -21,16 +21,19 @@ public class Broadcast extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {//알람 시간이 되었을때 onReceive를 호출함
         //NotificationManager 안드로이드 상태바에 메세지를 던지기위한 서비스 불러오고
         this.context = context;
+
         Log.e("알람","알람호출");
-        PowerManager powerManager = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
-        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
-        wakeLock.acquire();
-        mCount = intent.getExtras().getInt(EXTRA_COUNT);
+
+            PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
+            wakeLock.acquire();
+            mCount = intent.getExtras().getInt(EXTRA_COUNT);
 
 
-        wakeLock.release();
+            wakeLock.release();
 
-        notification();
+            notification();
+
     }
 
     void notification(){

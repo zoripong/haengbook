@@ -16,12 +16,15 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class SharedPreferenceManager {
     SharedPreferences sharedpreferences;
+
     public static final String MyPREFERENCES = "MyPrefs" ;
 
     public SharedPreferenceManager(Activity activity){
         sharedpreferences = activity.getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
 
     }
+
+
 
     public void save(String tag, String value){
         SharedPreferences.Editor editor = sharedpreferences.edit();

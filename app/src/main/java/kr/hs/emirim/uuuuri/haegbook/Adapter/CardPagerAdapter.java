@@ -267,8 +267,8 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
                     public void onClick(View view) {
                         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
                         //TODO SHARE MESSAGE
-                        String message = "";
-                        intent.putExtra(Intent.EXTRA_TEXT, cardBookCode);
+                        String message = "당신의 행복한 여행을 책임질 여행 관리 서비스, 행북! \n제 여행 이야기, 함께 보실래요? 친구가 여행 이야기를 공유했습니다.\n앱을 설치 후 아래 코드를 추가해보세요.\n"+cardBookCode;
+                        intent.putExtra(Intent.EXTRA_TEXT, message);
                         intent.setType("text/plain");
                         Intent chooser = Intent.createChooser(intent, "친구에게 공유하기");
                         view.getContext().startActivity(chooser);

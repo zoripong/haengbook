@@ -72,6 +72,7 @@
             app:scale_height="60"
             app:scale_left="470"
             app:scale_textsize="29"
+            android:inputType="numberDecimal"
             app:scale_top="465"
             app:scale_width="70" />
 
@@ -125,6 +126,7 @@
             app:scale_height="60"
             app:scale_left="470"
             app:scale_textsize="29"
+            android:inputType="numberDecimal"
             app:scale_top="535"
             app:scale_width="70" />
 
@@ -178,6 +180,7 @@
             app:scale_height="60"
             app:scale_left="470"
             app:scale_textsize="29"
+            android:inputType="numberDecimal"
             app:scale_top="605"
             app:scale_width="70" />
 
@@ -231,6 +234,7 @@
             app:scale_height="60"
             app:scale_left="470"
             app:scale_textsize="29"
+            android:inputType="numberDecimal"
             app:scale_top="675"
             app:scale_width="70" />
 
@@ -284,6 +288,7 @@
             app:scale_height="60"
             app:scale_left="470"
             app:scale_textsize="29"
+            android:inputType="numberDecimal"
             app:scale_top="745"
             app:scale_width="70" />
 
@@ -336,6 +341,7 @@
             app:scale_height="60"
             app:scale_left="470"
             app:scale_textsize="29"
+            android:inputType="numberDecimal"
             app:scale_top="815"
             app:scale_width="70" />
 

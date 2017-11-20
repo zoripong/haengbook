@@ -34,6 +34,8 @@ import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Model.CardBook;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
+import static android.R.id.input;
+
 /**
  * Created by 유리 on 2017-11-04.
  */
@@ -58,15 +60,21 @@ public class FifthInputFragment extends Fragment{
     //시크바
 
 
-    private int FoodVal = 20, BusVal = 20, ShopVal = 20, GiftVal = 20, ExpVal = 10, EtcVal=10;
+    private int[] typeInitRate = {20,20,20,20,10,10};
+    private boolean[] isSbFocus = {false,false,false,false,false,false};
+    private boolean[] isEtFocus = {false,false,false,false,false,false};
+
+
     private int max = 100,  rand = 0, turn, mmax = 0, sum;
     private int pgmax, pgmmax;
 
     private int k = 0, cnt = 0, s, m;
     private int mul = 0, mod = 0;
 
-    SeekBar sbar[] = new SeekBar[6];
-    EditText etext[] = new EditText[6];
+    SeekBar rateSeekBar[] = new SeekBar[6];
+    EditText rateEt[] = new EditText[6];
+
+    private int[] beforeRate = {20,20,20,20,10,10};
 
     //알림바
     private View rootView;
@@ -195,132 +203,6 @@ public class FifthInputFragment extends Fragment{
         }
     };
 
-    private void initialize() {
-        // editText, seekbar implements listener
-        sbar[0] = (SeekBar) rootView.findViewById(R.id.sbFood);
-        etext[0] = (EditText) rootView.findViewById(R.id.etFood);
-        etext[0].setText(String.valueOf(FoodVal));
-        sbar[1] = (SeekBar) rootView.findViewById(R.id.sbBus);
-        etext[1] = (EditText) rootView.findViewById(R.id.etBus);
-        etext[1].setText(String.valueOf(BusVal));
-        sbar[2] = (SeekBar) rootView.findViewById(R.id.sbShop);
-        etext[2] = (EditText) rootView.findViewById(R.id.etShop);
-        etext[2].setText(String.valueOf(ShopVal));
-        sbar[3] = (SeekBar) rootView.findViewById(R.id.sbGift);
-        etext[3] = (EditText) rootView.findViewById(R.id.etGift);
-        etext[3].setText(String.valueOf(GiftVal));
-        sbar[4] = (SeekBar) rootView.findViewById(R.id.sbExp);
-        etext[4] = (EditText) rootView.findViewById(R.id.etExp);
-        etext[4].setText(String.valueOf(ExpVal));
-        sbar[5] = (SeekBar) rootView.findViewById(R.id.sbEtc);
-        etext[5] = (EditText) rootView.findViewById(R.id.etEtc);
-        etext[5].setText(String.valueOf(EtcVal));
-
-        for(int i = 0; i<etext.length; i++){
-            final int finalI = i;
-
-            etext[i].addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    try {
-                        //Update Seekbar value after entering a number
-                        sbar[finalI].setProgress(Integer.parseInt(s.toString()));
-                        turn = finalI;
-                        // pgbar();
-                    } catch (Exception ex) {
-                        //Log.e(String.valueOf(val[0]), " : 0" );
-                    }
-                }
-            }); //etext Listener
-
-            sbar[i].setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                    pgbar();
-                    for (m = 0; m < 6; m++)
-                        etext[m].setText(String.valueOf(sbar[m].getProgress()));
-                    turn = finalI;
-                }
-            }); //sbar Listener
-        }
-    }
-
-    public void pgbar() { //progress bar 계산
-        int high=0, low=0;
-
-        for (k = 0; k < 4; k++) { //최대값 구하기
-            if (sbar[k].getProgress() <= sbar[k + 1].getProgress()) {
-                high = k + 1;
-                low = k;
-            }
-            else {
-                high = k;
-                low = k+1;
-            }
-        }
-
-        sum = sbar[0].getProgress() + sbar[1].getProgress() + sbar[2].getProgress() + sbar[3].getProgress() + sbar[4].getProgress() + sbar[5].getProgress();
-
-        if (sum > max) { //감소
-            cnt = sum - max;
-            mul = cnt / 5; //몫
-            mod = cnt % 5; //나머지
-
-            for (s = 0; s < 6; s++) {
-                Log.e("ssss : ", String.valueOf(s));
-                Log.e("sbar : ", String.valueOf(sbar[s].getProgress() - mul));
-                Log.e("turn : ", String.valueOf(turn));
-
-                if (turn != s && sbar[s].getProgress()-mul > 0) { //움직인 시크바가 아니고, 값을 빼도 음수값이 안 나올 때
-                    sbar[s].setProgress(sbar[s].getProgress() - mul);
-
-                }
-                else if(sbar[s].getProgress()-mul < 0) {
-                    if (sbar[high].getProgress() < 1)
-                        sbar[high].setProgress(sbar[high].getProgress() - mul);
-                    else
-                        sbar[low].setProgress(sbar[low].getProgress() - mul);
-                }
-
-                else ;
-            }
-            rand = (int) (Math.random() * 5);
-            sbar[rand].setProgress(sbar[rand].getProgress() - mod);
-
-        } else if (sum < max) { //증가
-            cnt = max - sum;
-            mul = cnt / 5; //몫
-            mod = cnt % 5; //나머지
-
-            for (s = 0; s < 6; s++) {
-                if (turn != s)
-                    sbar[s].setProgress(sbar[s].getProgress() + mul);
-                else ;
-            }
-
-            rand = (int) (Math.random() * 5);
-            sbar[rand].setProgress(sbar[rand].getProgress() + mod);
-
-        }
-    } //pgbar()
-
     public void firedate() {
         class dday {
             public String Date;
@@ -359,6 +241,163 @@ public class FifthInputFragment extends Fragment{
     } //firedate()
 
 
+    private void initialize() {
+        final int[] seekBarId ={R.id.sbFood, R.id.sbBus,R.id.sbShop,R.id.sbGift,R.id.sbExp,R.id.sbEtc };
+        for(int i=0;i<seekBarId.length;i++){
+            final int index;
+            index = i;
+            rateSeekBar[index] =  (SeekBar) rootView.findViewById(seekBarId[index]);
+            rateSeekBar[index].setProgress(typeInitRate[index]);
+
+            rateSeekBar[index].setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    rateEt[index].setText(rateSeekBar[index].getProgress()+"");
+
+                    if (isSbFocus[index]) {
+                        Log.e("시크바",index +"번 : "+rateSeekBar[index].getProgress());
+                        int gap= beforeRate[index] - rateSeekBar[index].getProgress();
+                        int rand = 0;
+
+                        Log.e("차이", String.valueOf(gap));
+                        randomChange(gap,index);
+
+                        beforeRate[index]= rateSeekBar[index].getProgress();
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                    isSbFocus[index] = true;
+                    beforeRate[index]= rateSeekBar[index].getProgress();
+                    for(int i=0;i<6;i++){
+                        Log.e("시크바 값", String.valueOf(rateSeekBar[i].getProgress()));
+
+                    }
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                    isSbFocus[index] = false;
+
+                }
+            });
+
+        }
+
+        final int[] editTextId ={R.id.etFood, R.id.etBus,R.id.etShop,R.id.etGift,R.id.etExp,R.id.etEtc };
+        for(int i=0;i<editTextId.length;i++){
+            final int index;
+            index = i;
+            rateEt[index] =  (EditText) rootView.findViewById(editTextId[index]);
+            rateEt[index].setText(String.valueOf(typeInitRate[i]));
+
+            rateEt[index].addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    Log.e("준비?","wnslq");
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable inputRate) {
+                    if (Integer.parseInt(String.valueOf(inputRate)) >= 0 && Integer.parseInt(String.valueOf(inputRate)) <= 100) {
+                        boolean isEtInput = true;
+                        for (int i = 0; i < editTextId.length; i++) {
+                            if (isSbFocus[index])
+                                isEtInput = false;
+                        }
+                        if (isEtFocus[index] && isEtInput) {
+                            rateSeekBar[index].setProgress(Integer.parseInt(inputRate.toString()));
+
+                            int gap = beforeRate[index] - input;
+                            Log.e("갭", String.valueOf(gap));
+                            randomChange(gap, index);
+
+
+                        }
+                    }
+                }
+            });
+            rateEt[index].setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                public void onFocusChange(View v, boolean gainFocus) {
+                    if (gainFocus)
+                        isEtFocus[index]=true;
+                    else
+                        isEtFocus[index] = false;
+
+                }
+            });
+
+        }
+
+
+
+
+
+    }
+
+    private void randomChange(int gap,int index){
+        while(gap!=0) {
+            rand = (int) (Math.random() * 6);//0부터 5?
+            Log.e("랜덤", String.valueOf(rand));
+
+            if (rand == index)//만약 자기 자신이면
+                continue;
+            Log.e("남은 갭", String.valueOf(gap));
+            Log.e("랜덤으로 뽑은 시크바 값", String.valueOf(rateSeekBar[rand].getProgress()));
+
+
+
+            Log.e("갭 절대값", String.valueOf(Math.abs(gap)));
+            int randomValue =Integer.parseInt(String.valueOf(rateEt[rand].getText()));
+
+            if(gap < 0){                            //랜덤을 줄여야한다면
+                if(rateSeekBar[rand].getProgress() == 0 )//바꾼 값이 더 크면 랜덤을 줄여야함.
+                    continue;
+                if(Math.abs(gap) <= randomValue) {//차이가 랜덤뽑은 값보다 작다면 빼도 상관없음
+                    rateEt[rand].setText(String.valueOf(randomValue + gap));
+                    rateSeekBar[rand].setProgress(Integer.parseInt(String.valueOf(rateEt[rand].getText())));
+                    gap=0;
+                    beforeRate[rand]= rateSeekBar[rand].getProgress();
+                    break;
+                }else {
+                    gap= gap + randomValue;
+                    rateEt[rand].setText(String.valueOf(randomValue - randomValue));
+                    rateSeekBar[rand].setProgress(Integer.parseInt(String.valueOf(rateEt[rand].getText())));
+                    beforeRate[rand]= rateSeekBar[rand].getProgress();
+
+                }
+
+            }else if(gap >0){
+                if(rateSeekBar[rand].getProgress() == 100)//바꾼 값이 더 크면 랜덤을 늘려야함.
+                    continue;
+                if(Math.abs(gap) <= 100 -randomValue) {//차이가 100 - 랜덤뽑은 값보다 작다면 더해도 상관없음
+                    rateEt[rand].setText(String.valueOf(randomValue + gap));
+                    rateSeekBar[rand].setProgress(Integer.parseInt(String.valueOf(rateEt[rand].getText())));
+                    gap=0;
+                    beforeRate[rand]= rateSeekBar[rand].getProgress();
+                    break;
+                }
+                else {
+                    gap = gap - (100 - randomValue);
+                    rateEt[rand].setText(String.valueOf(randomValue + (100 - randomValue)));
+                    rateSeekBar[rand].setProgress(Integer.parseInt(String.valueOf(rateEt[rand].getText())));
+                    beforeRate[rand]= rateSeekBar[rand].getProgress();
+
+                }
+            }
+
+
+            Log.e("바꼈당", String.valueOf(rateEt[index].getText()));
+        }
+    }
+
+
 
     public boolean saveData(){
 
@@ -382,7 +421,7 @@ public class FifthInputFragment extends Fragment{
 
         Map<String, Object> rateMap = new HashMap<String, Object>();
         for(int i=0;i<mMoneyRate.length;i++) {
-            rateMap.put(String.valueOf(i+1),new Float(String.valueOf(etext[i].getText())));
+            rateMap.put(String.valueOf(i+1),new Float(String.valueOf(rateEt[i].getText())));
         }
         moneyRef.child("Rate").updateChildren(rateMap);
 

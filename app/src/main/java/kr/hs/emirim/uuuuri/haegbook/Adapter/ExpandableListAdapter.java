@@ -33,6 +33,8 @@ import kr.hs.emirim.uuuuri.haegbook.Notification.AlarmReceiver;
 import kr.hs.emirim.uuuuri.haegbook.R;
 import kr.hs.emirim.uuuuri.haegbook.Widget.FloatingViewService;
 
+import static kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag.STATE_SETTING_CAMERA;
+
 public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final String FILE_PATH_EXTRA = "FILE PATH EXTRA";
 
@@ -59,20 +61,15 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     public ExpandableListAdapter(List<Item> data) {
 
-
         this.data = data;
         cal = Calendar.getInstance();
-
         Log.e(TAG, cal.get(Calendar.YEAR)+"");
         Log.e(TAG, cal.get(Calendar.MONTH)+1+"");
         Log.e(TAG, cal.get(Calendar.DATE)+"");
         Log.e(TAG, cal.get(Calendar.HOUR_OF_DAY)+"");
         Log.e(TAG, cal.get(Calendar.MINUTE)+"");
 
-
-
     }
-
 
 
     @Override
@@ -80,9 +77,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         View view = null;
         LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-
         mContext = parent.getContext();
-
         spm = new SharedPreferenceManager((Activity) mContext);
 
 
@@ -123,7 +118,6 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         final Item item = data.get(position);
         switch (item.type) {
             case HEADER:
-
                 final ListHeaderViewHolder itemController = (ListHeaderViewHolder) holder;
                 itemController.refferalItem = item;
                 itemController.header_title.setText(item.text);
@@ -134,6 +128,10 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
                 }
 
+                if(item.text.equals("카메라 플로팅 위젯")){
+                    itemController.setting_switch.setChecked(spm.retrieveBoolean(SharedPreferenceTag.STATE_SETTING_CAMERA));
+                    changeCameraWidget(item,itemController, spm.retrieveBoolean(SharedPreferenceTag.STATE_SETTING_CAMERA));
+                }
 
                 itemController.setting_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -156,6 +154,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                 break;
                             case "카메라 플로팅 위젯":
                                 changeCameraWidget(item,itemController,isChecked);
+                                spm.save(STATE_SETTING_CAMERA, isChecked);
                                 break;
                         }
 

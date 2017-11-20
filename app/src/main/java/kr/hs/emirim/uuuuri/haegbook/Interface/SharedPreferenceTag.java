@@ -30,4 +30,6 @@ public interface SharedPreferenceTag {
     // check the tutorial experience
     String SHOW_TUTORIAL = "SHOW TUTORIAL";
 
+    // check the setting of camera widget
+    String STATE_SETTING_CAMERA = "state setting camera";
 }

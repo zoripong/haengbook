@@ -226,7 +226,9 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 }
 
                 new AlarmReceiver(mContext).Alarm();
-
+                //TODO 
+              //  notificationAdapter.setNotification(NOTIFICATION_MESSAGE_BEFORE, beforeTime);
+              //  notificationAdapter.setNotification(NOTIFICATION_MESSAGE_AFTER, afterTime);
 
             }
         }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);  //마지막 boolean 값은 시간을 24시간으로 보일지 아닐지

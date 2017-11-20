@@ -2,6 +2,7 @@ package kr.hs.emirim.uuuuri.haegbook.Adapter;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,7 +16,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import kr.hs.emirim.uuuuri.haegbook.Interface.CurrencyTag;
 import kr.hs.emirim.uuuuri.haegbook.Interface.TravelDetailTag;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Model.Receipt;
@@ -97,7 +101,7 @@ public class ReceiptRecyclerAdapter extends RecyclerView.Adapter<ReceiptRecycler
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, items.size());
 
-                        deleteReceipt(item.getKey());
+                        deleteReceipt(item.getKey(),item.getType(),item.getAmount());
                         deleteDialog.dismiss();
 
                     }
@@ -118,13 +122,68 @@ public class ReceiptRecyclerAdapter extends RecyclerView.Adapter<ReceiptRecycler
             holder.deleteIv.setVisibility(View.GONE);
     }
 
-    private void deleteReceipt(String key){
+    private void deleteReceipt(String key, int type, String amount){
+        ProgressDialog updateDialog = new ProgressDialog(context);
+
+        updateDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        updateDialog.setMessage("로딩중입니다..");
+        updateDialog.setCancelable(false);
+        updateDialog.show();
 
         mDatabase = FirebaseDatabase.getInstance();
         String bookCode =  spm.retrieveString(TravelDetailTag.CARD_BOOK_CODE_TAG);
+        Float restMoney = spm.retrieveFloat(TravelDetailTag.REST_MONEY_TAG);
+
+        final DatabaseReference amountRef = mDatabase.getReference("TravelMoney/"+bookCode);
+
+        Map<String, Object> amountUpdates = new HashMap<String, Object>();
+        Map<String, Object> typeUpdates = new HashMap<String, Object>();
+        char lastAmount = amount.charAt(amount.length() - 1);
+        Float receiptAmount = Float.parseFloat(amount.replaceAll("[^0-9]", ""));
+
+        if(lastAmount != '\uFFE6'){
+            float rate = spm.retrieveFloat(CurrencyTag.CHOOSE_CURRENCY_TAG);
+            receiptAmount= (float) (Math.round(receiptAmount / rate * 1000) / 1000.0) ;
+        }
+        float typeMoney= 0;
+        switch (type){
+            case 0://음식
+                typeMoney = spm.retrieveFloat(TravelDetailTag.FOOD_MONEY_TAG);
+                break;
+            case 1:
+                typeMoney = spm.retrieveFloat(TravelDetailTag.TRAFFIC_MONEY_TAG);
+                break;
+            case 2:
+                typeMoney = spm.retrieveFloat(TravelDetailTag.SHOPPING_MONEY_TAG);
+                break;
+            case 3:
+                typeMoney = spm.retrieveFloat(TravelDetailTag.GIFT_MONEY_TAG);
+                break;
+            case 4:
+                typeMoney = spm.retrieveFloat(TravelDetailTag.CULTURE_MONEY_TAG);
+                break;
+            case 5:
+                typeMoney = spm.retrieveFloat(TravelDetailTag.ETC_MONEY_TAG);
+                break;
+        }
+
+        amountUpdates.put("restKorea", new Float(restMoney+receiptAmount));
+        typeUpdates.put(String.valueOf(type+1),new Float(typeMoney - receiptAmount));
+        amountRef.child("Total").updateChildren(amountUpdates);
+        amountRef.child("Money").updateChildren(typeUpdates);
+
+
+
+        //delete
         final DatabaseReference receiptRef = mDatabase.getReference("BookInfo/"+bookCode+"/Content/Receipt/"+key);
         receiptRef.removeValue();
+
+        updateDialog.dismiss();
+
     }
+
+
+
 
     @Override
     public int getItemCount() {

@@ -35,6 +35,7 @@ public class NotificationAdapter {
         intent.putExtra(EXTRA_COUNT, mNotiCount++);
         PendingIntent servicePending = PendingIntent.getBroadcast(mActivity, 111, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         Log.e("TAG", servicePending.toString());
+
         AlarmManager alarmManager = (AlarmManager)mContext.getSystemService(ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, date.getTime(), servicePending);
         Log.e("TAG", "알람 설정"+date);

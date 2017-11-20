@@ -80,8 +80,6 @@
             android:noHistory="false"
             android:theme="@android:style/Theme.Dialog"/>
 
-        <receiver android:name=".Notification.Broadcast"></receiver>
-
         <activity android:name=".Activity.TutorialActivity"
             android:theme="@style/AppTheme.NoActionBar"
             />

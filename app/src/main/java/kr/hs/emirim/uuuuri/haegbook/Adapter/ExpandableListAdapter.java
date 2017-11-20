@@ -21,14 +21,18 @@ import android.widget.Toast;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import kr.hs.emirim.uuuuri.haegbook.Interface.NotificationTag;
 import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
 import kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
+import kr.hs.emirim.uuuuri.haegbook.Notification.NotificationAdapter;
 import kr.hs.emirim.uuuuri.haegbook.R;
 import kr.hs.emirim.uuuuri.haegbook.Widget.FloatingViewService;
 
@@ -57,6 +61,10 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     private boolean isNotification=true;
 
+    private NotificationAdapter notificationAdapter;
+    SimpleDateFormat dateTimeFormat;
+    private String nowDate;
+
 
     public ExpandableListAdapter(List<Item> data) {
 
@@ -67,7 +75,6 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         Log.e(TAG, cal.get(Calendar.DATE)+"");
         Log.e(TAG, cal.get(Calendar.HOUR_OF_DAY)+"");
         Log.e(TAG, cal.get(Calendar.MINUTE)+"");
-
     }
 
 
@@ -77,6 +84,11 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         mContext = parent.getContext();
+
+        notificationAdapter = new NotificationAdapter((Activity) mContext, mContext);
+        dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.getDefault());
+        nowDate = cal.get(Calendar.YEAR)+"-"+ (cal.get(Calendar.MONTH))+"-"+cal.get(Calendar.DAY_OF_MONTH);
+
         spm = new SharedPreferenceManager((Activity) mContext);
 
 
@@ -218,16 +230,33 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     spm.save(NotificationTag.START_TIME_TAG, hour + ":" + min);
                     Log.e("시간", spm.retrieveString(NotificationTag.START_TIME_TAG));
                     childViewHolder.dateTv.setText(spm.retrieveString(NotificationTag.START_TIME_TAG));
+
+                    Date startTime = null;
+                    try {
+                        startTime = dateTimeFormat.parse(nowDate+" "+hour+":"+min);
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    notificationAdapter.setNotification("시작 알림 메시지",startTime);
+
                 } else {
                     spm.save(NotificationTag.FINISH_TIME_TAG, hour + ":" + min);
                     Log.e("시간", spm.retrieveString(NotificationTag.FINISH_TIME_TAG));
                     childViewHolder.dateTv.setText(spm.retrieveString(NotificationTag.FINISH_TIME_TAG));
+                    Date finishTime = null;
+                    try {
+                        finishTime = dateTimeFormat.parse(nowDate+" "+hour+":"+min);
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    notificationAdapter.setNotification("종료 알림 메시지", finishTime);
+
                 }
 
+
                 //new AlarmReceiver(mContext).Alarm();
-                //TODO
-              //  notificationAdapter.setNotification(NOTIFICATION_MESSAGE_BEFORE, beforeTime);
-              //  notificationAdapter.setNotification(NOTIFICATION_MESSAGE_AFTER, afterTime);
 
             }
         }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);  //마지막 boolean 값은 시간을 24시간으로 보일지 아닐지

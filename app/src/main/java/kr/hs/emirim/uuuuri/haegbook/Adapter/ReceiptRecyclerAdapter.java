@@ -1,6 +1,7 @@
 package kr.hs.emirim.uuuuri.haegbook.Adapter;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -87,11 +88,23 @@ public class ReceiptRecyclerAdapter extends RecyclerView.Adapter<ReceiptRecycler
         holder.deleteIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                items.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, items.size());
+                final Dialog deleteDialog = new Dialog(context, R.style.MyDialog);
+                deleteDialog.setContentView(R.layout.dialog_delete);
+                deleteDialog.findViewById(R.id.delete_btn).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        items.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, items.size());
 
-                deleteReceipt(item.getKey());
+                        deleteReceipt(item.getKey());
+                        deleteDialog.dismiss();
+
+                    }
+                });
+                deleteDialog.show();
+
+
             }
         });
         holder.typeIv.setOnClickListener(new View.OnClickListener() {

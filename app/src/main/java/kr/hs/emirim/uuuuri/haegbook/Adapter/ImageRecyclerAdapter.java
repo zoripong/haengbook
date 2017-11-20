@@ -168,10 +168,23 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
                         @Override
                         public void onClick(View view) {
                             // TODO: 2017-11-18 이미지 삭제하기
-                            deleteFirebaseImage(firebaseImage.getKey());
-                            Log.e("이미지 키",firebaseImage.getKey());
-                            Toast.makeText(mActivity, "사진이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
+                            dialog.hide();
+                            final Dialog deleteDialog = new Dialog(mActivity, R.style.MyDialog);
+                            deleteDialog.setContentView(R.layout.dialog_delete);
+                            deleteDialog.findViewById(R.id.delete_btn).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    dialog.dismiss();
+                                    deleteFirebaseImage(firebaseImage.getKey());
+                                    Log.e("이미지 키",firebaseImage.getKey());
+                                    Toast.makeText(mActivity, "사진이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                                    deleteDialog.dismiss();
+                                }
+                            });
+                            deleteDialog.show();
+
+
+
                         }
                     });
                     //TODO DEBUG PUBLISHING GONE

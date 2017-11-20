@@ -315,6 +315,7 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
                             int currencySize=1;
                             currencyArray = new String[currencySize];
                             currencyArray[0]="\uFFE6";
+                            currencySymbolSp.setEnabled(false);
 
                         }else{
                             int currencySize=2;
@@ -628,6 +629,7 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
             int currencySize=1;
             currencyArray = new String[currencySize];
             currencyArray[0]="\uFFE6";
+            addCurrencySp.setEnabled(false);
 
         }else{
             int currencySize=2;

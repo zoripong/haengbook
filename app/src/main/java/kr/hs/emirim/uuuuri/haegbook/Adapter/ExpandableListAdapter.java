@@ -1,5 +1,6 @@
 package kr.hs.emirim.uuuuri.haegbook.Adapter;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -18,6 +19,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -234,33 +236,27 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     }
 
-    public void changeCameraWidget(Item item,ListHeaderViewHolder itemController,boolean isChecked){
+    public void changeCameraWidget(Item item,ListHeaderViewHolder itemController,boolean isChecked) {
+        if (isChecked) {
+            if (spm.retrieveBoolean(SharedPreferenceTag.IS_TRAVELING_TAG)) {
 
-        if(isChecked){
-            if (item.invisibleChildren !=null){
-                int pos = data.indexOf(itemController.refferalItem);
-                int index = pos + 1;
-                for (Item i : item.invisibleChildren) {
-                    data.add(index, i);
-                    index++;
-                }
-                notifyItemRangeInserted(pos + 1, index - pos - 1);
-                //     itemController.floatingWidgetSwitch.setImageResource(R.mipmap.ic_launcher);
-                item.invisibleChildren = null;
+                TedPermission.with(mContext)
+                        .setPermissionListener(permissionlistener)
+                        .setDeniedMessage("권한이 없을 경우, 플로팅 위젯 기능을 사용 할 수 없습니다.\n\nPlease turn on permissions at [Setting] > [Permission]")
+                        .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.SYSTEM_ALERT_WINDOW)
+                        .check();
+            } else {
+                Toast.makeText(mContext, "여행중에만 이용가능한 서비스 입니다.", Toast.LENGTH_SHORT).show();
+                itemController.setting_switch.setChecked(false);
             }
-
-        }else{
-            item.invisibleChildren = new ArrayList<Item>();
-            int count = 0;
-            int pos = data.indexOf(itemController.refferalItem);
-            while (data.size() > pos + 1 && data.get(pos + 1).type == CHILD) {
-                item.invisibleChildren.add(data.remove(pos + 1));
-                count++;
+        } else {
+            if (mServiceIntent != null) {
+                mContext.stopService(mServiceIntent);
+                mServiceIntent = null;
             }
-            notifyItemRangeRemoved(pos + 1, count);
         }
-
     }
+
     private void changeNotification(Item item,ListHeaderViewHolder itemController,boolean isChecked){
         if(isChecked){
             if (item.invisibleChildren !=null){

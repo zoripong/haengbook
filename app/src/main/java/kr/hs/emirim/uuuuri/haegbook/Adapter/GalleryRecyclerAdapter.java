@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
@@ -119,6 +120,7 @@ public class GalleryRecyclerAdapter extends RecyclerView.Adapter<GalleryRecycler
                 .load(galleryImage.getImgPath())
                 .centerCrop()
                 .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)// for local images
                 .into(viewHolder.photoIv);
 
         //선택
@@ -172,6 +174,7 @@ public class GalleryRecyclerAdapter extends RecyclerView.Adapter<GalleryRecycler
                 Glide.with(mActivity)
                         .load(galleryImage.getImgPath())
                         .asBitmap()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)// for local images
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {

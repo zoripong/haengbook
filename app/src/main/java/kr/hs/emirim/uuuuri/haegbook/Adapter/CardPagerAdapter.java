@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.PagerAdapter;
@@ -21,8 +24,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.ViewTarget;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.DataSnapshot;
@@ -140,7 +145,7 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
 //        mViews.set(position, null);
     }
 
-    private void bind(final CardBook item, View view) {
+    private void bind(final CardBook item, final View view) {
         TextView titleTextView = (TextView) view.findViewById(R.id.title_tv);
         TextView periodTextView = (TextView) view.findViewById(R.id.period_tv);
         TextView locationTextView = (TextView) view.findViewById(R.id.location_tv);
@@ -178,7 +183,7 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
                     .load(storageReference)
                     .fitCenter()
                     .placeholder(R.drawable.loading)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .centerCrop()
                     .into(new ViewTarget<CardView, GlideDrawable>(cardView) {
                         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -191,19 +196,26 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
             if(item.getTitle().equals("tutorial")){
                 // 튜토리얼
                 Glide.with(mNowActivity.getApplicationContext())
+                        .fromResource()
+                        .asBitmap()
+                        .encoder(new BitmapEncoder(Bitmap.CompressFormat.PNG,100))
                         .load(R.drawable.tutorial_cover)
                         .fitCenter()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .centerCrop()
-                        .into(new ViewTarget<CardView, GlideDrawable>(cardView) {
-                            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                        .into(new SimpleTarget<Bitmap>() {
                             @Override
-                            public void onResourceReady(GlideDrawable resource, GlideAnimation anim) {
+                            public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
                                 ImageView imageV = view.findViewById(R.id.linear);
-                                imageV.setBackground(resource);
+
+                                Drawable drawable = new BitmapDrawable(mNowActivity.getResources(), bitmap);
+                                imageV.setBackgroundDrawable(drawable);
+
                                 linearLayout.setBackgroundColor(Color.parseColor("#00000000"));
+
                             }
                         });
+
                 titleTextView.setVisibility(View.GONE);
                 periodTextView.setVisibility(View.GONE);
                 locationTextView.setVisibility(View.GONE);

@@ -80,7 +80,7 @@ public class ImageDetailRecyclerAdapter extends RecyclerView.Adapter<ImageDetail
                 .asBitmap()
                 .override(width, width)
                 .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)// for remote images
                 .placeholder(R.drawable.loading)
                 .into(holder.imageView);
 

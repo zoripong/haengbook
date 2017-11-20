@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
@@ -93,6 +94,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
             Glide.with(mActivity)
                     .using(new FirebaseImageLoader())
                     .load(storageReference)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)// for local images
                     .centerCrop()
                     .into(holder.imageView);
         }

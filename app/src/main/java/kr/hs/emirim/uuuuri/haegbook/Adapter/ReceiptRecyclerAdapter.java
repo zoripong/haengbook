@@ -54,7 +54,7 @@ public class ReceiptRecyclerAdapter extends RecyclerView.Adapter<ReceiptRecycler
     }
 
     @Override
-    public void onBindViewHolder(final ReceiptViewHolder holder, int position) {
+    public void onBindViewHolder(final ReceiptViewHolder holder, final int position) {
         spm = new SharedPreferenceManager((Activity) context);
 
         final Receipt item = items.get(position);
@@ -87,6 +87,10 @@ public class ReceiptRecyclerAdapter extends RecyclerView.Adapter<ReceiptRecycler
         holder.deleteIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                items.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, items.size());
+
                 deleteReceipt(item.getKey());
             }
         });
@@ -102,6 +106,7 @@ public class ReceiptRecyclerAdapter extends RecyclerView.Adapter<ReceiptRecycler
     }
 
     private void deleteReceipt(String key){
+
         mDatabase = FirebaseDatabase.getInstance();
         String bookCode =  spm.retrieveString(TravelDetailTag.CARD_BOOK_CODE_TAG);
         final DatabaseReference receiptRef = mDatabase.getReference("BookInfo/"+bookCode+"/Content/Receipt/"+key);

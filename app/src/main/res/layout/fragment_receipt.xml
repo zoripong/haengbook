@@ -36,19 +36,7 @@
 
         </ScrollView>
 
-        <LinearLayout
-            android:id="@+id/handle"
-            android:orientation="horizontal"
-            android:layout_gravity="bottom|center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="70dp"
-                android:layout_height="20dp"
-                android:background="@drawable/handle"/>
-        </LinearLayout>
+
     </FrameLayout>
 
 

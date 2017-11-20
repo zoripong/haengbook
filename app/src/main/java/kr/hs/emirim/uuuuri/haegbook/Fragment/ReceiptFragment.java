@@ -109,8 +109,8 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
         Log.e(TAG, "GetDatabase : "+mBookCode);
 
         mAllReceipts = new ArrayList<Receipt>();
-
-        mReceiptListener = mReceiptRefer.addValueEventListener(new ValueEventListener() {
+//TODO
+        mReceiptRefer.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mAllReceipts.clear();
@@ -141,6 +141,8 @@ public class ReceiptFragment extends Fragment implements ReceiptType{
             }
         });
     }
+
+
 
     public void setBookCode(String bookCode){
         mBookCode = bookCode;

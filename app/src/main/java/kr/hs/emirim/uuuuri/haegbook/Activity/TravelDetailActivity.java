@@ -605,6 +605,7 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
                         receiptUpdates.put(String.valueOf(keyIndex + 1), new Receipt(date, title, amount + symbol, type, memo));
                         receiptRef.updateChildren(receiptUpdates);
                         saveData();
+                        mReceiptFragment.getDatabase();
                         mDialog.dismiss();
                     }
                 }

@@ -35,6 +35,17 @@
             android:gravity="center"
             android:textColor="#FFF"
             />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_height="47"
+            app:scale_left="110"
+            app:scale_textsize="30"
+            app:scale_top="555"
+            app:scale_width="180"
+            android:text="한국"
+            >
+        </TextView>
         <EditText
             android:id="@+id/before_money_et"
             android:layout_width="wrap_content"
@@ -73,31 +84,32 @@
             android:entries="@array/currencyCountry"
             android:background="@drawable/dropdown_icon">
         </Spinner>
-        <EditText
-            android:id="@+id/after_money_et"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:textColor="#FFFFFF"
-            android:theme="@style/MyEditTextTheme"
-            android:inputType="numberDecimal"
-            app:scale_left="288"
-            app:scale_textsize="30"
-            app:scale_top="635"
-            app:scale_width="247" />
 
         <TextView
             android:id="@+id/after_money_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:scale_height="47"
-            app:scale_left="535"
+            app:scale_height="53"
+            app:scale_left="540"
             app:scale_top="655"
-            app:scale_width="47"
+            app:scale_width="40"
             app:scale_textsize="47"
             android:textColor="#FFF"
             android:gravity="center"
             android:text="¥"/>
+
+        <EditText
+            android:id="@+id/after_money_et"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:paddingBottom="10dp"
+            android:textColor="#FFFFFF"
+            android:theme="@style/MyEditTextTheme"
+            app:scale_left="288"
+            app:scale_textsize="30"
+            app:scale_top="635"
+            app:scale_width="247" />
 
     </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
 </LinearLayout>

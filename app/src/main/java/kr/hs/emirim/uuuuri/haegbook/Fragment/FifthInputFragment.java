@@ -5,8 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,8 +31,6 @@ import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Model.CardBook;
 import kr.hs.emirim.uuuuri.haegbook.R;
-
-import static android.R.id.input;
 
 /**
  * Created by 유리 on 2017-11-04.
@@ -291,51 +287,9 @@ public class FifthInputFragment extends Fragment{
             index = i;
             rateEt[index] =  (EditText) rootView.findViewById(editTextId[index]);
             rateEt[index].setText(String.valueOf(typeInitRate[i]));
-
-            rateEt[index].addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    Log.e("준비?","wnslq");
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable inputRate) {
-                    if (Integer.parseInt(String.valueOf(inputRate)) >= 0 && Integer.parseInt(String.valueOf(inputRate)) <= 100) {
-                        boolean isEtInput = true;
-                        for (int i = 0; i < editTextId.length; i++) {
-                            if (isSbFocus[index])
-                                isEtInput = false;
-                        }
-                        if (isEtFocus[index] && isEtInput) {
-                            rateSeekBar[index].setProgress(Integer.parseInt(inputRate.toString()));
-
-                            int gap = beforeRate[index] - input;
-                            Log.e("갭", String.valueOf(gap));
-                            randomChange(gap, index);
-
-
-                        }
-                    }
-                }
-            });
-            rateEt[index].setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                public void onFocusChange(View v, boolean gainFocus) {
-                    if (gainFocus)
-                        isEtFocus[index]=true;
-                    else
-                        isEtFocus[index] = false;
-
-                }
-            });
+            rateEt[index].setEnabled(false);
 
         }
-
-
 
 
 

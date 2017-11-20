@@ -8,7 +8,7 @@
     <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/dialog_line_background"
+        android:background="@drawable/dialog_background"
         app:scale_base_height="340"
         app:scale_base_width="512">
         <TextView
@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             app:scale_left="60"
             app:scale_textsize="23"
-            app:scale_top="50"
+            app:scale_top="100"
             android:text="사용하신 금액이 예정했던 금액을 초과하여 영수증을 등록할 수 없습니다."
             app:scale_width="400"
             app:scale_height="67"
@@ -26,10 +26,10 @@
             android:layout_height="wrap_content"
             app:scale_left="120"
             app:scale_textsize="23"
-            app:scale_top="120"
+            app:scale_top="190"
             android:text="예정 금액을 늘려주세요."
             app:scale_width="274"
-            app:scale_height="67"
+            app:scale_height="40"
             android:gravity="center"/>
 
 
@@ -39,8 +39,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/button_background"
             app:scale_width="123"
-            app:scale_height="61"
-            app:scale_top="220"
+            app:scale_height="60"
+            app:scale_top="250"
             app:scale_left="195"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"

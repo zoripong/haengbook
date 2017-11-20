@@ -29,7 +29,6 @@ import kr.hs.emirim.uuuuri.haegbook.Interface.NotificationTag;
 import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
 import kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
-import kr.hs.emirim.uuuuri.haegbook.Notification.AlarmReceiver;
 import kr.hs.emirim.uuuuri.haegbook.R;
 import kr.hs.emirim.uuuuri.haegbook.Widget.FloatingViewService;
 
@@ -225,8 +224,8 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     childViewHolder.dateTv.setText(spm.retrieveString(NotificationTag.FINISH_TIME_TAG));
                 }
 
-                new AlarmReceiver(mContext).Alarm();
-                //TODO 
+                //new AlarmReceiver(mContext).Alarm();
+                //TODO
               //  notificationAdapter.setNotification(NOTIFICATION_MESSAGE_BEFORE, beforeTime);
               //  notificationAdapter.setNotification(NOTIFICATION_MESSAGE_AFTER, afterTime);
 

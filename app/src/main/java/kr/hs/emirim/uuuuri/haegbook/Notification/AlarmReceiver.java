@@ -1,57 +1,63 @@
 package kr.hs.emirim.uuuuri.haegbook.Notification;
 
-import android.app.Activity;
-import android.app.AlarmManager;
+/**
+ * Created by 유리 on 2017-10-19.
+ */
+
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+import android.os.PowerManager;
+import android.support.v4.app.NotificationCompat;
+import android.view.Gravity;
+import android.widget.Toast;
 
-import java.util.Calendar;
+import kr.hs.emirim.uuuuri.haegbook.R;
 
-import kr.hs.emirim.uuuuri.haegbook.Interface.NotificationTag;
-import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
+public class AlarmReceiver extends BroadcastReceiver {
+    private final String NOTIFICATION_MESSAGE_TITLE = "오몇점";
+    private final String EXTRA_MESSAGE = "EXTRA_MESSAGE";
+    private final String EXTRA_COUNT = "EXTRA_COUNT                                                                                                                                                                                                                                    ";
 
-public class AlarmReceiver {
-    private Context context;
-    public AlarmReceiver(Context context) {
-        this.context=context;
+    Context context;
+
+    private int mCount;
+    private String mMessage;
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        this.context = context;
+        PowerManager powerManager = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
+        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
+        wakeLock.acquire();
+
+
+        mCount = intent.getExtras().getInt(EXTRA_COUNT);
+        mMessage = intent.getExtras().getString(EXTRA_MESSAGE);
+
+        Toast toast = Toast.makeText(context, "알람이 울립니다.", Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.TOP, 0, 200);
+        toast.show();
+
+        wakeLock.release();
+
+        notification();
     }
-    public void Alarm() {
-        AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, Broadcast.class);
 
-//        PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//        if (sender != null){
-//            am.cancel(sender);
-//            sender.cancel();
-//        }
+    void notification(){
+        Intent intent = new Intent();
 
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
+        NotificationCompat.Builder notifiBuilder = new NotificationCompat.Builder(context)
+                .setContentTitle(NOTIFICATION_MESSAGE_TITLE)
+                .setContentText(mMessage)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setSmallIcon(R.mipmap.ic_launcher);
 
-        PendingIntent startSender = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-        Calendar calendar = Calendar.getInstance();
-        //알람시간 calendar에 set해주기
-
-        SharedPreferenceManager spm = new SharedPreferenceManager((Activity) context);
-        String[] startTime = spm.retrieveString(NotificationTag.START_TIME_TAG).split(":");
-
-        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), Integer.parseInt(startTime[0]), Integer.parseInt(startTime[1]), 0);
-        am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), startSender);
-
-
-
-        Log.e("알람이...",startTime[0]+":"+startTime[1]);
-
-        String[] finishTime = spm.retrieveString(NotificationTag.FINISH_TIME_TAG).split(":");
-
-        PendingIntent finishSender = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), Integer.parseInt(finishTime[0]), Integer.parseInt(finishTime[1]), 0);
-        Log.e("알람이...",finishTime[0]+":"+finishTime[1]);
-
-        am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), finishSender);
-
+        NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(mCount, notifiBuilder.build());
     }
 }

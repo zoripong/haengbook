@@ -1,54 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingLeft="40dp"
-    android:paddingRight="40dp"
-    android:paddingTop="80dp"
-    android:paddingBottom="80dp">
-    <LinearLayout
-        android:background="#FFF"
-        android:layout_weight="0"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <ImageView
-            android:src="@drawable/ic_notification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        android:background="@drawable/dialog_background"
+        app:scale_base_height="380"
+        app:scale_base_width="512">
+
         <ImageView
             android:id="@+id/close_btn"
             android:src="@drawable/ic_x_btn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-</LinearLayout>
-    <LinearLayout
-        android:background="#ffffff"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        >
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|top"
+            app:scale_top="20"
+            app:scale_width="80"
+            app:scale_height="20"/>
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/message_tv"
+            android:layout_height="match_parent"
+            app:scale_width="512"
+            app:scale_height="240"
+            android:layout_gravity="center"
+            android:gravity="center">
+            <kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                />
+                android:layout_height="wrap_content"
+                app:scale_base_height="240"
+                app:scale_base_width="512">
+                <TextView
+                    android:id="@+id/message_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    app:scale_width="512"
+                    app:scale_height="240"
+                    app:scale_textsize="22"
+                    />
+            </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
         </ScrollView>
-    </LinearLayout>
-
-    <LinearLayout
-        android:background="#FFF"
-        android:layout_weight="0"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
         <Button
             android:id="@+id/done_btn"
             android:layout_width="match_parent"
@@ -57,9 +52,15 @@
             android:textColor="#f8971c"
             android:text="바로 등록하기 &#62; "
             android:textStyle="bold"
-            android:textSize="15sp"
-            android:gravity="center|right"
-            android:paddingRight="30dp"/>
-    </LinearLayout>
+            android:layout_gravity="right|bottom"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            app:scale_width="190"
+            app:scale_height="40"
+            app:scale_textsize="25"
+            style="?android:attr/borderlessButtonStyle"/>
 
+
+
+    </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
 </LinearLayout>

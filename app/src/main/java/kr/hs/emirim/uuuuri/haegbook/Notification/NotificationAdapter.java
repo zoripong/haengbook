@@ -9,6 +9,9 @@ import android.util.Log;
 
 import java.util.Calendar;
 
+import kr.hs.emirim.uuuuri.haegbook.Interface.NotificationTag;
+import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
+
 import static android.content.Context.ALARM_SERVICE;
 
 /**
@@ -24,29 +27,46 @@ public class NotificationAdapter {
     private int mNotiCount;
     Activity mActivity;
     Context mContext;
+    SharedPreferenceManager spm;
+
+    private boolean isNotify;
+
+    String time;
 
     public NotificationAdapter(Activity mActivity, Context mContext) {
         this.mActivity = mActivity;
         this.mContext = mContext;
         mNotiCount = 0;
         alarmManager = (AlarmManager)mContext.getSystemService(ALARM_SERVICE);
-
+        spm = new SharedPreferenceManager(mActivity);
     }
 
-    public void setNotification(int notifyId, String title, String message,int hour, int min){
+    public void setNotification(int notifyId, String title, String message) {
         Intent intent = new Intent(mActivity, AlarmReceiver.class);
+        isNotify = spm.retrieveBoolean(NotificationTag.NOTIFICATION_SET_TAG);
 
-        intent.putExtra(EXTRA_TITLE, title);
-        intent.putExtra(EXTRA_MESSAGE, message);
-        intent.putExtra(EXTRA_COUNT, mNotiCount++);
-        PendingIntent servicePending = PendingIntent.getBroadcast(mActivity, notifyId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Log.e("TAG", servicePending.toString());
-        Calendar calendar = Calendar.getInstance();
+        if (isNotify) {
+            switch (notifyId){
+                case 0://시작
+                    time = spm.retrieveString(NotificationTag.START_TIME_TAG);
+                    break;
+                case 1://끝
+                    time = spm.retrieveString(NotificationTag.FINISH_TIME_TAG);
+                    break;
+            }
+            String[] notifyTime=time.split(":");
 
-        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), hour, min, 0);
+            intent.putExtra(EXTRA_TITLE, title);
+            intent.putExtra(EXTRA_MESSAGE, message);
+            intent.putExtra(EXTRA_COUNT, mNotiCount++);
+            PendingIntent servicePending = PendingIntent.getBroadcast(mActivity, notifyId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            Log.e("TAG", servicePending.toString());
+            Calendar calendar = Calendar.getInstance();
 
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), servicePending);
-        Log.e("TAG", "알람 설정"+hour+":"+min);
+            calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), Integer.parseInt(notifyTime[0]), Integer.parseInt(notifyTime[1]), 0);
+
+            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), servicePending);
+        }
     }
 
     public void cancelNotification(int notifyId) {

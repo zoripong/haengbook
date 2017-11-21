@@ -243,7 +243,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         Log.e("시간", spm.retrieveString(NotificationTag.START_TIME_TAG));
                         childViewHolder.dateTv.setText(spm.retrieveString(NotificationTag.START_TIME_TAG));
 
-                        notificationAdapter.setNotification(0, "제목", "시작 알림 메시지", hour, min);
+                        notificationAdapter.setNotification(0, "제목", "시작 알림 메시지");
                     }
                 } else {
                     String finishTime = hour + ":" + min;
@@ -255,7 +255,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
                         Log.e("시간", spm.retrieveString(NotificationTag.FINISH_TIME_TAG));
                         childViewHolder.dateTv.setText(spm.retrieveString(NotificationTag.FINISH_TIME_TAG));
-                        notificationAdapter.setNotification(1, "제목", "종료 알림 메시지", hour, min);
+                        notificationAdapter.setNotification(1, "제목", "종료 알림 메시지");
 
                     }
                 }
@@ -276,12 +276,16 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             SimpleDateFormat format = new SimpleDateFormat("HH:mm");
             Date Date = format.parse(time);
             Date compareDate = format.parse(compareTime);
+            Log.e("앞시간",time);
+            Log.e("뒷시간",compareTime);
+
 
             long calDate = Date.getTime() - compareDate.getTime();
 
             // Date.getTime() 은 해당날짜를 기준으로1970년 00:00:00 부터 몇 초가 흘렀는지를 반환해준다.
             // 이제 24*60*60*1000(각 시간값에 따른 차이점) 을 나눠주면 일수가 나온다.
             long calDateDays = calDate / ( 24*60*60*1000);
+            Log.e("왜 다 true..", String.valueOf(calDateDays));
             if(calDateDays < 0) return false;//날짜 적당
 
         } catch (ParseException e) {
@@ -315,11 +319,9 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private void changeNotification(Item item,ListHeaderViewHolder itemController,boolean isChecked){
         if(isChecked){
             //TODO 알람 SET
-            String[] startTime = spm.retrieveString(NotificationTag.START_TIME_TAG).split(":");
-            String[] finishTime = spm.retrieveString(NotificationTag.FINISH_TIME_TAG).split(":");
 
-            notificationAdapter.setNotification(0,"제목","시작 알림 메시지",Integer.parseInt(startTime[0]),Integer.parseInt(startTime[1]));
-            notificationAdapter.setNotification(1,"제목","종료 알림 메시지",Integer.parseInt(finishTime[0]),Integer.parseInt(finishTime[1]));
+            notificationAdapter.setNotification(0,"제목","시작 알림 메시지");
+            notificationAdapter.setNotification(1,"제목","종료 알림 메시지");
 
             if (item.invisibleChildren !=null){
                 int pos = data.indexOf(itemController.refferalItem);

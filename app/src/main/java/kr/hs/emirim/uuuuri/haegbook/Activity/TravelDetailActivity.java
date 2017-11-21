@@ -1,5 +1,6 @@
 package kr.hs.emirim.uuuuri.haegbook.Activity;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -66,6 +67,7 @@ import kr.hs.emirim.uuuuri.haegbook.Model.FirebaseImage;
 import kr.hs.emirim.uuuuri.haegbook.Model.PurchaseAmount;
 import kr.hs.emirim.uuuuri.haegbook.Model.Receipt;
 import kr.hs.emirim.uuuuri.haegbook.Model.TabEntity;
+import kr.hs.emirim.uuuuri.haegbook.Notification.NotificationAdapter;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 
@@ -124,6 +126,7 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
     private BottomSheetLayout bottomSheetLayout;
 
     private ArrayList<PurchaseAmount> mPurchases;
+    private NotificationAdapter notificationAdapter;
 
     private EditText addPlanAmountEt;
     private Spinner addCurrencySp;
@@ -134,6 +137,8 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
         setContentView(R.layout.activity_travel_detail);
 
         spm = new SharedPreferenceManager(this);
+        notificationAdapter = new NotificationAdapter((Activity) getApplicationContext(), getApplicationContext());
+
         mPurchases = new ArrayList<>();
 
         Intent intent = getIntent();
@@ -959,6 +964,8 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
         else
             new getRate().execute();
 
+        notificationAdapter.setNotification(0, "제목", "시작 알림 메시지");
+        notificationAdapter.setNotification(1,"제목","종료 알림 메시지");
 
 
     }

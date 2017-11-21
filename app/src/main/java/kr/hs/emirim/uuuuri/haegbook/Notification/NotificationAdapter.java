@@ -21,7 +21,9 @@ import static android.content.Context.ALARM_SERVICE;
 public class NotificationAdapter {
     private final String EXTRA_TITLE = "EXTRA_TITLE";
     private final String EXTRA_MESSAGE = "EXTRA_MESSAGE";
-    private final String EXTRA_COUNT = "EXTRA_COUNT";
+    private final String NOTIFY_ID = "NOTIFY_ID";
+    private final String NOTIFY_TIME ="NOTIFY_TIME";
+
 
     AlarmManager alarmManager;
     private int mNotiCount;
@@ -49,36 +51,43 @@ public class NotificationAdapter {
             switch (notifyId){
                 case 0://시작
                     time = spm.retrieveString(NotificationTag.START_TIME_TAG);
+                    Log.e("시작시간",time);
+
                     break;
-                case 1://끝
+                case 1:case 2://끝
                     time = spm.retrieveString(NotificationTag.FINISH_TIME_TAG);
                     break;
             }
             String[] notifyTime=time.split(":");
 
+            intent.putExtra(NOTIFY_ID,notifyId);
+            intent.putExtra(NOTIFY_TIME,time);
             intent.putExtra(EXTRA_TITLE, title);
             intent.putExtra(EXTRA_MESSAGE, message);
-            intent.putExtra(EXTRA_COUNT, mNotiCount++);
-            PendingIntent servicePending = PendingIntent.getBroadcast(mActivity, notifyId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            PendingIntent servicePending= PendingIntent.getBroadcast(mActivity, notifyId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             Log.e("TAG", servicePending.toString());
             Calendar calendar = Calendar.getInstance();
 
             calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), Integer.parseInt(notifyTime[0]), Integer.parseInt(notifyTime[1]), 0);
 
-            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), servicePending);
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),24*60*60*1000, servicePending);
         }
     }
 
-    public void cancelNotification(int notifyId) {
+    public void cancelNotification() {
         Intent intent = new Intent(mActivity, AlarmReceiver.class);
 
-        PendingIntent checkIntent = PendingIntent.getBroadcast(mActivity, notifyId, intent, PendingIntent.FLAG_NO_CREATE);
-        boolean result = (checkIntent == null);
-        if(!result){
-            PendingIntent cancelIntent = PendingIntent.getBroadcast(mActivity, notifyId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            alarmManager.cancel(cancelIntent);
-            cancelIntent.cancel();
+        for(int i=0;i<3;i++) {
+            PendingIntent checkIntent = PendingIntent.getBroadcast(mActivity, i, intent, PendingIntent.FLAG_NO_CREATE);
+            boolean result = (checkIntent == null);
+            if (!result) {
+                PendingIntent cancelIntent = PendingIntent.getBroadcast(mActivity, i, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                alarmManager.cancel(cancelIntent);
+                cancelIntent.cancel();
+            }
         }
+
 
 
     }

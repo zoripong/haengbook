@@ -1,6 +1,5 @@
 package kr.hs.emirim.uuuuri.haegbook.Activity;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -68,6 +67,7 @@ import kr.hs.emirim.uuuuri.haegbook.Model.PurchaseAmount;
 import kr.hs.emirim.uuuuri.haegbook.Model.Receipt;
 import kr.hs.emirim.uuuuri.haegbook.Model.TabEntity;
 import kr.hs.emirim.uuuuri.haegbook.Notification.NotificationAdapter;
+import kr.hs.emirim.uuuuri.haegbook.Notification.NotificationMessage;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 
@@ -131,13 +131,17 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
     private EditText addPlanAmountEt;
     private Spinner addCurrencySp;
     double mRate;
+
+    NotificationMessage notificationMessage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_detail);
 
         spm = new SharedPreferenceManager(this);
-        notificationAdapter = new NotificationAdapter((Activity) getApplicationContext(), getApplicationContext());
+        notificationMessage =new NotificationMessage(this);
+
+        notificationAdapter = new NotificationAdapter(this,this);
 
         mPurchases = new ArrayList<>();
 
@@ -964,10 +968,13 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
         else
             new getRate().execute();
 
-        notificationAdapter.setNotification(0, "제목", "시작 알림 메시지");
-        notificationAdapter.setNotification(1,"제목","종료 알림 메시지");
+        notificationAdapter.setNotification(0, "오늘도 행복한 여행되세요!", notificationMessage.getStartNotificationMessage());
+
+        notificationAdapter.setNotification(1, "남은 비용", notificationMessage.getFinishNotificationMessage());
+        notificationAdapter.setNotification(2,"오늘의 여행은 어떠셨나요?","앱을 열어 여행이야기를 들려주세요 :)");
 
 
     }
+
 }
 

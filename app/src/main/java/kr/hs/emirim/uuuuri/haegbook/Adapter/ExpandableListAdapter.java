@@ -33,6 +33,7 @@ import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
 import kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Notification.NotificationAdapter;
+import kr.hs.emirim.uuuuri.haegbook.Notification.NotificationMessage;
 import kr.hs.emirim.uuuuri.haegbook.R;
 import kr.hs.emirim.uuuuri.haegbook.Widget.FloatingViewService;
 
@@ -68,7 +69,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private String setStartTime;
     private String setFinishTime;
 
-
+    NotificationMessage notificationMessage;
 
     public ExpandableListAdapter(List<Item> data) {
 
@@ -94,6 +95,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         nowDate = cal.get(Calendar.YEAR)+"-"+ (cal.get(Calendar.MONTH))+"-"+cal.get(Calendar.DAY_OF_MONTH);
 
         spm = new SharedPreferenceManager((Activity) mContext);
+        notificationMessage = new NotificationMessage(mContext);
         setStartTime = spm.retrieveString(NotificationTag.START_TIME_TAG);
         setFinishTime = spm.retrieveString(NotificationTag.FINISH_TIME_TAG);
 
@@ -231,31 +233,43 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int min) {
                 Log.e("이름", item.text);
+                String getTime ="";
+                try {
+
+                String time = hour+":"+min;
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+                Date date = timeFormat.parse(time);getTime= timeFormat.format(date);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
                 if (item.text.contains("시작")) {
                     String startTime = hour + ":" + min;
                     if(checkTime(startTime,setFinishTime)) {
                         Toast.makeText(mContext, "시작 시간은 끝 시간보다 더 빠르게 설정해주세요.", Toast.LENGTH_SHORT).show();
                     }else {
-                        spm.save(NotificationTag.START_TIME_TAG, hour + ":" + min);
+                        spm.save(NotificationTag.START_TIME_TAG,getTime);
                         setStartTime = spm.retrieveString(NotificationTag.START_TIME_TAG);
 
                         Log.e("시간", spm.retrieveString(NotificationTag.START_TIME_TAG));
+
+
                         childViewHolder.dateTv.setText(spm.retrieveString(NotificationTag.START_TIME_TAG));
 
-                        notificationAdapter.setNotification(0, "제목", "시작 알림 메시지");
+                        notificationAdapter.setNotification(0, "오늘도 행복한 여행되세요!", notificationMessage.getStartNotificationMessage());
                     }
                 } else {
                     String finishTime = hour + ":" + min;
                     if(checkTime(setStartTime,finishTime)) {
                         Toast.makeText(mContext, "끝 시간은 시작 시간보다 더 느리게 설정해주세요.", Toast.LENGTH_SHORT).show();
                     }else {
-                        spm.save(NotificationTag.FINISH_TIME_TAG, hour + ":" + min);
+                        spm.save(NotificationTag.FINISH_TIME_TAG,getTime);
                         setFinishTime = spm.retrieveString(NotificationTag.FINISH_TIME_TAG);
 
                         Log.e("시간", spm.retrieveString(NotificationTag.FINISH_TIME_TAG));
                         childViewHolder.dateTv.setText(spm.retrieveString(NotificationTag.FINISH_TIME_TAG));
-                        notificationAdapter.setNotification(1, "제목", "종료 알림 메시지");
+                        notificationAdapter.setNotification(1, "남은 비용", notificationMessage.getFinishNotificationMessage());
+                        notificationAdapter.setNotification(2,"오늘의 여행은 어떠셨나요?","앱을 열어 여행이야기를 들려주세요 :)");
 
                     }
                 }
@@ -276,17 +290,13 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             SimpleDateFormat format = new SimpleDateFormat("HH:mm");
             Date Date = format.parse(time);
             Date compareDate = format.parse(compareTime);
-            Log.e("앞시간",time);
-            Log.e("뒷시간",compareTime);
 
 
             long calDate = Date.getTime() - compareDate.getTime();
 
-            // Date.getTime() 은 해당날짜를 기준으로1970년 00:00:00 부터 몇 초가 흘렀는지를 반환해준다.
-            // 이제 24*60*60*1000(각 시간값에 따른 차이점) 을 나눠주면 일수가 나온다.
-            long calDateDays = calDate / ( 24*60*60*1000);
-            Log.e("왜 다 true..", String.valueOf(calDateDays));
-            if(calDateDays < 0) return false;//날짜 적당
+            long minute = calDate / 60000;
+
+            if(minute < 0) return false;//날짜 적당
 
         } catch (ParseException e) {
             Log.e("날짜 파싱에러","서로 타입이 맞지 않음.");
@@ -294,6 +304,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         return true;//시작날짜가 끝나는 날짜보다 뒤에 있음
 
     }
+
 
     public void changeCameraWidget(Item item,ListHeaderViewHolder itemController,boolean isChecked) {
         if (isChecked) {
@@ -316,12 +327,14 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
     }
 
+
     private void changeNotification(Item item,ListHeaderViewHolder itemController,boolean isChecked){
         if(isChecked){
-            //TODO 알람 SET
 
-            notificationAdapter.setNotification(0,"제목","시작 알림 메시지");
-            notificationAdapter.setNotification(1,"제목","종료 알림 메시지");
+            notificationAdapter.setNotification(0, "오늘도 행복한 여행되세요!", notificationMessage.getStartNotificationMessage());
+            notificationAdapter.setNotification(1, "남은 비용", notificationMessage.getFinishNotificationMessage());
+            notificationAdapter.setNotification(2, "오늘의 여행은 어떠셨나요?", "앱을 열어 여행이야기를 들려주세요 :)");
+
 
             if (item.invisibleChildren !=null){
                 int pos = data.indexOf(itemController.refferalItem);
@@ -336,9 +349,8 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
 
         }else{
-            //TODO 알람 취소
-            notificationAdapter.cancelNotification(0);
-            notificationAdapter.cancelNotification(1);
+
+            notificationAdapter.cancelNotification();
 
             item.invisibleChildren = new ArrayList<Item>();
             int count = 0;

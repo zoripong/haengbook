@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import kr.hs.emirim.uuuuri.haegbook.Interface.CurrencyTag;
+import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
 import kr.hs.emirim.uuuuri.haegbook.Interface.TravelDetailTag;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 
@@ -24,8 +25,14 @@ public class NotificationMessage {
         float restMoney = spm.retrieveFloat(TravelDetailTag.REST_MONEY_TAG);
         float rate = spm.retrieveFloat(CurrencyTag.CHOOSE_CURRENCY_TAG);
         String symbol = spm.retrieveString(CurrencyTag.CURRENCY_SYMBOL_TAG);
+        boolean isKorea = spm.retrieveBoolean(SharedPreferenceTag.IS_KOR_TAG);
+        if(isKorea){
+            return "여행 경비는 "+restMoney+"\uFFE6 남았습니다.";
 
-        return "여행 경비는 "+restMoney+"\uFFE6 , "+restMoney*rate + symbol+"남았습니다.";
+        }
+        return "여행 경비는 "+restMoney+"\uFFE6 , "+restMoney*rate + symbol+" 남았습니다.";
+
+
     }
     public String getStartNotificationMessage(){
 

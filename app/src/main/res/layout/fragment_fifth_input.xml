@@ -39,6 +39,18 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="고정"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:scale_height="80"
+            app:scale_left="515"
+            app:scale_textsize="27"
+            app:scale_top="410"
+            app:scale_width="150" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:gravity="center|right"
             android:text="식비"
             android:textColor="#FFFFFF"
@@ -75,6 +87,21 @@
             android:inputType="numberDecimal"
             app:scale_top="465"
             app:scale_width="70" />
+
+        <CheckBox
+            android:id="@+id/ckFood"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:gravity="center"
+            android:textColor="#FFF"
+            app:scale_height="60"
+            app:scale_left="560"
+            app:scale_textsize="29"
+            android:inputType="numberDecimal"
+            app:scale_top="465"
+            app:scale_width="70" />
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -130,6 +157,19 @@
             app:scale_top="535"
             app:scale_width="70" />
 
+        <CheckBox
+            android:id="@+id/ckBus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:gravity="center"
+            android:textColor="#FFF"
+            app:scale_height="60"
+            app:scale_left="560"
+            app:scale_textsize="29"
+            android:inputType="numberDecimal"
+            app:scale_top="535"
+            app:scale_width="70" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -179,6 +219,19 @@
             android:textColor="#FFF"
             app:scale_height="60"
             app:scale_left="470"
+            app:scale_textsize="29"
+            android:inputType="numberDecimal"
+            app:scale_top="605"
+            app:scale_width="70" />
+        <CheckBox
+            android:id="@+id/ckShop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:gravity="center"
+            android:textColor="#FFF"
+            app:scale_height="60"
+            app:scale_left="560"
             app:scale_textsize="29"
             android:inputType="numberDecimal"
             app:scale_top="605"
@@ -238,6 +291,19 @@
             app:scale_top="675"
             app:scale_width="70" />
 
+        <CheckBox
+            android:id="@+id/ckGift"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:gravity="center"
+            android:textColor="#FFF"
+            app:scale_height="60"
+            app:scale_left="560"
+            app:scale_textsize="29"
+            android:inputType="numberDecimal"
+            app:scale_top="675"
+            app:scale_width="70" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -292,6 +358,19 @@
             app:scale_top="745"
             app:scale_width="70" />
 
+        <CheckBox
+            android:id="@+id/ckExp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:gravity="center"
+            android:textColor="#FFF"
+            app:scale_height="60"
+            app:scale_left="560"
+            app:scale_textsize="29"
+            android:inputType="numberDecimal"
+            app:scale_top="745"
+            app:scale_width="70" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -345,6 +424,19 @@
             app:scale_top="815"
             app:scale_width="70" />
 
+        <CheckBox
+            android:id="@+id/ckEtc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:gravity="center"
+            android:textColor="#FFF"
+            app:scale_height="60"
+            app:scale_left="560"
+            app:scale_textsize="29"
+            android:inputType="numberDecimal"
+            app:scale_top="815"
+            app:scale_width="70" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

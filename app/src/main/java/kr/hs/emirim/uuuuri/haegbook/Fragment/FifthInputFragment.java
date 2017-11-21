@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.SeekBar;
 
@@ -60,6 +61,7 @@ public class FifthInputFragment extends Fragment{
     private boolean[] isSbFocus = {false,false,false,false,false,false};
     private boolean[] isEtFocus = {false,false,false,false,false,false};
 
+    private boolean[] isCkecked = {false,false,false,false,false,false};
 
     private int max = 100,  rand = 0, turn, mmax = 0, sum;
     private int pgmax, pgmmax;
@@ -69,8 +71,10 @@ public class FifthInputFragment extends Fragment{
 
     SeekBar rateSeekBar[] = new SeekBar[6];
     EditText rateEt[] = new EditText[6];
+    CheckBox rateCk[] = new CheckBox[6];
 
-    private int[] beforeRate = {20,20,20,20,10,10};
+    private int[] beforeRate ={20,20,20,20,10,10};
+
 
     //알림바
     private View rootView;
@@ -256,7 +260,11 @@ public class FifthInputFragment extends Fragment{
                         int rand = 0;
 
                         Log.e("차이", String.valueOf(gap));
-                        randomChange(gap,index);
+                        if((gap = randomChange(gap,index))!=0){
+                            rateSeekBar[index].setProgress(rateSeekBar[index].getProgress()+gap);
+                            rateEt[index].setText(rateSeekBar[index].getProgress()+"");
+
+                        }
 
                         beforeRate[index]= rateSeekBar[index].getProgress();
                     }
@@ -291,24 +299,69 @@ public class FifthInputFragment extends Fragment{
 
         }
 
+        final int[] checkId ={R.id.ckFood, R.id.ckBus,R.id.ckShop,R.id.ckGift,R.id.ckExp,R.id.ckEtc };
+        for(int i=0;i<checkId.length;i++){
+            final int index;
+            index = i;
+            rateCk[index] =  (CheckBox) rootView.findViewById(checkId[index]);
+            rateCk[index].setOnClickListener(new CheckBox.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (rateCk[index].isChecked()) {
+                        isCkecked[index]=true;
+
+                    }else{
+                        isCkecked[index]=false;
+                    }
+                }
+                });
+
+        }
+
+
+
+
+
 
 
     }
 
-    private void randomChange(int gap,int index){
+    private int randomChange(int gap,int index){
         while(gap!=0) {
             rand = (int) (Math.random() * 6);//0부터 5?
             Log.e("랜덤", String.valueOf(rand));
 
             if (rand == index)//만약 자기 자신이면
                 continue;
+            if(isCkecked[rand])
+                continue;
             Log.e("남은 갭", String.valueOf(gap));
             Log.e("랜덤으로 뽑은 시크바 값", String.valueOf(rateSeekBar[rand].getProgress()));
+
+            int randomValue =Integer.parseInt(String.valueOf(rateEt[rand].getText()));
+
+            int checkCount=0;
+            int restAmountCnt=0;
+            for(int i=0;i<isCkecked.length;i++){
+                if(!isCkecked[i]){
+                    if(i==index)
+                        continue;
+                    checkCount++;
+                    if( gap<0 &&rateSeekBar[i].getProgress()<Math.abs(gap) ){
+                        restAmountCnt++;
+                    }
+                    else if(gap>0 && 100-rateSeekBar[i].getProgress()<Math.abs(gap) ){
+                        restAmountCnt++;
+                    }
+                }
+            }
+            if(checkCount==restAmountCnt) {
+                return gap;
+            }
 
 
 
             Log.e("갭 절대값", String.valueOf(Math.abs(gap)));
-            int randomValue =Integer.parseInt(String.valueOf(rateEt[rand].getText()));
 
             if(gap < 0){                            //랜덤을 줄여야한다면
                 if(rateSeekBar[rand].getProgress() == 0 )//바꾼 값이 더 크면 랜덤을 줄여야함.
@@ -349,6 +402,7 @@ public class FifthInputFragment extends Fragment{
 
             Log.e("바꼈당", String.valueOf(rateEt[index].getText()));
         }
+        return 0;
     }
 
 

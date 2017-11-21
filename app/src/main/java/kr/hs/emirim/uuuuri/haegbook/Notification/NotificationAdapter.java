@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import static android.content.Context.ALARM_SERVICE;
 
@@ -16,9 +16,11 @@ import static android.content.Context.ALARM_SERVICE;
  */
 
 public class NotificationAdapter {
+    private final String EXTRA_TITLE = "EXTRA_TITLE";
     private final String EXTRA_MESSAGE = "EXTRA_MESSAGE";
     private final String EXTRA_COUNT = "EXTRA_COUNT";
 
+    AlarmManager alarmManager;
     private int mNotiCount;
     Activity mActivity;
     Context mContext;
@@ -27,18 +29,38 @@ public class NotificationAdapter {
         this.mActivity = mActivity;
         this.mContext = mContext;
         mNotiCount = 0;
+        alarmManager = (AlarmManager)mContext.getSystemService(ALARM_SERVICE);
+
     }
 
-    public void setNotification(String message, Date date){
+    public void setNotification(int notifyId, String title, String message,int hour, int min){
         Intent intent = new Intent(mActivity, AlarmReceiver.class);
+
+        intent.putExtra(EXTRA_TITLE, title);
         intent.putExtra(EXTRA_MESSAGE, message);
         intent.putExtra(EXTRA_COUNT, mNotiCount++);
-        PendingIntent servicePending = PendingIntent.getBroadcast(mActivity, 111, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent servicePending = PendingIntent.getBroadcast(mActivity, notifyId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         Log.e("TAG", servicePending.toString());
+        Calendar calendar = Calendar.getInstance();
 
-        AlarmManager alarmManager = (AlarmManager)mContext.getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, date.getTime(), servicePending);
-        Log.e("TAG", "알람 설정"+date);
+        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), hour, min, 0);
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), servicePending);
+        Log.e("TAG", "알람 설정"+hour+":"+min);
+    }
+
+    public void cancelNotification(int notifyId) {
+        Intent intent = new Intent(mActivity, AlarmReceiver.class);
+
+        PendingIntent checkIntent = PendingIntent.getBroadcast(mActivity, notifyId, intent, PendingIntent.FLAG_NO_CREATE);
+        boolean result = (checkIntent == null);
+        if(!result){
+            PendingIntent cancelIntent = PendingIntent.getBroadcast(mActivity, notifyId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            alarmManager.cancel(cancelIntent);
+            cancelIntent.cancel();
+        }
+
+
     }
 }
 

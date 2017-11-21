@@ -17,13 +17,14 @@ import android.widget.Toast;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 public class AlarmReceiver extends BroadcastReceiver {
-    private final String NOTIFICATION_MESSAGE_TITLE = "오몇점";
+    private final String EXTRA_TITLE = "EXTRA_TITLE";
     private final String EXTRA_MESSAGE = "EXTRA_MESSAGE";
     private final String EXTRA_COUNT = "EXTRA_COUNT                                                                                                                                                                                                                                    ";
 
     Context context;
 
     private int mCount;
+    private String mTitle;
     private String mMessage;
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -34,6 +35,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 
         mCount = intent.getExtras().getInt(EXTRA_COUNT);
+        mTitle = intent.getExtras().getString(EXTRA_TITLE);
         mMessage = intent.getExtras().getString(EXTRA_MESSAGE);
 
         Toast toast = Toast.makeText(context, "알람이 울립니다.", Toast.LENGTH_SHORT);
@@ -51,7 +53,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.Builder notifiBuilder = new NotificationCompat.Builder(context)
-                .setContentTitle(NOTIFICATION_MESSAGE_TITLE)
+                .setContentTitle(mTitle)
                 .setContentText(mMessage)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)

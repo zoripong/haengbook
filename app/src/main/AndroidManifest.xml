@@ -83,6 +83,10 @@
         <activity android:name=".Activity.TutorialActivity"
             android:theme="@style/AppTheme.NoActionBar"
             />
+        <receiver
+            android:name=".Notification.AlarmReceiver"
+            android:exported="true">
+        </receiver>
     </application>
 
 </manifest>

@@ -66,6 +66,8 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
 
     private FirebaseDatabase mDatabase;
 
+    SharedPreferenceManager spm;
+
     public CardPagerAdapter(Activity activity) {
         mNowActivity = activity;
         mData = new ArrayList<>();
@@ -155,6 +157,9 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
         ImageView gpsIconImageView = view.findViewById(R.id.gps_iv);
         final LinearLayout linearLayout = view.findViewById(R.id.gray_linear);
 
+        mDatabase = FirebaseDatabase.getInstance();
+        spm=new SharedPreferenceManager(mNowActivity);
+
         if(item.getTitle()!=null)
             titleTextView.setText(item.getTitle());
         if(item.getPeriod()!=null)
@@ -229,11 +234,53 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
             plusImageView.setVisibility(View.VISIBLE);
         }
 
+        //todo
         cardView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+
+
+                final Dialog deleteDialog = new Dialog(mNowActivity, R.style.MyDialog);
+                deleteDialog.setContentView(R.layout.dialog_delete_card);
+                deleteDialog.findViewById(R.id.delete_btn).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+
+                        String userToken = spm.retrieveString(SharedPreferenceTag.USER_TOKEN_TAG);
+
+                        final DatabaseReference receiptRef = mDatabase.getReference("UserInfo/"+userToken);
+                        receiptRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Iterator<DataSnapshot> childIterator = dataSnapshot.getChildren().iterator();
+                                //users의 모든 자식들의 key값과 value 값들을 iterator로 참조
+                                while (childIterator.hasNext()) {
+                                    DataSnapshot snapshotIterator = childIterator.next();
+                                    String cardCode = snapshotIterator.getValue(String.class);
+                                    if (cardCode.equals(item.getBookCode())) {
+                                        receiptRef.child(snapshotIterator.getKey()).removeValue();
+                                        return;
+                                    }
+
+                                }
+                            }
+
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {}
+                        });
+
+
+                        deleteDialog.dismiss();
+
+                    }
+                });
+                deleteDialog.show();
+
+
                 Toast.makeText(mNowActivity, item.toString(), Toast.LENGTH_SHORT).show();
-                return false;
+                return true;
             }
         });
 

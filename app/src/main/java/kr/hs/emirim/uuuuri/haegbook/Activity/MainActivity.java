@@ -412,9 +412,9 @@ public class MainActivity extends BaseActivity {
                 //uid에 카드 업데이트
 
                 final DatabaseReference userInfoRef = mDatabase.getReference("UserInfo/"+uid);
+                final String postKey=userInfoRef.push().getKey();
 
                 userInfoRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    long keyIndex;
 
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -430,9 +430,8 @@ public class MainActivity extends BaseActivity {
 
                         }
 
-                        keyIndex = dataSnapshot.getChildrenCount();
                         Map<String, Object> haveCardBookUpdates = new HashMap<String, Object>();
-                        haveCardBookUpdates.put(String.valueOf(keyIndex+1), inputCode);
+                        haveCardBookUpdates.put(postKey, inputCode);
                         userInfoRef.updateChildren(haveCardBookUpdates);
                     }
 

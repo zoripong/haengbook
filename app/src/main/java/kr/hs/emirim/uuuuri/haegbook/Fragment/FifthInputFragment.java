@@ -461,17 +461,15 @@ public class FifthInputFragment extends Fragment{
         //uid에 카드 업데이트
 
         final DatabaseReference tokenRef = mDatabase.getReference("UserInfo/"+mUserToken);
+        final String userCardpostKey=tokenRef.push().getKey();
 
         tokenRef.addListenerForSingleValueEvent(new ValueEventListener() {
             long keyIndex;
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                keyIndex = dataSnapshot.getChildrenCount();
-                Log.e("아이들 갯수", String.valueOf(keyIndex));
                 Map<String, Object> haveCardBookUpdates = new HashMap<String, Object>();
-                Log.e("카드 인덱스", String.valueOf(keyIndex+1));
-                haveCardBookUpdates.put(String.valueOf(keyIndex+1), postKey);
+                haveCardBookUpdates.put(userCardpostKey, postKey);
                 tokenRef.updateChildren(haveCardBookUpdates);
             }
 

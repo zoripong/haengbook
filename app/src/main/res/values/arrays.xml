@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="korea">
+        <item >한국</item>
+    </string-array>
+
     <string-array name="currencyCountry">
         <item >미국</item>
         <item >유럽연합</item>

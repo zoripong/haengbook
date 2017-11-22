@@ -35,17 +35,19 @@
             android:gravity="center"
             android:textColor="#FFF"
             />
-        <TextView
+        <Spinner
+            android:id="@+id/korea_sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:scale_height="47"
-            app:scale_left="110"
+            app:scale_left="101"
             app:scale_textsize="30"
             app:scale_top="555"
-            app:scale_width="180"
-            android:text="한국"
-            >
-        </TextView>
+            app:scale_width="187"
+            android:entries="@array/korea"
+            android:background="@drawable/dropdown_icon">
+        </Spinner>
+
         <EditText
             android:id="@+id/before_money_et"
             android:layout_width="wrap_content"

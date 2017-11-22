@@ -1,5 +1,6 @@
 package kr.hs.emirim.uuuuri.haegbook.Fragment;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,11 +15,10 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
-import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
+import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
 import static kr.hs.emirim.uuuuri.haegbook.R.id.end_date_choose_btn;
@@ -37,23 +37,18 @@ public class ThirdInputFragment extends Fragment{
 
     private String mEndDate;
 
+    SharedPreferenceManager spm;
 
-    public ThirdInputFragment() {
-        final Calendar cc = Calendar.getInstance();
-        mYear = cc.get(Calendar.YEAR);
-        mMonth = cc.get(Calendar.MONTH);
-        mDay = cc.get(Calendar.DAY_OF_MONTH);
-        mEndDate = mYear +"."+ String.valueOf(mMonth+1) +"."+ mDay;
+    View rootView;
 
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_third_input, container, false);
-        mEndDateTv = (TextView) rootView.findViewById(R.id.end_date_tv);
-        mEndDateTv.setText(mYear+" . "+String.valueOf(mMonth+1)+" . "+mDay);
+        rootView = inflater.inflate(R.layout.fragment_third_input, container, false);
+        spm = new SharedPreferenceManager((Activity) rootView.getContext());
+
+        String[] defaultDate = spm.retrieveString(SharedPreferenceTag.START_DATE_TAG).split("\\.");
 
         mEndDateChooseBtn = (ImageView) rootView.findViewById(end_date_choose_btn);
         mEndDateChooseBtn.setOnClickListener(new View.OnClickListener() {
@@ -62,6 +57,7 @@ public class ThirdInputFragment extends Fragment{
                 new DatePickerDialog(getActivity(), mDateSetListener,mYear,mMonth,mDay).show();
             }
         });
+
         return rootView;
     }
 
@@ -84,6 +80,15 @@ public class ThirdInputFragment extends Fragment{
         }
         SharedPreferenceManager spm = new SharedPreferenceManager(getActivity());
         mStartDate= spm.retrieveString(SharedPreferenceTag.START_DATE_TAG);
+        String[] defaultDate = spm.retrieveString(SharedPreferenceTag.START_DATE_TAG).split("\\.");
+
+        mYear = Integer.parseInt(defaultDate[0]);
+        mMonth = Integer.parseInt(defaultDate[1])-1;
+        mDay = Integer.parseInt(defaultDate[2]);
+        mEndDate = mYear +"."+ String.valueOf(mMonth+1) +"."+ mDay;
+
+        mEndDateTv = (TextView) rootView.findViewById(R.id.end_date_tv);
+        mEndDateTv.setText(mYear+" . "+String.valueOf(mMonth+1)+" . "+mDay);
 
     }
 
@@ -94,7 +99,6 @@ public class ThirdInputFragment extends Fragment{
             return false;
         }
 
-        SharedPreferenceManager spm = new SharedPreferenceManager(getActivity());
         spm.save(SharedPreferenceTag.END_DATE_TAG, mEndDate);
         return true;
     }

@@ -39,6 +39,7 @@ public class FourthInputFragment extends Fragment{
     private TextView mAfterMoneyTv;
 
     private Spinner mAfterCountrySp;
+    private Spinner mKoreaSp;
     private boolean beforeFocus=true;
     private boolean afterFocus=false;
 
@@ -120,6 +121,8 @@ public class FourthInputFragment extends Fragment{
                 else    afterFocus=false;
             }
         });
+        mKoreaSp = (Spinner)rootView.findViewById(R.id.korea_sp);
+        mKoreaSp.setEnabled(false);
         mAfterCountrySp = (Spinner)rootView.findViewById(R.id.after_country_sp);
 
         mAfterCountrySp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

@@ -2,23 +2,23 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="300dp"
     android:orientation="vertical"
     android:paddingLeft="40dp"
     android:paddingRight="40dp"
-    android:paddingTop="80dp"
-    android:paddingBottom="80dp">
+    android:background="@drawable/dialog_background">
     <LinearLayout
         android:background="#ffffff"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         >
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -28,23 +28,27 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingRight="100dp"
+            android:layout_weight="1"
             android:textColor="#f8971c"
-            android:textSize="13sp"
-            android:text="책의 표지를 선택하세요."/>
+            android:textSize="15sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="책의 표지를 선택하세요"/>
         <Button
             android:id="@+id/publish_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="3"
             android:background="#FFF"
             android:textColor="#f8971c"
-            android:text="완료 &#62; "
+            android:text="완료 &#62;"
             android:textStyle="bold"
             android:textSize="15sp"
-            android:gravity="center|right"
-            android:paddingRight="30dp"/>
+            android:layout_gravity="center"
+            android:gravity="center"
+            style="?android:attr/borderlessButtonStyle"/>
     </LinearLayout>
 
 </LinearLayout>

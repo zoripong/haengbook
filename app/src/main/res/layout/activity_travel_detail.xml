@@ -7,71 +7,85 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     >
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tl="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_content"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="kr.hs.emirim.uuuuri.haegbook.Activity.TravelDetailActivity">
-
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/appbar_padding_top"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
-
-        </android.support.v7.widget.Toolbar>
-
-        <com.flyco.tablayout.CommonTabLayout
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@color/colorPrimary"
-            tl:tl_iconVisible="false"
-            tl:tl_indicator_color="#eeeeee"
-            tl:tl_indicator_corner_radius="1.5dp"
-            tl:tl_indicator_height="3dp"
-            tl:tl_indicator_style="TRIANGLE"
-            tl:tl_indicator_width="10dp"
-            tl:tl_textsize="14sp"/>
-
-</android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/container"
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tl="http://schemas.android.com/apk/res-auto"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:fitsSystemWindows="true"
+        tools:context="kr.hs.emirim.uuuuri.haegbook.Activity.TravelDetailActivity">
 
-    <android.support.design.widget.FloatingActionButton
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/appbar_padding_top"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            </android.support.v7.widget.Toolbar>
+
+            <com.flyco.tablayout.CommonTabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/colorPrimary"
+                tl:tl_iconVisible="false"
+                tl:tl_indicator_color="#eeeeee"
+                tl:tl_indicator_corner_radius="1.5dp"
+                tl:tl_indicator_height="3dp"
+                tl:tl_indicator_style="TRIANGLE"
+                tl:tl_indicator_width="10dp"
+                tl:tl_textsize="14sp"/>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/dropdown_icon" />
+        app:srcCompat="@drawable/add_image" />
 
-    <LinearLayout
-        android:id="@+id/handle"
-        android:orientation="horizontal"
-        android:layout_gravity="bottom"
-        android:layout_width="match_parent"
-        android:layout_height="15dp"
-        android:layout_weight="0"
-        />
+        <!--<ImageView-->
+            <!--android:id="@+id/floatingActionButton"-->
+            <!--android:layout_width="60dp"-->
+            <!--android:layout_height="60dp"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginBottom="25dp"-->
+            <!--android:layout_marginRight="25dp"-->
+            <!--android:layout_gravity="end|bottom"-->
+            <!--android:clickable="true"-->
+            <!--android:onClick="edit"-->
+            <!--android:padding="0dp"-->
+            <!--android:scaleType="fitXY"-->
+            <!--android:src="@drawable/add_image" />-->
+        <LinearLayout
+            android:id="@+id/handle"
+            android:orientation="horizontal"
+            android:layout_gravity="bottom"
+            android:layout_width="match_parent"
+            android:layout_height="15dp"
+            android:layout_weight="0"
+            />
 
-</android.support.design.widget.CoordinatorLayout>
+    </android.support.design.widget.CoordinatorLayout>
 </com.flipboard.bottomsheet.BottomSheetLayout>

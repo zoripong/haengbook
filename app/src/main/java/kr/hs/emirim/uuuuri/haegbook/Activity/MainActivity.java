@@ -462,6 +462,9 @@ public class MainActivity extends BaseActivity {
                 mCardAdapter.addCardItems(mCardBooks);
                 mViewPager.setAdapter(mCardAdapter);
 
+                long timeDiff = Long.MAX_VALUE;
+                int beforeCheck = -2;
+
                 Iterator<DataSnapshot> bookDataSnapshot = dataSnapshot.getChildren().iterator();
                 while(bookDataSnapshot.hasNext()){
                     DataSnapshot bookCodeSnapShot = bookDataSnapshot.next();
@@ -488,16 +491,39 @@ public class MainActivity extends BaseActivity {
                         Log.e(TAG, dates[0].toString()+"/"+dates[1].toString()+"/"+now.toString());
                         if(dates[0].getTime() <= now.getTime() && dates[1].getTime() >= now.getTime()){
                             isTraveling = true;
+                            timeDiff = 0;
+                            beforeCheck = 0;
                             travelingCard = cardBook;
                             spm.save(SharedPreferenceTag.DEFAULT_DIRECTORY, title);
                             Log.e(TAG, "여행 중");
                             Log.e(TAG, "default directory name : "+spm.retrieveString(SharedPreferenceTag.DEFAULT_DIRECTORY));
-                        }else if(dates[0].getTime() < now.getTime() && dates[1].getTime() < now.getTime() && image==null){
-                            mNotPublishBook.add(cardBook);
+                        }else if(dates[0].getTime() < now.getTime() && dates[1].getTime() < now.getTime()){
+                            // 여행 끝
+                            if(image == null)
+                                mNotPublishBook.add(cardBook);
+                            if(timeDiff > Math.abs(dates[1].getTime()-now.getTime())){
+                                beforeCheck = 1;
+                                timeDiff = Math.abs(dates[1].getTime() - now.getTime());
+                            }
+
+
+                        }else if(dates[0].getTime() > now.getTime() && dates[1].getTime() > now.getTime()){
+                            // 여행 전
+                            if(timeDiff > Math.abs(dates[0].getTime() - now.getTime())){
+                                beforeCheck = -1;
+                                timeDiff = Math.abs(dates[0].getTime() - now.getTime());
+                            }
+
                         }
                     }
 
                 }
+
+                timeDiff *= beforeCheck;
+                Log.e(TAG, "D-Day : " + timeDiff);
+
+                spm.save(SharedPreferenceTag.D_Day, timeDiff);
+
 
 //                Log.e(TAG, "sort 전 카드북 : "+mCardBooks.toString());
                 DescendingObj descending = new DescendingObj();

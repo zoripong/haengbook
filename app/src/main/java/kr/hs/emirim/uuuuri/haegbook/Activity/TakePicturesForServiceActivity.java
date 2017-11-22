@@ -16,7 +16,7 @@ import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
 import kr.hs.emirim.uuuuri.haegbook.Manager.CameraManager;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.R;
-import kr.hs.emirim.uuuuri.haegbook.Widget.FloatingViewService;
+import kr.hs.emirim.uuuuri.haegbook.Service.FloatingViewService;
 
 public class TakePicturesForServiceActivity extends Activity {
     private final String TAG = "TakePicturesForServiceActivity";

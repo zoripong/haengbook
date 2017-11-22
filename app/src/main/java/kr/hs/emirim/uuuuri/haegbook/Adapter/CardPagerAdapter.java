@@ -260,6 +260,7 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
                                     String cardCode = snapshotIterator.getValue(String.class);
                                     if (cardCode.equals(item.getBookCode())) {
                                         receiptRef.child(snapshotIterator.getKey()).removeValue();
+
                                         return;
                                     }
 

@@ -2,7 +2,8 @@ package kr.hs.emirim.uuuuri.haegbook.Fragment;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.flipboard.bottomsheet.commons.BottomSheetFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,23 +23,20 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import kr.hs.emirim.uuuuri.haegbook.Manager.ImageRecyclerSetter;
+import kr.hs.emirim.uuuuri.haegbook.Manager.GridDividerDecoration;
+import kr.hs.emirim.uuuuri.haegbook.Manager.ImageListRecyclerSetter;
 import kr.hs.emirim.uuuuri.haegbook.Model.FirebaseImage;
 import kr.hs.emirim.uuuuri.haegbook.R;
 
-// todo hide animation when recyclerview scroll down
-public class PhotoFragment extends Fragment {
+public class PhotoListFragment extends BottomSheetFragment {
     private final String TAG = "PhotoFragment";
 
-    private View rootView;
-    private ImageRecyclerSetter imageRecyclerSetter;
-
-    //
     private FirebaseDatabase mDatabase;
 
-
+    private View rootView;
 
     private RecyclerView recyclerView;
+    private ImageListRecyclerSetter imageRecyclerSetter;
 
     private String mBookCode;
     private String mPeriod;
@@ -55,31 +54,27 @@ public class PhotoFragment extends Fragment {
     private ArrayList<String> dateList;
 
 
-    public PhotoFragment() {
+    public PhotoListFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_photo, container, false);
+        rootView = inflater.inflate(R.layout.fragment_photo_list, container, false);
         mAllImages = new ArrayList<>();
         mImages = new ArrayList<>();
 
+        imageView= rootView.findViewById(R.id.image);
+        imageRecyclerSetter = new ImageListRecyclerSetter(getActivity(), true);
+
+
         recyclerView = rootView.findViewById(R.id.recyclerview);
-        imageRecyclerSetter = new ImageRecyclerSetter(getActivity());
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new GridDividerDecoration(getResources(), R.drawable.divider_recycler_gallery));
 
         getFBImage();
-        /*
-        *
-        *     if(mAllImages.size() == 0)
-                        ((TextView)rootView.findViewById(R.id.message_tv)).setText("등록된 이미지가 없습니다 :(");
-                    else
-                        ((TextView)rootView.findViewById(R.id.message_tv)).setText("");
 
-                    imageRecyclerSetter.setRecyclerCardView(recyclerView, mAllImages, null);
-
-                Bundle로 받아오기
-        * */
 
         return rootView;
     }
@@ -115,7 +110,7 @@ public class PhotoFragment extends Fragment {
                     else
                         ((TextView)rootView.findViewById(R.id.message_tv)).setText("");
 
-                    imageRecyclerSetter.setRecyclerCardView(recyclerView, mAllImages);
+                    imageRecyclerSetter.setRecyclerCardView(recyclerView, mAllImages, null);
                 }
                 else{
                     spinnerItemSelected(spinnerIndex);
@@ -157,7 +152,7 @@ public class PhotoFragment extends Fragment {
         else
             ((TextView)rootView.findViewById(R.id.message_tv)).setText("");
 
-        imageRecyclerSetter.setRecyclerCardView(recyclerView, mImages);
+        imageRecyclerSetter.setRecyclerCardView(recyclerView, mImages, null);
     }
 
     public void setDateList(ArrayList<String> dateList) {

@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 import kr.hs.emirim.uuuuri.haegbook.Adapter.GalleryRecyclerAdapter;
-import kr.hs.emirim.uuuuri.haegbook.Adapter.ImageRecyclerAdapter;
+import kr.hs.emirim.uuuuri.haegbook.Adapter.ImageListRecyclerAdapter;
 import kr.hs.emirim.uuuuri.haegbook.Interface.OnItemClickListener;
 import kr.hs.emirim.uuuuri.haegbook.Manager.DateListManager;
 import kr.hs.emirim.uuuuri.haegbook.Manager.GalleryManager;
@@ -249,7 +249,9 @@ public class AddPhotoActivity extends AppCompatActivity {
         }
 
         @Override
-        public void OnItemClick(ImageRecyclerAdapter.ImageViewHolder imageViewHolder, int position) {}
+        public void OnItemClick(ImageListRecyclerAdapter.ImageViewHolder imageViewHolder, int position) {
+
+        }
     };
 
     /*

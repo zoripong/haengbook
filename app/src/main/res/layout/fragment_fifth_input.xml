@@ -450,13 +450,5 @@
             app:scale_width="55" />
 
 
-        <Button
-            android:id="@+id/notify"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:scale_width="100"
-            android:text="noti" />
-
-
     </kr.hs.emirim.uuuuri.haegbook.Layout.ScalableLayout>
 </LinearLayout>

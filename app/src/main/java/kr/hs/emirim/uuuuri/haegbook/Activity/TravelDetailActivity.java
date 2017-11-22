@@ -47,9 +47,10 @@ import java.util.List;
 import java.util.Map;
 
 import kr.hs.emirim.uuuuri.haegbook.Adapter.GalleryRecyclerAdapter;
-import kr.hs.emirim.uuuuri.haegbook.Adapter.ImageRecyclerAdapter;
+import kr.hs.emirim.uuuuri.haegbook.Adapter.ImageListRecyclerAdapter;
 import kr.hs.emirim.uuuuri.haegbook.Adapter.OnSwipeTouchListener;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.PhotoFragment;
+import kr.hs.emirim.uuuuri.haegbook.Fragment.PhotoListFragment;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.PurchaseListFragment;
 import kr.hs.emirim.uuuuri.haegbook.Fragment.ReceiptFragment;
 import kr.hs.emirim.uuuuri.haegbook.Interface.CurrencyTag;
@@ -59,7 +60,7 @@ import kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag;
 import kr.hs.emirim.uuuuri.haegbook.Interface.TravelDetailTag;
 import kr.hs.emirim.uuuuri.haegbook.Manager.DateListManager;
 import kr.hs.emirim.uuuuri.haegbook.Manager.GridDividerDecoration;
-import kr.hs.emirim.uuuuri.haegbook.Manager.ImageRecyclerSetter;
+import kr.hs.emirim.uuuuri.haegbook.Manager.ImageListRecyclerSetter;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Manager.ViewFindUtils;
 import kr.hs.emirim.uuuuri.haegbook.Model.FirebaseImage;
@@ -108,7 +109,7 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
 
     private RecyclerView recyclerView;
     private ArrayList<FirebaseImage> mImages;
-    private ImageRecyclerSetter imageRecyclerSetter;
+    private ImageListRecyclerSetter imageRecyclerSetter;
 
     private Float[] mTravelMoney=new Float[6];
     private Float[] mTravelRate=new Float[6];
@@ -158,7 +159,6 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
 
         bottomSheetLayout.setInterceptContentTouch(true);
 
-        findViewById(R.id.handle).setVisibility(View.GONE);
         findViewById(R.id.handle).setOnTouchListener(new OnSwipeTouchListener(this) {
             @Override
             public void onSwipeRight() {}
@@ -168,25 +168,23 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
 
             @Override
             public void onSwipeTop() {
-/*
- Bundle bundle = new Bundle();
-        String myMessage = "Stackoverflow is cool!";
-        bundle.putString("message", myMessage );
-        FragmentClass fragInfo = new FragmentClass();
-        fragInfo.setArguments(bundle);
-        transaction.replace(R.id.fragment_single, fragInfo);
-        transaction.commit();
- */
-                Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList(BUNDLE_TAG, mPurchases);
-                PurchaseListFragment fragment = new PurchaseListFragment();
-                fragment.setArguments(bundle);
-                fragment.show(getSupportFragmentManager(), R.id.design_bottom_sheet);
+                Log.e(TAG, "onSwipeTop");
+                if(mPosition == RECEIPT) {
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelableArrayList(BUNDLE_TAG, mPurchases);
+                    PurchaseListFragment fragment = new PurchaseListFragment();
+                    fragment.setArguments(bundle);
+                    fragment.show(getSupportFragmentManager(), R.id.design_bottom_sheet);
+                }else if(mPosition == PHOTO){
+                    PhotoListFragment fragment = new PhotoListFragment();
+                    fragment.show(getSupportFragmentManager(), R.id.design_bottom_sheet);
 
+                }
             }
 
             @Override
-            public void onSwipeBottom() {}
+            public void onSwipeBottom() {
+            }
 
 
         });
@@ -254,10 +252,6 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
                 tabLayout.setCurrentTab(position);
                 mPosition=position;
                 Log.e("탭", String.valueOf(mPosition));
-                if(mPosition == PHOTO)
-                    findViewById(R.id.handle).setVisibility(View.GONE);
-                else
-                    findViewById(R.id.handle).setVisibility(View.VISIBLE);
 
             }
 
@@ -458,8 +452,6 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
                                                                     }
         );
 
-
-
         actionBar.setCustomView(actionbar);
 
         //액션바 양쪽 공백 없애기
@@ -477,7 +469,7 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
 
         mImages = new ArrayList<FirebaseImage>();
         recyclerView = publishDialog.findViewById(R.id.recyclerview);
-        imageRecyclerSetter = new ImageRecyclerSetter(TravelDetailActivity.this, false);
+        imageRecyclerSetter = new ImageListRecyclerSetter(TravelDetailActivity.this, false);
 
         // // TODO: 2017-11-18 기기 마다 패딩 다르게
         recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
@@ -721,7 +713,7 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
         public void OnItemClick(GalleryRecyclerAdapter.PhotoViewHolder photoViewHolder, int position) {}
 
         @Override
-        public void OnItemClick(ImageRecyclerAdapter.ImageViewHolder imageViewHolder, int position) {
+        public void OnItemClick(ImageListRecyclerAdapter.ImageViewHolder imageViewHolder, int position) {
             List<FirebaseImage> firebaseImages = imageRecyclerSetter.getPhotoList();
             FirebaseImage firebaseImage = firebaseImages.get(position);
             isNotSelected = false;
@@ -743,16 +735,14 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
             Log.e(TAG, "선택되었나?" + isNotSelected);
 
             imageRecyclerSetter.setRecyclerCardView(recyclerView, mImages, mOnItemClickListener);
-        }
 
+        }
     };
 
 
     public void updateTypeMoney(final int type, String amount){
         mDatabase = FirebaseDatabase.getInstance();
         final DatabaseReference receiptRef = mDatabase.getReference("TravelMoney/"+mBookCode);
-
-
 
         Float restMoney = spm.retrieveFloat(TravelDetailTag.REST_MONEY_TAG);
         Float typeMoney = 0.0f;

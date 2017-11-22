@@ -35,9 +35,11 @@ import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Notification.NotificationAdapter;
 import kr.hs.emirim.uuuuri.haegbook.Notification.NotificationMessage;
 import kr.hs.emirim.uuuuri.haegbook.R;
-import kr.hs.emirim.uuuuri.haegbook.Widget.FloatingViewService;
+import kr.hs.emirim.uuuuri.haegbook.Service.DDayService;
+import kr.hs.emirim.uuuuri.haegbook.Service.FloatingViewService;
 
 import static kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag.STATE_SETTING_CAMERA;
+import static kr.hs.emirim.uuuuri.haegbook.Interface.SharedPreferenceTag.STATE_SETTING_DAY;
 
 public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final String FILE_PATH_EXTRA = "FILE PATH EXTRA";
@@ -50,6 +52,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private Context mContext;
 
     private Intent mServiceIntent;
+    private Intent dDayIntent;
 
     private boolean isFirst = true;
     private List<Item> data;
@@ -144,14 +147,16 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     //todo notification set
                     isNotification = spm.retrieveBoolean(NotificationTag.NOTIFICATION_SET_TAG);
                     itemController.setting_switch.setChecked(isNotification);
-
-
-                }
-
-                if(item.text.equals("카메라 플로팅 위젯")){
+                }else if(item.text.equals("카메라 플로팅 위젯")){
                     itemController.setting_switch.setChecked(spm.retrieveBoolean(SharedPreferenceTag.STATE_SETTING_CAMERA));
                     changeCameraWidget(item,itemController, spm.retrieveBoolean(SharedPreferenceTag.STATE_SETTING_CAMERA));
+                }else if(item.text.equals("D-Day")){
+                    itemController.setting_switch.setChecked(spm.retrieveBoolean(SharedPreferenceTag.STATE_SETTING_DAY));
+                    showDayNotification(spm.retrieveBoolean(SharedPreferenceTag.STATE_SETTING_DAY));
                 }
+
+
+
 
                 itemController.setting_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -161,13 +166,14 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         Log.e("쳌", String.valueOf(isChecked));
                         switch (item.text) {
                             case "D-Day":
+                                showDayNotification(isChecked);
+                                spm.save(STATE_SETTING_DAY, isChecked);
                                 break;
                             case "Notification":
                                 if(isFirst && !isNotification) {
                                     changeNotification(item, itemController, false);
                                 }
                                 isFirst=false;
-
                                 spm.save(NotificationTag.NOTIFICATION_SET_TAG,isChecked);
                                 isNotification = spm.retrieveBoolean(NotificationTag.NOTIFICATION_SET_TAG);
                                 changeNotification(item,itemController,isChecked);
@@ -225,6 +231,24 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     }
                 });
 
+        }
+    }
+
+    private void showDayNotification(boolean isChecked) {
+        if(isChecked){
+            if(spm.retrieveInt(SharedPreferenceTag.CARD_COUNT) == 0){
+                Toast.makeText(mContext, "등록된 여행이 없습니다.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if(dDayIntent == null) {
+                dDayIntent = new Intent(mContext, DDayService.class);
+                mContext.startService(dDayIntent);
+            }
+        }else {
+            if (dDayIntent != null) {
+                mContext.stopService(dDayIntent);
+                dDayIntent = null;
+            }
         }
     }
 
@@ -309,7 +333,6 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public void changeCameraWidget(Item item,ListHeaderViewHolder itemController,boolean isChecked) {
         if (isChecked) {
             if (spm.retrieveBoolean(SharedPreferenceTag.IS_TRAVELING_TAG)) {
-
                 TedPermission.with(mContext)
                         .setPermissionListener(permissionlistener)
                         .setDeniedMessage("권한이 없을 경우, 플로팅 위젯 기능을 사용 할 수 없습니다.\n\nPlease turn on permissions at [Setting] > [Permission]")

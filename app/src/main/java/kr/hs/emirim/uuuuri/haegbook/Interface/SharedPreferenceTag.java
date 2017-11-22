@@ -32,7 +32,10 @@ public interface SharedPreferenceTag {
 
     // check the setting of camera widget
     String STATE_SETTING_CAMERA = "state setting camera";
-
+    String STATE_SETTING_DAY = "state setting day";
     String D_Day = "d-day";
+
+    String CARD_COUNT = "card count";
+    String DDAY_TRAVEL_NAME = "D-DAY TRAVEL NAME";
 
 }

@@ -42,6 +42,7 @@ import kr.hs.emirim.uuuuri.haegbook.Manager.ShadowTransformer;
 import kr.hs.emirim.uuuuri.haegbook.Manager.SharedPreferenceManager;
 import kr.hs.emirim.uuuuri.haegbook.Model.CardBook;
 import kr.hs.emirim.uuuuri.haegbook.R;
+import kr.hs.emirim.uuuuri.haegbook.Service.DDayService;
 
 // TODO: 2017-11-12 : 이미지 로딩 화면 제공
 public class MainActivity extends BaseActivity {
@@ -312,15 +313,6 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onSwipeTop() {
-/*
- Bundle bundle = new Bundle();
-        String myMessage = "Stackoverflow is cool!";
-        bundle.putString("message", myMessage );
-        FragmentClass fragInfo = new FragmentClass();
-        fragInfo.setArguments(bundle);
-        transaction.replace(R.id.fragment_single, fragInfo);
-        transaction.commit();
- */
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList(BUNDLE_TAG, mCardBooks);
                 BookCardListFragment fragment = new BookCardListFragment();
@@ -464,6 +456,7 @@ public class MainActivity extends BaseActivity {
 
                 long timeDiff = Long.MAX_VALUE;
                 int beforeCheck = -2;
+                String travelName = null;
 
                 Iterator<DataSnapshot> bookDataSnapshot = dataSnapshot.getChildren().iterator();
                 while(bookDataSnapshot.hasNext()){
@@ -485,6 +478,7 @@ public class MainActivity extends BaseActivity {
                         Date dates[] = dateListManager.convertDates(period);
 
                         Date now = new Date();
+                        Log.e(TAG, "HOUR : "+ now.getHours()+"/Minutes : "+now.getMinutes()+"/Seconds : "+now.getSeconds());
                         now = new Date(now.getYear(), now.getMonth(), now.getDate(), 0, 0, 0);
 
                         Log.e(TAG, dates[0].getTime()+"/"+dates[1].getTime()+"/"+now.getTime());
@@ -493,6 +487,7 @@ public class MainActivity extends BaseActivity {
                             isTraveling = true;
                             timeDiff = 0;
                             beforeCheck = 0;
+                            travelName = title;
                             travelingCard = cardBook;
                             spm.save(SharedPreferenceTag.DEFAULT_DIRECTORY, title);
                             Log.e(TAG, "여행 중");
@@ -504,16 +499,17 @@ public class MainActivity extends BaseActivity {
                             if(timeDiff > Math.abs(dates[1].getTime()-now.getTime())){
                                 beforeCheck = 1;
                                 timeDiff = Math.abs(dates[1].getTime() - now.getTime());
+                                travelName = title;
                             }
 
 
                         }else if(dates[0].getTime() > now.getTime() && dates[1].getTime() > now.getTime()){
                             // 여행 전
-                            if(timeDiff > Math.abs(dates[0].getTime() - now.getTime())){
+                            if(timeDiff >= Math.abs(dates[0].getTime() - now.getTime())){
                                 beforeCheck = -1;
                                 timeDiff = Math.abs(dates[0].getTime() - now.getTime());
+                                travelName = title;
                             }
-
                         }
                     }
 
@@ -522,8 +518,16 @@ public class MainActivity extends BaseActivity {
                 timeDiff *= beforeCheck;
                 Log.e(TAG, "D-Day : " + timeDiff);
 
-                spm.save(SharedPreferenceTag.D_Day, timeDiff);
+                spm.save(SharedPreferenceTag.CARD_COUNT, mCardBooks.size());
+                if(mCardBooks.size() > 0) {
+                    spm.save(SharedPreferenceTag.D_Day, (int) timeDiff / (24 * 60 * 60 * 1000));
+                    spm.save(SharedPreferenceTag.DDAY_TRAVEL_NAME, travelName);
+                }
 
+                if(spm.retrieveBoolean(SharedPreferenceTag.STATE_SETTING_DAY)){
+                    Intent intent = new Intent(MainActivity.this, DDayService.class);
+                    startService(intent);
+                }
 
 //                Log.e(TAG, "sort 전 카드북 : "+mCardBooks.toString());
                 DescendingObj descending = new DescendingObj();
@@ -546,7 +550,6 @@ public class MainActivity extends BaseActivity {
 
                 if(isTraveling && travelingCard!=null){
                     ((TextView)findViewById(R.id.add_schedule_btn)).setText("현재 여행 바로가기 >");
-
                 }
             }
 

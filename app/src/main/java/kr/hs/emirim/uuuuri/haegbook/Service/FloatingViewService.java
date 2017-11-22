@@ -1,4 +1,4 @@
-package kr.hs.emirim.uuuuri.haegbook.Widget;
+package kr.hs.emirim.uuuuri.haegbook.Service;
 
 import android.app.Service;
 import android.content.Intent;
@@ -156,5 +156,6 @@ public class FloatingViewService extends Service {
     public void onDestroy() {
         super.onDestroy();
         if (mFloatingView != null) mWindowManager.removeView(mFloatingView);
+        this.stopSelf();
     }
 }

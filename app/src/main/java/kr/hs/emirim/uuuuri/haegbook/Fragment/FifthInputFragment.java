@@ -127,14 +127,11 @@ public class FifthInputFragment extends Fragment{
         mCurrencyName=spm.retrieveString(CurrencyTag.CURRENCY_COUNTRY_TAG);
 
         mIsKorea =spm.retrieveBoolean(SharedPreferenceTag.IS_KOR_TAG);
-        firedate();
         initialize();
         notifyalarm();
     }
 
     private void notifyalarm() {
-        Button btnGen = (Button) rootView.findViewById(R.id.notify);
-        btnGen.setOnClickListener(myGenOnClickListener);
 
         startday =mCardBookStartDate.split("\\."); //여행시작날
 
@@ -177,68 +174,6 @@ public class FifthInputFragment extends Fragment{
     }
 
 
-    private void generatNotification() {
-        nNM = (NotificationManager)getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-        //PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, FifthInputFragment.class), PendingIntent.FLAG_UPDATE_CURRENT)
-
-        //Context context = MainActivity.this;
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext()) ;
-        if (resultNumber >= 0) { //날짜 안 지남
-            builder.setContentTitle("여행 D-" + resultNumber);
-        } else { //날짜 지남
-            int absR = Math.abs(resultNumber);
-            builder.setContentTitle("여행 D+" + absR);
-        }
-        // builder.setContentIntent(pendingIntent);
-        builder.setContentText("빨리 여행가고파");
-        builder.setSmallIcon(android.R.drawable.stat_notify_more);
-        builder.setWhen(System.currentTimeMillis());
-
-        nNM.notify(NOTIFICATION_ID, builder.build()); //알람 띄우기
-    }
-
-    Button.OnClickListener myGenOnClickListener = new Button.OnClickListener() {
-        public void onClick(View v) {
-            generatNotification();
-        }
-    };
-
-    public void firedate() {
-        class dday {
-            public String Date;
-
-            public dday(String Date) {
-
-            }
-        }
-
-        mDatabase = FirebaseDatabase.getInstance();
-        final DatabaseReference dayref= mDatabase.getReference("DDay");
-        final DatabaseReference tokenRef = mDatabase.getReference("DDay/"+mUserToken);
-
-        dayref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    date="2017.11.28"; //초기값 아무렇게나 주기
-                    Map<String, Object> map = new HashMap<String, Object>();
-                    initialize();
-                    notifyalarm(); //date값 바뀜
-                    beforeSavedDate = date;
-
-                    map.put("date", date); //넣기
-                    tokenRef.updateChildren(map);
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    } //firedate()
 
 
     private void initialize() {

@@ -1,6 +1,7 @@
 package kr.hs.emirim.uuuuri.haegbook.Manager;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import kr.hs.emirim.uuuuri.haegbook.Interface.CurrencyTag;
@@ -21,12 +22,14 @@ public class SharedPreferenceManager {
 
     public SharedPreferenceManager(Activity activity){
         sharedpreferences = activity.getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
+    }
 
+    public SharedPreferenceManager(Context context) {
+        sharedpreferences = context.getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
     }
 
 
-
-    public void save(String tag, String value){
+        public void save(String tag, String value){
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(tag, value);
         editor.commit();

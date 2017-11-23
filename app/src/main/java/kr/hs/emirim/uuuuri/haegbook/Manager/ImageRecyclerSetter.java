@@ -2,6 +2,7 @@ package kr.hs.emirim.uuuuri.haegbook.Manager;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -21,14 +22,13 @@ public class ImageRecyclerSetter{
 
     private Context context;
     private Activity nowActivity;
-    private boolean isPhotoFragment;
+
 
     public ImageRecyclerSetter(Activity nowActivity) {
         this.nowActivity = nowActivity;
-        this.isPhotoFragment = isPhotoFragment;
     }
 
-    public boolean setRecyclerCardView(RecyclerView recyclerView, ArrayList<FirebaseImage> imageArrayList){
+    public boolean setRecyclerCardView(RecyclerView recyclerView, ArrayList<FirebaseImage> imageArrayList, ArrayList<Bitmap> bitmaps){
 
         items = imageArrayList;
 
@@ -36,7 +36,7 @@ public class ImageRecyclerSetter{
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new ImageRecyclerAdapter(nowActivity,items, isPhotoFragment);
+        adapter = new ImageRecyclerAdapter(nowActivity,items, bitmaps);
         recyclerView.setAdapter(adapter);
 
         return true;

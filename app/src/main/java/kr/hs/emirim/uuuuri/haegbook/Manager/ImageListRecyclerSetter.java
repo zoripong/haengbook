@@ -2,12 +2,12 @@ package kr.hs.emirim.uuuuri.haegbook.Manager;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import kr.hs.emirim.uuuuri.haegbook.Adapter.ImageRecyclerAdapter;
+import kr.hs.emirim.uuuuri.haegbook.Adapter.ImageListRecyclerAdapter;
 import kr.hs.emirim.uuuuri.haegbook.Interface.OnItemClickListener;
 import kr.hs.emirim.uuuuri.haegbook.Model.FirebaseImage;
 
@@ -17,7 +17,7 @@ import kr.hs.emirim.uuuuri.haegbook.Model.FirebaseImage;
 
 public class ImageListRecyclerSetter {
     private ArrayList<FirebaseImage> items;
-    private ImageRecyclerAdapter adapter;
+    private ImageListRecyclerAdapter adapter;
 
     private Context context;
     private Activity nowActivity;
@@ -28,17 +28,19 @@ public class ImageListRecyclerSetter {
         this.isPhotoFragment = isPhotoFragment;
     }
 
-    public boolean setRecyclerCardView(RecyclerView recyclerView, ArrayList<FirebaseImage> imageArrayList, OnItemClickListener listener ){
+    public boolean setRecyclerCardView(RecyclerView recyclerView, ArrayList<FirebaseImage> imageArrayList, ArrayList<Bitmap> bitmaps, OnItemClickListener listener ){
 
         items = imageArrayList;
 
-        adapter = new ImageRecyclerAdapter(nowActivity,items, isPhotoFragment);
+        adapter = new ImageListRecyclerAdapter(nowActivity,items, bitmaps, isPhotoFragment);
+        if(listener != null)
+            adapter.setOnItemClickListener(listener);
         recyclerView.setAdapter(adapter);
 
         return true;
     }
 
-    public List<FirebaseImage> getPhotoList(){
+    public ArrayList<FirebaseImage> getPhotoList(){
         return adapter.getPhotoList();
     }
 

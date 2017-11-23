@@ -153,6 +153,7 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
         TextView locationTextView = (TextView) view.findViewById(R.id.location_tv);
         CardView cardView = view.findViewById(R.id.card_view);
         ImageView sharedImageView = view.findViewById(R.id.shared_iv);
+        TextView sharedTextView = view.findViewById(R.id.shared_tv);
         ImageView plusImageView = view.findViewById(R.id.plus_iv);
         ImageView gpsIconImageView = view.findViewById(R.id.gps_iv);
         final LinearLayout linearLayout = view.findViewById(R.id.gray_linear);
@@ -226,11 +227,14 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
                 locationTextView.setVisibility(View.GONE);
                 gpsIconImageView.setVisibility(View.GONE);
                 sharedImageView.setVisibility(View.GONE);
+                sharedTextView.setVisibility(View.GONE);
+
             }
 
         }
         if(item.getTitle() == null){
             sharedImageView.setVisibility(View.GONE);
+            sharedTextView.setVisibility(View.GONE);
             plusImageView.setVisibility(View.VISIBLE);
         }
 

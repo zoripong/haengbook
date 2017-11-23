@@ -158,9 +158,6 @@ public class GalleryRecyclerAdapter extends RecyclerView.Adapter<GalleryRecycler
                 });
 
 
-                dialog.findViewById(R.id.delete_iv).setVisibility(View.GONE);
-                dialog.findViewById(R.id.download_iv).setVisibility(View.GONE);
-
                 dialog.findViewById(R.id.close_btn).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

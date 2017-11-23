@@ -1,7 +1,10 @@
 package kr.hs.emirim.uuuuri.haegbook.Fragment;
 
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,11 +15,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,6 +36,7 @@ import kr.hs.emirim.uuuuri.haegbook.R;
 public class PhotoFragment extends Fragment {
     private final String TAG = "PhotoFragment";
 
+    private boolean isLoading;
     private View rootView;
     private ImageRecyclerSetter imageRecyclerSetter;
 
@@ -47,13 +55,16 @@ public class PhotoFragment extends Fragment {
     private ImageView imageView;
 
     private ArrayList<FirebaseImage> mAllImages;
+    private ArrayList<Bitmap> mAllBitmaps;
 
 
-    ArrayList<FirebaseImage> mImages;
+    private ArrayList<FirebaseImage> mImages;
+    private ArrayList<Bitmap> mBitmaps;
 
 
     private ArrayList<String> dateList;
 
+    private ProgressDialog gettingImageDialog;
 
     public PhotoFragment() {
     }
@@ -64,38 +75,39 @@ public class PhotoFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_photo, container, false);
         mAllImages = new ArrayList<>();
         mImages = new ArrayList<>();
+        mAllBitmaps = new ArrayList<>();
+        mBitmaps = new ArrayList<>();
 
         recyclerView = rootView.findViewById(R.id.recyclerview);
         imageRecyclerSetter = new ImageRecyclerSetter(getActivity());
 
         getFBImage();
-        /*
-        *
-        *     if(mAllImages.size() == 0)
-                        ((TextView)rootView.findViewById(R.id.message_tv)).setText("등록된 이미지가 없습니다 :(");
-                    else
-                        ((TextView)rootView.findViewById(R.id.message_tv)).setText("");
 
-                    imageRecyclerSetter.setRecyclerCardView(recyclerView, mAllImages, null);
 
-                Bundle로 받아오기
-        * */
+        isLoading = true;
 
         return rootView;
     }
 
+    public ArrayList<Bitmap> getBitmaps(){
+        return mAllBitmaps;
+    }
+
+    public ArrayList<FirebaseImage> getImages(){
+        return mAllImages;
+    }
     public void getFBImage(){
         mDatabase = FirebaseDatabase.getInstance();
         final DatabaseReference imageRef = mDatabase.getReference("BookInfo/"+mBookCode+"/Content/Images");
-        final ProgressDialog gettingImageDialog = new ProgressDialog(getActivity());
+        gettingImageDialog = new ProgressDialog(getActivity());
         gettingImageDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        gettingImageDialog.setMessage("로딩중입니다..");
+        gettingImageDialog.setMessage("이미지를 불러오는 중입니다..");
+        gettingImageDialog.setCancelable(false);
         gettingImageDialog.show();
         ValueEventListener imageListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot FBimage) {
                 mAllImages.clear();
-
                 Iterator<DataSnapshot> childIterator = FBimage.getChildren().iterator();
                 //users의 모든 자식들의 key값과 value 값들을 iterator로 참조
                 while(childIterator.hasNext()) {
@@ -115,13 +127,12 @@ public class PhotoFragment extends Fragment {
                     else
                         ((TextView)rootView.findViewById(R.id.message_tv)).setText("");
 
-                    imageRecyclerSetter.setRecyclerCardView(recyclerView, mAllImages);
+
                 }
                 else{
                     spinnerItemSelected(spinnerIndex);
                 }
-
-                gettingImageDialog.dismiss();
+                getBitmapImages();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -130,17 +141,23 @@ public class PhotoFragment extends Fragment {
         imageRef.addValueEventListener(imageListener);
     }
 
-    public void spinnerItemSelected(int i){
+    public ArrayList<Bitmap> spinnerItemSelected(int i){
+        if(isLoading){
+            return new ArrayList<>();
+        }
+
         Log.e(TAG, "선택 된 날짜 : "+ dateList.get(i));
         Log.e(TAG, "DIALOG LIST : "+ dateList.toString());
         Log.e(TAG, "선택 index : "+i);
 
         spinnerIndex=i;
         mImages.clear();
+        mBitmaps.clear();
 
         if(i == 0){
             for(int j = 0; j<mAllImages.size(); j++){
                 mImages.add(mAllImages.get(j));
+                mBitmaps.add(mAllBitmaps.get(j));
             }
             Log.e("TAG", "보여지는 사진 : "+ mImages.toString());
         }else{
@@ -148,6 +165,7 @@ public class PhotoFragment extends Fragment {
                 if(mAllImages.get(j).getDate().equals(dateList.get(i))){
                     Toast.makeText(getContext(), dateList.get(i), Toast.LENGTH_SHORT).show();
                     mImages.add(mAllImages.get(j));
+                    mBitmaps.add(mAllBitmaps.get(j));
                 }
             }
         }
@@ -157,7 +175,9 @@ public class PhotoFragment extends Fragment {
         else
             ((TextView)rootView.findViewById(R.id.message_tv)).setText("");
 
-        imageRecyclerSetter.setRecyclerCardView(recyclerView, mImages);
+        imageRecyclerSetter.setRecyclerCardView(recyclerView, mImages, mBitmaps);
+
+        return mBitmaps;
     }
 
     public void setDateList(ArrayList<String> dateList) {
@@ -172,4 +192,44 @@ public class PhotoFragment extends Fragment {
         mPeriod = period;
     }
 
+    public void getBitmapImages() {
+
+        mAllBitmaps.clear();
+
+        if(mAllImages.size() == 0)
+            gettingImageDialog.dismiss();
+        for (int i = 0; i < mAllImages.size(); i++) {
+            StorageReference storageRef = FirebaseStorage.getInstance().getReference(mAllImages.get(i).getImageURI());
+
+            final int finalI = i;
+            storageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    // Use the bytes to display the image
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    mAllBitmaps.add(bitmap);
+                    Log.e(TAG, "이거 되고 있니.. ?");
+                    if(finalI == mAllImages.size()-1){
+                        isLoading = false;
+                        if(mAllImages.size() == 0)
+                            ((TextView)rootView.findViewById(R.id.message_tv)).setText("등록된 이미지가 없습니다 :(");
+                        else {
+                            ((TextView) rootView.findViewById(R.id.message_tv)).setText("");
+                            imageRecyclerSetter.setRecyclerCardView(recyclerView, mAllImages, mAllBitmaps);
+                        }
+                        Log.e(TAG, "SIZE!!!!!!!!!!!" + mAllBitmaps.size() +"/"+mAllImages.size() );
+                        gettingImageDialog.dismiss();
+
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+
+        }
+
+    }
 }

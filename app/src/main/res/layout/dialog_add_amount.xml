@@ -26,7 +26,7 @@
             android:id="@+id/amount_et"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:scale_left="120"
+            app:scale_left="150"
             app:scale_textsize="23"
             app:scale_top="145"
             app:scale_width="230"
@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/dropdown_icon"
-            app:scale_left="340"
+            app:scale_left="360"
             app:scale_textsize="29"
             app:scale_top="135"
             app:scale_width="80"></Spinner>

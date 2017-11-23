@@ -14,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -178,7 +177,6 @@ public class FourthInputFragment extends Fragment{
         if(getActivity() == null)
             return;
         SharedPreferenceManager spm = new SharedPreferenceManager(getActivity());
-        Toast.makeText(getContext(), spm.retrieveString(SharedPreferenceTag.ADDRESS_TAG), Toast.LENGTH_SHORT).show();
         country = spm.retrieveString(SharedPreferenceTag.ADDRESS_TAG);
 
         for(int i=0;i<spinnerCountry.length;i++){
@@ -187,7 +185,6 @@ public class FourthInputFragment extends Fragment{
                 break;
             }
         }
-        Toast.makeText(getContext(), String.valueOf(spm.retrieveBoolean(SharedPreferenceTag.IS_KOR_TAG)), Toast.LENGTH_SHORT).show();
         isKoreaTravel=spm.retrieveBoolean(SharedPreferenceTag.IS_KOR_TAG);
         if(isGoingForeignTravel()){
 

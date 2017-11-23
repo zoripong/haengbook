@@ -79,7 +79,7 @@ public class AddScheduleActivity extends AppCompatActivity {
                             increaseProgressBar();
                             secondInputFragment.getData();
                         }else{
-                            Toast.makeText(getApplicationContext(), "입력바람", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "모두 입력해주세요 :)", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         break;
@@ -89,7 +89,7 @@ public class AddScheduleActivity extends AppCompatActivity {
                             increaseProgressBar();
                             thirdInputFragment.getData();
                         }else{
-                            Toast.makeText(getApplicationContext(), "입력바람", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "모두 입력해주세요 :)", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         break;
@@ -98,7 +98,6 @@ public class AddScheduleActivity extends AppCompatActivity {
                             increaseProgressBar();
                             fourthInputFragment.getData();
                         }else{
-                            Toast.makeText(getApplicationContext(), "입력바람", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         break;
@@ -107,7 +106,7 @@ public class AddScheduleActivity extends AppCompatActivity {
                             increaseProgressBar();
                             fifthInputFragment.getData();
                         }else{
-                            Toast.makeText(getApplicationContext(), "입력바람", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "모두 입력해주세요 :)", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         break;

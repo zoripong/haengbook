@@ -49,6 +49,11 @@ public class MainActivity extends BaseActivity {
     private final String TAG = "MainActivity";
     private final String BUNDLE_TAG ="BUNDLE_TAG";
 
+    private final long FINISH_INTERVAL_TIME = 2000;
+    private long backPressedTime = 0;
+
+
+
     private EditText bookCodeEt;
 
     private FirebaseDatabase mDatabase;
@@ -353,6 +358,23 @@ public class MainActivity extends BaseActivity {
             mCardBookRefer.removeEventListener(mCardBookListener);
 
     }
+    @Override
+    public void onBackPressed() {
+        long tempTime = System.currentTimeMillis();
+        long intervalTime = tempTime - backPressedTime;
+
+        if (0 <= intervalTime && FINISH_INTERVAL_TIME >= intervalTime)
+        {
+            super.onBackPressed();
+        }
+        else
+        {
+            backPressedTime = tempTime;
+            Toast.makeText(getApplicationContext(), "'뒤로'버튼 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 
     public void getDatabase() {
 

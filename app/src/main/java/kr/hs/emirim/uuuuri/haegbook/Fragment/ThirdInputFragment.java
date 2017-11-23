@@ -32,7 +32,7 @@ public class ThirdInputFragment extends Fragment{
     private ImageView mEndDateChooseBtn;
     private TextView mEndDateTv;
 
-    public int mEndYear, mEndMonth, mEndDay;
+    public int mEndYear=0, mEndMonth, mEndDay;
     private int mYear, mMonth, mDay;
 
     private String mEndDate;
@@ -95,7 +95,7 @@ public class ThirdInputFragment extends Fragment{
 
     public boolean saveData(){
         if(checkDate()) {
-            Toast.makeText(getContext(), "여행 끝은 시작날보다 뒤로 신청하세요.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "여행 끝은 시작보다 뒤로 신청하세요 :)", Toast.LENGTH_SHORT).show();
             return false;
         }
 

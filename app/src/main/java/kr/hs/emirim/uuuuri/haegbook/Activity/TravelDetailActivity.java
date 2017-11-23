@@ -201,7 +201,6 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
         isNotSelected = true;
 
         getDetailInfo();
-        Toast.makeText(getApplicationContext(), mBookCode, Toast.LENGTH_SHORT).show();
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -475,6 +474,10 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 
     private void publishTravel() {
         final Dialog publishDialog = new Dialog(TravelDetailActivity.this, R.style.MyDialog);
@@ -566,7 +569,7 @@ public class TravelDetailActivity extends BaseActivity implements SelectedFragme
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.e("입력값",date+"        "+title+amount+memo);
                 if(date.replaceAll(" ","").equals("") || title.replaceAll(" ","").equals("") || amount.replaceAll(" ","").equals("") || memo.replaceAll(" ","").equals("")){
-                    Toast.makeText(getApplicationContext(), "입력해주세요.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "전부 입력해주세요.", Toast.LENGTH_SHORT).show();
 
                 }else {
                     Float restMoney = spm.retrieveFloat(TravelDetailTag.REST_MONEY_TAG);

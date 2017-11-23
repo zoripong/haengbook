@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -28,7 +27,7 @@ public class SecondInputFragment extends Fragment{
     private ImageView mStartDateChooseBtn;
     private TextView mStartDateTv;
 
-    public int mStartYear, mStartMonth, mStartDay;
+    public int mStartYear=0, mStartMonth, mStartDay;
     private int mYear, mMonth, mDay;
 
 
@@ -84,8 +83,6 @@ public class SecondInputFragment extends Fragment{
             return;
         }
         SharedPreferenceManager spm = new SharedPreferenceManager(getActivity());
-        Toast.makeText(getContext(), spm.retrieveString(SharedPreferenceTag.LOCATION_TAG), Toast.LENGTH_SHORT).show();
-
     }
 
 

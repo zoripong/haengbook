@@ -283,8 +283,6 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
                 });
                 deleteDialog.show();
 
-
-                Toast.makeText(mNowActivity, item.toString(), Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
